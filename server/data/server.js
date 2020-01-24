@@ -2,7 +2,8 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const morgan = require('dev');
+const morgan = require('morgan');
+const graphqlHTTP = require('express-graphql');
 
 // user Routes
 const authRouter = require('../auth/auth-router');
@@ -15,6 +16,15 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 server.use(cors());
+server.use(morgan('dev'));
+
+server.use(
+  '/graphql',
+  graphqlHTTP({
+    // TODO: create schema
+    graphql: true,
+  }),
+);
 
 server.use('/api/auth', authRouter);
 server.use('/api/users', userRouter);
