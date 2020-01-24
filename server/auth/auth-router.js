@@ -9,8 +9,8 @@ function validateUserCredentials(req, res, next) {
     res.status(400).json({error: 'No information was passed into the body.'});
   } else {
     // start the more specific requests to provide better error handling
-    if (!req.body.username) {
-      res.status(400).json({error: 'Please provide a username.'});
+    if (!req.body.email) {
+      res.status(400).json({error: 'Please provide an email.'});
     } else if (!req.body.password) {
       res.status(400).json({error: 'Please provide a password.'});
 
@@ -22,15 +22,17 @@ function validateUserCredentials(req, res, next) {
 }
 
 function userAlreadyExists(req, res, next) {
-  let username = req.body.username;
+  let email = req.body.email;
 
   // Searches the database for the username that was passed in
-  Users.findUserBy({username})
+  Users.findUserBy({email})
     .then(response => {
       // If we get a response, we know that a user with that unique username already exists so return an error.
       // If no user is found, allow the endpoint to be accessed
       if (response) {
-        res.status(400).json({error: 'That username already exists.'});
+        res
+          .status(400)
+          .json({error: 'That email address has already been taken.'});
       } else {
         next();
       }
@@ -66,22 +68,23 @@ router.post(
 );
 
 router.post('/login', validateUserCredentials, (req, res) => {
-  let {username, password} = req.body;
+  let {email, password} = req.body;
 
-  Users.findUserBy({username})
+  console.log(email, password);
+  Users.findUserBy({email})
     .first()
     .then(user => {
       // Need to grab the password of the username that was used to login, and check if the hashed password and the password the user provided match
       // If the user matches, sets a session of the user object to allow access to restricted routes
       if (user && bcrypt.compareSync(password, user.password)) {
         // saves a session for the user credentials
-        req.session.user = user;
+        // req.session.user = user;
 
         // sets a header authorization token
         const token = signToken(user);
         res.set('authorization', token);
 
-        res.status(200).json({token, message: `Welcome ${user.username}`});
+        res.status(200).json({token, message: `Welcome ${user.email}`});
       } else {
         res.status(401).json({message: 'Invalid credentials were provided.'});
       }
@@ -89,7 +92,7 @@ router.post('/login', validateUserCredentials, (req, res) => {
     .catch(error => {
       console.log(error);
       res.status(500).json({
-        errorMessage: 'Unable to find the user by the username provided.',
+        errorMessage: 'Unable to find the user by the email provided.',
       });
     });
 });
@@ -114,7 +117,7 @@ router.get('/logout', (req, res) => {
 function signToken(user) {
   const payload = {
     user_id: user.id,
-    username: user.username,
+    email: user.email,
   };
 
   const secret = process.env.JWT_SECRET || 'secretkey';

@@ -22,7 +22,7 @@ function addUser(userData) {
 
 function findUserBy(filter) {
   return db('users')
-    .select('id', 'username', 'password')
+    .select('id', 'email', 'password')
     .where(filter)
     .first();
 }
