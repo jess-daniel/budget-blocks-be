@@ -123,7 +123,7 @@ function signToken(user) {
   const secret = process.env.JWT_SECRET || 'secretkey';
 
   const options = {
-    expiresIn: '1h',
+    expiresIn: '4h',
   };
 
   // returns the token so that it can be sent back to the client
