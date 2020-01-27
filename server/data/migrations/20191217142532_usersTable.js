@@ -13,6 +13,7 @@ exports.up = function(knex) {
       // Creates a reference table so that an access token can be mapped to a specific user_id
       // One user can have multiple access_tokens depending upon how many bank accts they sync
       .createTable('users_accessToken', tbl => {
+        tbl.increments();
         tbl
           .integer('user_id')
           .unsigned()
