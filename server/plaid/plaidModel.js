@@ -5,7 +5,7 @@ const data = require('./data.js');
 
 const add_A_Token = (token, Userid)=>{
 
-    return db('access')
+    return db('users_accessToken')
     .returning('id')
     .insert({access_token:token, user_id:Userid})
     .then(ids=>{
