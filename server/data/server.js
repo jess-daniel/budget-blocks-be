@@ -8,6 +8,7 @@ const graphqlHTTP = require('express-graphql');
 // user Routes
 const authRouter = require('../auth/auth-router');
 const userRouter = require('../users/users-router');
+const plaidRouter = require('../plaid/plaidRouter.js');
 
 // Server initialization
 const knex = require('./db-config');
@@ -28,6 +29,7 @@ server.use(
 
 server.use('/api/auth', authRouter);
 server.use('/api/users', userRouter);
+server.use('/plaid',plaidRouter);
 
 server.use('/', (req, res) => {
   res.send({message: 'API is up and running...'});
