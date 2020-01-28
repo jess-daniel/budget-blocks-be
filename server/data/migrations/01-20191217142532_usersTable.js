@@ -1,7 +1,6 @@
 exports.up = function(knex) {
   return (
-    knex.schema
-      .createTable("users", tbl => {
+    knex.schema.createTable("users", tbl => {
         tbl.increments();
         tbl
           .string("email")
@@ -14,6 +13,7 @@ exports.up = function(knex) {
       // One user can have multiple access_tokens depending upon how many bank accts they sync
       .createTable("users_accessToken", tbl => {
         tbl.increments();
+
         tbl
           .integer("user_id")
           .unsigned()
@@ -22,10 +22,15 @@ exports.up = function(knex) {
           .inTable("users")
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
+
         tbl.string("access_token");
       })
   );
 };
+
+
+
+
 
 exports.down = function(knex) {
   return knex.schema.dropTableIfExists("users");
