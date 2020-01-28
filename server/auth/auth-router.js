@@ -51,20 +51,23 @@ router.post(
     let user = req.body;
 
     // hashes the password prior to sending it over to the client
-    const hash = bcrypt.hashSync(user.password, 12);
-    user.password = hash;
+      bcrypt.hash(user.password,12, (err,hash)=>{
+       
+        if(err){
+          res.status(500).json({message:'something went wrong, we cant process the password right now'})
+        }else{
+          user.password=hash;
 
-    Users.addUser(user)
-      .then(response => {
-        // The response is set to return back the newly created user
-        res.status(201).json(response);
-      })
-      .catch(error => {
-        console.log(error);
-        res.status(500).json({error: 'Unable to create a new user.'});
-      });
-  },
-);
+          Users.addUser(user)
+          .then(id=>{
+            res.status(201).json({message:"success", id})
+          })
+          .catch(err=>{
+            res.status(500).json({message:"unable to create new user"})
+          })
+        }
+    })
+  });
 
 router.post('/login', validateUserCredentials, (req, res) => {
 
@@ -72,20 +75,21 @@ router.post('/login', validateUserCredentials, (req, res) => {
   // console.log(email, password);
   Users.login(credentials)
     .then(user=>{
-      bcrypt.compare(credentials.password, user.password,(err,response)=>{
-        if(err){
-          res.status(401).json({message:'Invalid credentials were provided'})
-        }else{
-          const token = signToken(user);
-          res.status(200).json({
-            token,
-            message:`Welcome ${user.email}!`
-          })
-        }
-      })
+        bcrypt.compare(credentials.password, user.password,(err,response)=>{
+          if(err){
+            res.status(401).json({message:'Invalid credentials were provided'})
+          }else{
+            const token = signToken(user);
+            res.status(200).json({
+              token,
+              message:`Welcome ${user.email}!`,
+              LinkedAccount:user.LinkedAccount
+            })
+          }
+        })
     })
     .catch(err=>{
-      console.log(err)
+      // console.log(err)
       res.status(500).json({message:"Unable to find the user by the email provided"})
     })
 });
