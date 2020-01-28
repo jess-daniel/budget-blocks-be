@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const plaid = require('plaid');
-const qs = require('./PlaidModel.js');
+const qs = require('./plaidModel.js');
 const data = require('./data.js');
 
 const router = express.Router();
