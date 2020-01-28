@@ -37,11 +37,11 @@
         "password": "Yeet"
     }
 
-**Returns the token, id, and BankAccountLink statue**
+**Returns the token, id, and BankAccountLink status**
 
     {
         "id": 1,
-        "token":      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Ikt5bGUiLCJpYXQiOjE1ODAyMzU0NzMsImV4cCI6MTU4MDI0OTg3M30.vOU1ZbHcLxOgCtD50Pu7JqHiudEc-0VYtDfbtXeqvlU",
+        "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Ikt5bGUiLCJpYXQiOjE1ODAyMzU0NzMsImV4cCI6MTU4MDI0OTg3M30.vOU1ZbHcLxOgCtD50Pu7JqHiudEc-0VYtDfbtXeqvlU",
         "message": "Welcome Kyle!",
         "LinkedAccount": false
     }
@@ -49,6 +49,8 @@
 ## (Plaid) **POST** /plaid/token_exchange
 
 **Expected request body**
+
+**The publicToken is what you get from the react-plaid-link**
 
     {
         "publicToken": "public-sandbox-b54b4ec6-877d-456f-a916-2c38542be274",
