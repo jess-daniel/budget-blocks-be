@@ -81,6 +81,7 @@ router.post('/login', validateUserCredentials, (req, res) => {
           }else{
             const token = signToken(user);
             res.status(200).json({
+              id:user.id,
               token,
               message:`Welcome ${user.email}!`,
               LinkedAccount:user.LinkedAccount
