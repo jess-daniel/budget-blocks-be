@@ -55,9 +55,21 @@ const link_user_categories = (Categoryid, Userid) => {
   });
 };
 
+//reserved for PLAID middleware
+const getAccessToken = (Userid)=>{
+
+  return db('db')
+  .select('access_token')
+  .from('users_accessToken')
+  .where({user_id:Userid})
+  .first()
+
+}
+
 module.exports = {
   add_A_Token,
   add_An_Item,
   insert_transactions,
-  link_user_categories
+  link_user_categories,
+  getAccessToken
 };
