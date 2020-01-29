@@ -4,6 +4,8 @@ const plaid = require('plaid');
 const qs = require('./plaidModel.js');
 const data = require('./data.js');
 
+const checkAccessToken = require("./getAccessToken-middleware.js");
+
 const router = express.Router();
 
 const client = new plaid.Client(
@@ -74,5 +76,13 @@ router.post('/token_exchange', accessTokenExists, async (req, res) => {
     console.log('access', err);
   }
 });
+
+router.post('/transactions',checkAccessToken, async (req,res)=>{
+ 
+  console.log("the request body", req.body)
+  res.end()
+
+
+})
 
 module.exports = router;
