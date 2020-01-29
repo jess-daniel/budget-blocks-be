@@ -17,7 +17,7 @@ const client = new plaid.Client(
 );
 
 // Checks if an access token exists for the user
-function accessTokenExists(req, res, next) {
+function publicTokenExists(req, res, next) {
   // Check if the body contains any information
   if (Object.keys(req.body).length === 0) {
     res.status(400).json({error: 'No information was passed into the body.'});
@@ -33,7 +33,7 @@ function accessTokenExists(req, res, next) {
   }
 }
 
-router.post('/token_exchange', accessTokenExists, async (req, res) => {
+router.post('/token_exchange', publicTokenExists, async (req, res) => {
   const {publicToken} = req.body;
   const {userid} = req.body;
 

@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
       if (error) {
         res.status(401).json({error: 'Invalid token.'});
       } else {
-        req.token = validToken;
+        req.body.token = validToken;
         next();
       }
     });
