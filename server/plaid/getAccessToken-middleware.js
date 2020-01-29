@@ -10,7 +10,7 @@ module.exports=(req, res, next)=>{
             req.body.access = access.access_token
             next();
         }else{
-            res.status(401).json({message:"No access_Token found for that user id provided"})
+            res.status(404).json({message:"No access_Token found for that user id provided"})
         }
     })
 

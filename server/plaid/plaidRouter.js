@@ -80,8 +80,18 @@ router.post('/token_exchange', accessTokenExists, async (req, res) => {
 router.post('/transactions',checkAccessToken, async (req,res)=>{
  
   console.log("the request body", req.body)
-  res.end()
 
+  const access = req.body.access
+  
+  try{
+
+    const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-20')
+    
+    res.status(200).json({transactions})
+  }catch(err){
+    console.log(err)
+    res.status(500).json({message:"error sending transactions"})
+  }
 
 })
 
