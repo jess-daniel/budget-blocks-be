@@ -64,3 +64,19 @@
         "ItemIdInserted": 1,
         "TransactionsInserted":[]
     }
+
+## (Plaid) **POST** /plaid/transactions
+
+**Expected body(could change in the fucture)**
+
+    {
+        "userid": 1
+    }
+
+*When we implement the restricitve middleware, thers a chance it'll change to a get request and we'll get the user id from the authorization header token*
+
+**Returns the list of transactions for that user**
+
+    {
+        "transactions":[array of transactions]
+    }
