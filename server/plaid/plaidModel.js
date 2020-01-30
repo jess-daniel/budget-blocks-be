@@ -64,17 +64,10 @@ const getAccessToken = Userid => {
     .first();
 };
 
-const returnUserCategories = userId => {
-  return db('db')
-    .from('user_category')
-    .where({user_id: userId});
-};
-
 module.exports = {
   add_A_Token,
   add_An_Item,
   insert_transactions,
   link_user_categories,
   getAccessToken,
-  returnUserCategories,
 };
