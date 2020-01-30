@@ -68,8 +68,8 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
     // );
 
     res.status(201).json({
-      AccessTokenInserted: Accessid,
-      ItemIdInserted: Itemid
+      accessCreated: access_token,
+      ItemCreated:item
       // TransactionsInserted: transactions,
     });
   } catch (err) {
