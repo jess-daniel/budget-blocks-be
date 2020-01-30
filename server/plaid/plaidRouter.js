@@ -4,7 +4,7 @@ const plaid = require('plaid');
 const qs = require('./plaidModel.js');
 const data = require('./data.js');
 
-const checkAccessToken = require("./getAccessToken-middleware.js");
+const checkAccessToken = require('./getAccessToken-middleware.js');
 
 const router = express.Router();
 
@@ -46,10 +46,25 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    const {transactions} = await client.getTransactions(
-      access_token,
-      '2019-01-01',
-      '2019-01-20',
+    //const {transactions} = await client.getTransactions(
+    //access_token,
+    // '2019-01-01',
+    //'2019-01-20',
+    // );
+
+    // Pull transactions for a date range
+    client.getTransactions(
+      accessToken,
+      '2018-01-01',
+      '2018-02-01',
+      {
+        count: 250,
+        offset: 0,
+      },
+      (err, result) => {
+        // Handle err
+        const transactions = result.transactions;
+      },
     );
 
     //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
@@ -77,22 +92,23 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
   }
 });
 
-router.post('/transactions',checkAccessToken, async (req,res)=>{
- 
-  console.log("the request body", req.body)
+router.post('/transactions', checkAccessToken, async (req, res) => {
+  console.log('the request body', req.body);
 
-  const access = req.body.access
-  
-  try{
+  const access = req.body.access;
 
-    const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-20')
-    
-    res.status(200).json({transactions})
-  }catch(err){
-    console.log(err)
-    res.status(500).json({message:"error sending transactions"})
+  try {
+    const {transactions} = await client.getTransactions(
+      access,
+      '2019-01-01',
+      '2019-01-20',
+    );
+
+    res.status(200).json({transactions});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({message: 'error sending transactions'});
   }
-
-})
+});
 
 module.exports = router;

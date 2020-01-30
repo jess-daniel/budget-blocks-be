@@ -42,10 +42,11 @@ To get the server running locally:
 
 #### User Routes
 
-| Method | Endpoint             | Access Control | Description                                  |
-| ------ | -------------------- | -------------- | -------------------------------------------- |
-| GET    | `/api/auth/login`    | all users      | Email & password required. Returns JWT token |
-| GET    | `/api/auth/register` | all users      | Email & password required.                   |
+| Method | Endpoint                        | Access Control | Description                                  |
+| ------ | ------------------------------- | -------------- | -------------------------------------------- |
+| GET    | `/api/auth/login`               | all users      | Email & password required. Returns JWT token |
+| GET    | `/api/auth/register`            | all users      | Email & password required.                   |
+| GET    | `/api/users/categories/:userId` | all users      | Returns a list of user categories.           |
 
 # Data Model
 
@@ -121,9 +122,10 @@ create a .env file that includes the following:
 🚫 These are just examples, replace them with the specifics for your app
 
 _ STAGING_DB - optional development db for using functionality not available in SQLite
-_ NODE*ENV - set to "development" until ready for "production"
-* JWT*SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-_=+)') for i in range(50)])
-_ SENDGRID_API_KEY - this is generated in your Sendgrid account \* stripe_secret - this is generated in the Stripe dashboard
+_ NODE\*ENV - set to "development" until ready for "production"
+
+- JWT*SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-_=+)') for i in range(50)])
+  _ SENDGRID_API_KEY - this is generated in your Sendgrid account \* stripe_secret - this is generated in the Stripe dashboard
 
 ## Contributing
 
