@@ -6,6 +6,7 @@ module.exports = {
   findUserBy,
   login,
   checkAccessToken,
+  returnUserCategories,
 };
 
 function allUsers() {
@@ -54,4 +55,13 @@ function checkAccessToken(UserID) {
     .from('users_accessToken')
     .where({user_id: UserID})
     .first();
+}
+
+// Returns the categories based upon the userId.
+function returnUserCategories(userId) {
+  return db('user_cateogiry')
+    .select('category.id as id', 'category.name as category')
+    .from('user_category')
+    .join('category', 'category.id', 'user_category.category_id')
+    .where({user_id: userId});
 }

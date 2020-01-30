@@ -111,4 +111,24 @@ router.post('/transactions', checkAccessToken, async (req, res) => {
   }
 });
 
+router.get(`categories/:userId`, (req, res) => {
+  console.log(req);
+  qs.returnUserCategories(req.params.userId)
+    .then(categories => {
+      if (categories) {
+        res.status(200).json(categories);
+      } else {
+        res
+          .status(404)
+          .json({message: 'The specified user ID does not exist.'});
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res
+        .status(500)
+        .json({message: 'Unable to return categories for the specified user.'});
+    });
+});
+
 module.exports = router;
