@@ -78,7 +78,7 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 });
 
 router.post('/webhook', (req,res)=>{
-  const body = req.body;
+  const body = req.body.webhook_type;
   console.log("The webhook",body)
   res.end()
 })
