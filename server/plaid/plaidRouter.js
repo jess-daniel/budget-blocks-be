@@ -46,36 +46,42 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    const {transactions} = await client.getTransactions(
-      access_token,
-      '2019-01-01',
-      '2019-01-20',
-    );
+    // const {transactions} = await client.getTransactions(
+    //   access_token,
+    //   '2019-01-01',
+    //   '2019-01-20',
+    // );
 
-    //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-    const done = Promise.all(
-      transactions.map(async trans => {
-        const contents = await qs.insert_transactions(trans);
-        return trans;
-      }),
-    );
+    // //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
+    // const done = Promise.all(
+    //   transactions.map(async trans => {
+    //     const contents = await qs.insert_transactions(trans);
+    //     return trans;
+    //   }),
+    // );
 
-    const doneData = Promise.all(
-      data.map(async d => {
-        const contents = await qs.link_user_categories(d.id, userid);
-        return d;
-      }),
-    );
+    // const doneData = Promise.all(
+    //   data.map(async d => {
+    //     const contents = await qs.link_user_categories(d.id, userid);
+    //     return d;
+    //   }),
+    // );
 
     res.status(201).json({
       AccessTokenInserted: Accessid,
-      ItemIdInserted: Itemid,
-      TransactionsInserted: transactions,
+      ItemIdInserted: Itemid
+      // TransactionsInserted: transactions,
     });
   } catch (err) {
     console.log('access', err);
   }
 });
+
+router.post('/Webhook', (req,res)=>{
+  const body = req.body;
+  console.log(body)
+  res.end()
+})
 
 router.post('/transactions',checkAccessToken, async (req,res)=>{
  
