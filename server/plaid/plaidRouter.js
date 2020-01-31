@@ -8,6 +8,8 @@ const checkAccessToken = require("./getAccessToken-middleware.js");
 
 const router = express.Router();
 
+var done = undefined;
+
 const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
   process.env.PLAID_SECRET,
@@ -46,30 +48,30 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    // const {transactions} = await client.getTransactions(
-    //   access_token,
-    //   '2019-01-01',
-    //   '2019-01-20',
-    // );
+    const {transactions} = await client.getTransactions(
+      access_token,
+      '2019-01-01',
+      '2019-01-20',
+    );
 
-    // //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-    // const done = Promise.all(
-    //   transactions.map(async trans => {
-    //     const contents = await qs.insert_transactions(trans);
-    //     return trans;
-    //   }),
-    // );
+    //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
+    const done = Promise.all(
+      transactions.map(async trans => {
+        const contents = await qs.insert_transactions(trans);
+        return trans;
+      }),
+    );
 
-    // const doneData = Promise.all(
-    //   data.map(async d => {
-    //     const contents = await qs.link_user_categories(d.id, userid);
-    //     return d;
-    //   }),
-    // );
+    const doneData = Promise.all(
+      data.map(async d => {
+        const contents = await qs.link_user_categories(d.id, userid);
+        return d;
+      }),
+    );
 
     res.status(201).json({
-      accessCreated: access_token,
-      ItemCreated:item
+      accessCreated: Accessid,
+      ItemCreated:Itemid
       // TransactionsInserted: transactions,
     });
   } catch (err) {
@@ -77,9 +79,39 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
   }
 });
 
-router.post('/webhook', (req,res)=>{
+//This is comming from PLAID, res.send or any variation will just be sending to plaid
+router.post('/webhook', async (req,res)=>{
   const body = req.body;
   console.log("THE WEBHOOK BRUH",body)
+
+  
+
+  //basically if webhook_code = 'Historical_UPDATE'
+  //then pull the transactions for the past year and insert them into the database
+
+  if(body.webhook_code==="HISTORICAL TRANSACTIONS"){
+    const A_token = await  qs.GetAccessTokenThatsConnectedTo(body.item_id)
+    
+    const {transactions} = await client.getTransactions(A_token)
+
+        const done = Promise.all(
+        transactions.map(async trans => {
+        const contents = await qs.insert_transactions(trans);
+        return trans;
+      }),
+    );
+
+  }
+
+  //if webhook_code = 'Default_update'
+  //then insirt the new transaction into the db
+
+  //Everything that happens in here is between plaid and our server, the database can be somthing to consider 
+  //in terms of letting node know the transactions are ready
+
+
+  //basically when this is done, i want the front end to be sent those transactions or be alerted to get them
+  //but since PLAID is the sender of this data. running res.send on this wouldn't go to our user
   res.end()
 })
 
@@ -91,7 +123,7 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   
   try{
 
-    const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-20')
+    const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-30')
     
     res.status(200).json({transactions})
   }catch(err){
