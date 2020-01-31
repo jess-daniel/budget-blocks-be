@@ -8,7 +8,15 @@ const checkAccessToken = require("./getAccessToken-middleware.js");
 
 const router = express.Router();
 
-var done = undefined;
+function done(finished){
+  return new Promise(function(resolve,reject){
+    if(finished == "done"){
+      resolve(console.log("the promise resolve"))
+    }else{
+      reject(console.log('the promise reject'))
+    }
+  })
+}
 
 const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
@@ -48,26 +56,26 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    const {transactions} = await client.getTransactions(
-      access_token,
-      '2019-01-01',
-      '2019-01-20',
-    );
+    // const {transactions} = await client.getTransactions(
+    //   access_token,
+    //   '2019-01-01',
+    //   '2019-01-20',
+    // );
 
-    //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-    const done = Promise.all(
-      transactions.map(async trans => {
-        const contents = await qs.insert_transactions(trans);
-        return trans;
-      }),
-    );
+    // //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
+    // const done = Promise.all(
+    //   transactions.map(async trans => {
+    //     const contents = await qs.insert_transactions(trans);
+    //     return trans;
+    //   }),
+    // );
 
-    const doneData = Promise.all(
-      data.map(async d => {
-        const contents = await qs.link_user_categories(d.id, userid);
-        return d;
-      }),
-    );
+    // const doneData = Promise.all(
+    //   data.map(async d => {
+    //     const contents = await qs.link_user_categories(d.id, userid);
+    //     return d;
+    //   }),
+    // );
 
     res.status(201).json({
       accessCreated: Accessid,
@@ -85,23 +93,11 @@ router.post('/webhook', async (req,res)=>{
   console.log("THE WEBHOOK BRUH",body)
 
   
+  const finish ="done"
 
-  //basically if webhook_code = 'Historical_UPDATE'
-  //then pull the transactions for the past year and insert them into the database
+  const yeet = await done(finish)
 
-  if(body.webhook_code==="HISTORICAL TRANSACTIONS"){
-    const A_token = await  qs.GetAccessTokenThatsConnectedTo(body.item_id)
-    
-    const {transactions} = await client.getTransactions(A_token)
-
-        const done = Promise.all(
-        transactions.map(async trans => {
-        const contents = await qs.insert_transactions(trans);
-        return trans;
-      }),
-    );
-
-  }
+  console.log(yeet)
 
   //if webhook_code = 'Default_update'
   //then insirt the new transaction into the db
