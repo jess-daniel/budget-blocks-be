@@ -97,7 +97,7 @@ router.post('/webhook', async (req,res)=>{
 
   const yeet = await done(finish)
 
-  console.log(yeet)
+  console.log("PROMISE",yeet)
 
   //if webhook_code = 'Default_update'
   //then insirt the new transaction into the db
