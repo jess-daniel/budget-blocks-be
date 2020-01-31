@@ -96,7 +96,7 @@ router.post('/webhook', async (req,res)=>{
   const body = req.body;
   console.log("THE WEBHOOK BRUH",body)
 
-  if(body.webhook_code==="HISTORICAL TRANSACTIONS"){
+  if(body.webhook_code==="HISTORICAL_UPDATE"){
 
     const finish ="done"
   
