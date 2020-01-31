@@ -11,6 +11,9 @@ const router = express.Router();
 function done(finished){
   return new Promise(function(resolve,reject){
     if(finished == "done"){
+      setTimeout(function(){
+        console.log("waiting...")
+      },5000)
       resolve(21)
     }else{
       reject(00)
@@ -93,12 +96,14 @@ router.post('/webhook', async (req,res)=>{
   const body = req.body;
   console.log("THE WEBHOOK BRUH",body)
 
+  if(body.webhook_code==="HISTORICAL TRANSACTIONS"){
+
+    const finish ="done"
   
-  const finish ="done"
-
-  const yeet = await done(finish)
-
-  console.log("PROMISE",yeet)
+    const yeet = await done(finish)
+  
+    console.log("PROMISE",yeet)
+  }
 
   //if webhook_code = 'Default_update'
   //then insirt the new transaction into the db
@@ -116,17 +121,19 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
  
   console.log("the request body", req.body)
 
-  const access = req.body.access
-  
-  try{
 
-    const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-30')
+
+  // const access = req.body.access
+  
+  // try{
+
+  //   const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-30')
     
-    res.status(200).json({transactions})
-  }catch(err){
-    console.log(err)
-    res.status(500).json({message:"error sending transactions"})
-  }
+  //   res.status(200).json({transactions})
+  // }catch(err){
+  //   console.log(err)
+  //   res.status(500).json({message:"error sending transactions"})
+  // }
 
 })
 
