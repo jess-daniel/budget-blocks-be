@@ -43,6 +43,7 @@ function publicTokenExists(req, res, next) {
   }
 }
 
+
 router.post('/token_exchange', publicTokenExists, async (req, res) => {
   const {publicToken} = req.body;
   const {userid} = req.body;
