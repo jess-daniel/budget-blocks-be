@@ -11,9 +11,9 @@ const router = express.Router();
 function done(finished){
   return new Promise(function(resolve,reject){
     if(finished == "done"){
-      resolve(console.log("the promise resolve"))
+      resolve(21)
     }else{
-      reject(console.log('the promise reject'))
+      reject(00)
     }
   })
 }
