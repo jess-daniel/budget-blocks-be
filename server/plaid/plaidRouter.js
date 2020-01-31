@@ -13,8 +13,8 @@ function done(finished){
     if(finished == "done"){
       setTimeout(function(){
         console.log("waiting...")
+        resolve(21)
       },5000)
-      resolve(21)
     }else{
       reject(00)
     }
