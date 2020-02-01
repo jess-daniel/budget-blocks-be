@@ -100,7 +100,7 @@ router.post('/webhook', async (req,res)=>{
         }),
       );
   
-      const InsertionEnd = await qs.WEB_track_insertion(pgItemId, 'done')
+      const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
   
       console.log('THE INSERTION ENDING', InsertionEnd)
     }catch(err){
