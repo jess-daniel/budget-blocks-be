@@ -93,6 +93,15 @@ const WEB_get_accessToken = (plaidItemId)=>{
   .first()
 }
 
+const WEB_insert_transactions = async(list)=>{
+
+  return Promise.all(list.map(async(trans)=>{
+    const yeet = await insert_transactions(trans)
+    return{...trans, yeet:'done'}
+  }))
+
+}
+
 
 
 
@@ -104,5 +113,6 @@ module.exports = {
   getAccessToken,
   WEB_get_pg_itemid,
   WEB_track_insertion,
-  WEB_get_accessToken
+  WEB_get_accessToken,
+  WEB_insert_transactions
 };

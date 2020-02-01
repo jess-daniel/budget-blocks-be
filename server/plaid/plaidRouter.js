@@ -93,12 +93,15 @@ router.post('/webhook', async (req,res)=>{
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
   
        //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-      const done = Promise.all(
-        transactions.map(async trans => {
-          const contents = await qs.insert_transactions(trans);
-          return trans;
-        }),
-      );
+      // const done = await Promise.all(
+      //   transactions.map(async trans => {
+      //     const contents = await qs.insert_transactions(trans);
+      //     return trans;
+      //   }),
+      // );
+
+     const done = await qs.WEB_insert_transactions(transactions)
+     console.log("DONE WITH TRANSACTIONS",done)
   
       const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
   
