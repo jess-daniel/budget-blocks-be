@@ -102,6 +102,19 @@ const WEB_insert_transactions = async(list)=>{
 
 }
 
+const INFO_get_status = (Userid)=>{
+
+  return db('db')
+  .select('ii.id, ii.status')
+  .from('users')
+  .join('item as i', 'users.id', 'i.user_id' )
+  .join('item_insertions as ii', 'i.id', 'ii.pg_item_id')
+  .where('userd.id', Userid)
+  .orderBy('ii.id', 'desc')
+  .first()
+
+}
+
 
 
 
@@ -114,5 +127,6 @@ module.exports = {
   WEB_get_pg_itemid,
   WEB_track_insertion,
   WEB_get_accessToken,
-  WEB_insert_transactions
+  WEB_insert_transactions,
+  INFO_get_status
 };

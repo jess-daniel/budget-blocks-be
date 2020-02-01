@@ -101,9 +101,8 @@ router.post('/webhook', async (req,res)=>{
       // );
 
      const done = await qs.WEB_insert_transactions(transactions)
-     console.log("DONE WITH TRANSACTIONS",done)
   
-      const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
+    const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
   
       console.log('THE INSERTION ENDING', InsertionEnd)
     }catch(err){
@@ -125,22 +124,21 @@ router.post('/webhook', async (req,res)=>{
 })
 
 router.post('/transactions',checkAccessToken, async (req,res)=>{
+
+  const body = req.body;
  
   console.log("the request body", req.body)
 
+  //get the last thing inserted into the insertion table
 
+  try{
+    const status = qs.INFO_get_status(body.userid)
 
-  // const access = req.body.access
-  
-  // try{
+    console.log(status)
 
-  //   const {transactions} = await client.getTransactions(access,'2019-01-01','2019-01-30')
-    
-  //   res.status(200).json({transactions})
-  // }catch(err){
-  //   console.log(err)
-  //   res.status(500).json({message:"error sending transactions"})
-  // }
+  }catch(err){
+    console.log(err)
+  }
 
 })
 
