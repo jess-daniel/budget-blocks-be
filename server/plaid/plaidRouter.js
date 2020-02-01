@@ -78,14 +78,17 @@ router.post('/webhook', async (req,res)=>{
 
       const item_id = body.item_id;
   
-      const pgItemId = await qs.get_pg_itemid(item_id)
-      console.log('THE PGITEMID', pgItemId.id)
+      const pgItemId = await qs.WEB_get_pg_itemid(item_id)
+      
   
-      const InsertionStart = await qs.track_insertion(pgItemId.id, 'inserting')
+      const InsertionStart = await qs.WEB_track_insertion(pgItemId.id, 'inserting')
   
       console.log('THE INSERTION BEGINNING', InsertionStart)
   
       //code up here to get set variables to stings of todays date, and another dat 45 days back
+
+      const access_token = await qs.WEB_get_accessToken(item_id)
+      console.log('THE ACCESS TOKEN', access_token)
   
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
   

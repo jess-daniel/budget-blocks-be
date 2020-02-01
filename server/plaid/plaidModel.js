@@ -65,24 +65,34 @@ const getAccessToken = (Userid)=>{
 
 }
 
-const get_pg_itemid = (item_id)=>{
+const WEB_get_pg_itemid = (plaidItemId)=>{
 
   return db('db')
   .select('id')
   .from('item')
-  .where('item_id', item_id)
+  .where('item_id', plaidItemId)
   .first()
 }
 
-const track_insertion=(pgItemId,status)=>{
+const WEB_track_insertion=(pgItemId,status)=>{
   return db('item_insertions')
   .returning('id')
   .insert({pg_item_id:pgItemId, status:status})
   .then(ids=>{
     return ids[0]
   })
-
 }
+
+const WEB_get_accessToken = (plaidItemId)=>{
+  return db('db')
+  .select("at.access_token")
+  .from('item')
+  .join('users as u','item.user_id', 'u.id')
+  .join('users_accessToken as at', 'u.id', 'at.user_id' )
+  .where("item.item_id", plaidItemId)
+}
+
+
 
 
 module.exports = {
@@ -91,6 +101,7 @@ module.exports = {
   insert_transactions,
   link_user_categories,
   getAccessToken,
-  get_pg_itemid,
-  track_insertion
+  WEB_get_pg_itemid,
+  WEB_track_insertion,
+  WEB_get_accessToken
 };
