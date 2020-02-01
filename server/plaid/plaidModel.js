@@ -90,6 +90,7 @@ const WEB_get_accessToken = (plaidItemId)=>{
   .join('users as u','item.user_id', 'u.id')
   .join('users_accessToken as at', 'u.id', 'at.user_id' )
   .where("item.item_id", plaidItemId)
+  .first()
 }
 
 

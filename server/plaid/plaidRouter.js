@@ -87,7 +87,7 @@ router.post('/webhook', async (req,res)=>{
   
       //code up here to get set variables to stings of todays date, and another dat 45 days back
 
-      const access_token = await qs.WEB_get_accessToken(item_id)
+      const {access_token} = await qs.WEB_get_accessToken(item_id)
       console.log('THE ACCESS TOKEN', access_token)
   
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
