@@ -49,9 +49,8 @@ const insert_transactions = trans => {
 };
 
 const link_user_categories = (Categoryid, Userid) => {
-  return db("user_category").insert({
-    category_id: Categoryid,
-    user_id: Userid
+  return db("user_category")
+  .insert({category_id: Categoryid,user_id: Userid
   });
 };
 
@@ -66,10 +65,32 @@ const getAccessToken = (Userid)=>{
 
 }
 
+const get_pg_itemid = (item_id)=>{
+
+  return ('db')
+  .select('id')
+  .from('item')
+  .where('item_id', item_id)
+  .first()
+}
+
+const track_insertion=(pgItemId,status)=>{
+  return('item_insertions')
+  .returning('id')
+  .insert({pg_item_id:pgItemId, status:status})
+  .then(ids=>{
+    return ids[0]
+  })
+
+}
+
+
 module.exports = {
   add_A_Token,
   add_An_Item,
   insert_transactions,
   link_user_categories,
-  getAccessToken
+  getAccessToken,
+  get_pg_itemid,
+  track_insertion
 };

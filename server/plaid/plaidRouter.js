@@ -8,18 +8,6 @@ const checkAccessToken = require("./getAccessToken-middleware.js");
 
 const router = express.Router();
 
-function done(finished){
-  return new Promise(function(resolve,reject){
-    if(finished == "done"){
-      setTimeout(function(){
-        console.log("waiting...")
-        resolve(21)
-      },5000)
-    }else{
-      reject(00)
-    }
-  })
-}
 
 const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
@@ -60,31 +48,19 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    // const {transactions} = await client.getTransactions(
-    //   access_token,
-    //   '2019-01-01',
-    //   '2019-01-20',
-    // );
-
-    // //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-    // const done = Promise.all(
-    //   transactions.map(async trans => {
-    //     const contents = await qs.insert_transactions(trans);
-    //     return trans;
-    //   }),
-    // );
-
-    // const doneData = Promise.all(
-    //   data.map(async d => {
-    //     const contents = await qs.link_user_categories(d.id, userid);
-    //     return d;
-    //   }),
-    // );
+  
+    //same thing, it just needs to insert into the user_category linking table the default categories
+    const doneData = Promise.all(
+      data.map(async d => {
+        const contents = await qs.link_user_categories(d.id, userid);
+        return d;
+      }),
+    );
 
     res.status(201).json({
       accessCreated: Accessid,
       ItemCreated:Itemid
-      // TransactionsInserted: transactions,
+      
     });
   } catch (err) {
     console.log('access', err);
@@ -94,15 +70,34 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 //This is comming from PLAID, res.send or any variation will just be sending to plaid
 router.post('/webhook', async (req,res)=>{
   const body = req.body;
-  console.log("THE WEBHOOK BRUH",body)
-
+  
   if(body.webhook_code==="HISTORICAL_UPDATE"){
+    console.log("THE WEBHOOK BRUH",body)
 
-    const finish ="done"
-  
-    const yeet = await done(finish)
-  
-    console.log("PROMISE",yeet)
+    const item_id = body.item_id;
+
+    const pgItemId = await qs.get_pg_itemid(item_id);
+
+    const InsertionStart = await qs.track_insertion(pgItemId, 'inserting')
+
+    console.log('THE INSERTION BEGINNING', InsertionStart)
+
+    //code up here to get set variables to stings of todays date, and another dat 45 days back
+
+    const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
+
+     //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
+    const done = Promise.all(
+      transactions.map(async trans => {
+        const contents = await qs.insert_transactions(trans);
+        return trans;
+      }),
+    );
+
+    const InsertionEnd = await qs.track_insertion(pgItemId, 'done')
+
+    console.log('THE INSERTION ENDING', InsertionEnd)
+      
   }
 
   //if webhook_code = 'Default_update'
