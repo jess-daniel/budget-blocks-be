@@ -67,7 +67,7 @@ const getAccessToken = (Userid)=>{
 
 const get_pg_itemid = (item_id)=>{
 
-  return ('db')
+  return db('db')
   .select('id')
   .from('item')
   .where('item_id', item_id)
@@ -75,7 +75,7 @@ const get_pg_itemid = (item_id)=>{
 }
 
 const track_insertion=(pgItemId,status)=>{
-  return('item_insertions')
+  return db('item_insertions')
   .returning('id')
   .insert({pg_item_id:pgItemId, status:status})
   .then(ids=>{

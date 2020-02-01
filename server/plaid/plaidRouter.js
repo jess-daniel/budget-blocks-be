@@ -74,30 +74,35 @@ router.post('/webhook', async (req,res)=>{
   if(body.webhook_code==="HISTORICAL_UPDATE"){
     console.log("THE WEBHOOK BRUH",body)
 
-    const item_id = body.item_id;
+    try{
 
-    const pgItemId = await qs.get_pg_itemid(item_id);
+      const item_id = body.item_id;
+  
+      const pgItemId = await qs.get_pg_itemid(item_id);
+  
+      const InsertionStart = await qs.track_insertion(pgItemId, 'inserting')
+  
+      console.log('THE INSERTION BEGINNING', InsertionStart)
+  
+      //code up here to get set variables to stings of todays date, and another dat 45 days back
+  
+      const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
+  
+       //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
+      const done = Promise.all(
+        transactions.map(async trans => {
+          const contents = await qs.insert_transactions(trans);
+          return trans;
+        }),
+      );
+  
+      const InsertionEnd = await qs.track_insertion(pgItemId, 'done')
+  
+      console.log('THE INSERTION ENDING', InsertionEnd)
+    }catch(err){
+      console.log('ERROR', err)
+    }
 
-    const InsertionStart = await qs.track_insertion(pgItemId, 'inserting')
-
-    console.log('THE INSERTION BEGINNING', InsertionStart)
-
-    //code up here to get set variables to stings of todays date, and another dat 45 days back
-
-    const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
-
-     //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-    const done = Promise.all(
-      transactions.map(async trans => {
-        const contents = await qs.insert_transactions(trans);
-        return trans;
-      }),
-    );
-
-    const InsertionEnd = await qs.track_insertion(pgItemId, 'done')
-
-    console.log('THE INSERTION ENDING', InsertionEnd)
-      
   }
 
   //if webhook_code = 'Default_update'
