@@ -78,7 +78,8 @@ router.post('/webhook', async (req,res)=>{
 
       const item_id = body.item_id;
   
-      const pgItemId = await qs.get_pg_itemid(item_id);
+      const pgItemId = await qs.get_pg_itemid(item_id)
+      console.log('THE PGITEMID', pgItemId)
   
       const InsertionStart = await qs.track_insertion(pgItemId, 'inserting')
   
