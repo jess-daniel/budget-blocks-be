@@ -127,7 +127,7 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   try{
     const {status} = await qs.INFO_get_status(body.userid)
 
-    console.log(status)
+    console.log("THE STATUS i'M LOOKING FOR",status)
 
     // if(!status){
     //   res.status(330).json({message:"insertion process hasn't started"})
@@ -143,6 +143,8 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
     //   res.status(300).json({message:"we are inserting your data"})
 
     // }
+
+    res.end()
 
   }catch(err){
     console.log(err)
