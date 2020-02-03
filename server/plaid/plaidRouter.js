@@ -84,7 +84,7 @@ router.post('/webhook', async (req,res)=>{
   
       const pgItemId = await qs.WEB_get_pg_itemid(item_id)
 
-      const userID = await qs.WEB_get_userID(item_id)
+      const {userID} = await qs.WEB_get_userID(item_id)
 
       console.log('THE USERID', userID)
   

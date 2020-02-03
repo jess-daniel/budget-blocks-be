@@ -80,6 +80,7 @@ const WEB_get_userID = (plaidItemId)=>{
   .from('item')
   .join('users', 'item.user_id', 'users.id')
   .where('item.item_id',plaidItemId)
+  .first()
 }
 
 const WEB_track_insertion=(pgItemId,status)=>{
