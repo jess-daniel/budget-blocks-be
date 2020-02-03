@@ -138,11 +138,11 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
 
       const categories = await qs.INFO_get_categories(body.userid)
 
-      console.log(categories)
+      
+      
+          res.status(200).json({categories})
 
     }
-
-    res.end()
 
   }catch(err){
     console.log(err)
