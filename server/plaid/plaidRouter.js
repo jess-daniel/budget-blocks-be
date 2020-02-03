@@ -100,7 +100,7 @@ router.post('/webhook', async (req,res)=>{
 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
   
-    const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
+     const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
   
       console.log('THE INSERTION ENDING', InsertionEnd)
     }catch(err){
@@ -109,15 +109,6 @@ router.post('/webhook', async (req,res)=>{
 
   }
 
-  //if webhook_code = 'Default_update'
-  //then insirt the new transaction into the db
-
-  //Everything that happens in here is between plaid and our server, the database can be somthing to consider 
-  //in terms of letting node know the transactions are ready
-
-
-  //basically when this is done, i want the front end to be sent those transactions or be alerted to get them
-  //but since PLAID is the sender of this data. running res.send on this wouldn't go to our user
   res.end()
 })
 
@@ -132,16 +123,10 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   try{
     const {status} = await qs.INFO_get_status(body.userid)
 
-    console.log(status)
-
     if(status ==="done"){
 
       const categories = await qs.INFO_get_categories(body.userid)
-
-      
-      
-          res.status(200).json({categories})
-
+      res.status(200).json({categories})
     }
 
   }catch(err){
