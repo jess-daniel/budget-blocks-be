@@ -127,22 +127,22 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   try{
     const status = await qs.INFO_get_status(body.userid)
 
-    console.log("THE STATUS i'M LOOKING FOR",status)
 
-    // if(!status){
-    //   res.status(330).json({message:"insertion process hasn't started"})
-    // }
+    //I understand its redundant to have status.status, but just keep it. This error handling depends on it
+    if(!status){
+      res.status(330).json({message:"insertion process hasn't started"})
+    }
 
-    // if(status ==="done"){
+    if(status.status ==="done"){
 
-    //   const categories = await qs.INFO_get_categories(body.userid)
-    //   res.status(200).json({categories})
+      const categories = await qs.INFO_get_categories(body.userid)
+      res.status(200).json({categories})
 
-    // }else if(status ==="inserting"){
+    }else if(status.status ==="inserting"){
 
-    //   res.status(300).json({message:"we are inserting your data"})
+      res.status(300).json({message:"we are inserting your data"})
 
-    // }
+    }
 
     res.end()
 
