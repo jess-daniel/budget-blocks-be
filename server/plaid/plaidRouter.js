@@ -127,20 +127,22 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   try{
     const {status} = await qs.INFO_get_status(body.userid)
 
-    if(!status){
-      res.status(330).json({message:"insertion process hasn't started"})
-    }
+    console.log(status)
 
-    if(status ==="done"){
+    // if(!status){
+    //   res.status(330).json({message:"insertion process hasn't started"})
+    // }
 
-      const categories = await qs.INFO_get_categories(body.userid)
-      res.status(200).json({categories})
+    // if(status ==="done"){
 
-    }else if(status ==="inserting"){
+    //   const categories = await qs.INFO_get_categories(body.userid)
+    //   res.status(200).json({categories})
 
-      res.status(300).json({message:"we are inserting your data"})
+    // }else if(status ==="inserting"){
 
-    }
+    //   res.status(300).json({message:"we are inserting your data"})
+
+    // }
 
   }catch(err){
     console.log(err)
