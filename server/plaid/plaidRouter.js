@@ -4,9 +4,10 @@ const plaid = require('plaid');
 const qs = require('./plaidModel.js');
 const data = require('./data.js');
 
-const checkAccessToken = require('./getAccessToken-middleware.js');
+const checkAccessToken = require("./getAccessToken-middleware.js");
 
 const router = express.Router();
+
 
 const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
@@ -33,6 +34,7 @@ function publicTokenExists(req, res, next) {
   }
 }
 
+
 router.post('/token_exchange', publicTokenExists, async (req, res) => {
   const {publicToken} = req.body;
   const {userid} = req.body;
@@ -46,35 +48,8 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    //const {transactions} = await client.getTransactions(
-    //access_token,
-    // '2019-01-01',
-    //'2019-01-20',
-    // );
-
-    // Pull transactions for a date range
-    client.getTransactions(
-      accessToken,
-      '2018-01-01',
-      '2018-02-01',
-      {
-        count: 250,
-        offset: 0,
-      },
-      (err, result) => {
-        // Handle err
-        const transactions = result.transactions;
-      },
-    );
-
-    //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-    const done = Promise.all(
-      transactions.map(async trans => {
-        const contents = await qs.insert_transactions(trans);
-        return trans;
-      }),
-    );
-
+  
+    //same thing, it just needs to insert into the user_category linking table the default categories
     const doneData = Promise.all(
       data.map(async d => {
         const contents = await qs.link_user_categories(d.id, userid);
@@ -83,32 +58,98 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
     );
 
     res.status(201).json({
-      AccessTokenInserted: Accessid,
-      ItemIdInserted: Itemid,
-      TransactionsInserted: transactions,
+      accessCreated: Accessid,
+      ItemCreated:Itemid
+      
     });
   } catch (err) {
     console.log('access', err);
   }
 });
 
-router.post('/transactions', checkAccessToken, async (req, res) => {
-  console.log('the request body', req.body);
+//This is comming from PLAID, res.send or any variation will just be sending to plaid
+router.post('/webhook', async (req,res)=>{
+  const body = req.body;
 
-  const access = req.body.access;
+  // if(body.webhook_code ==="INITIAL_UPDATE"){
+  //   console.log('THIS IS THE INITAL 30 DAY PULL',body)
+  // }
+  
+  if(body.webhook_code==="HISTORICAL_UPDATE"){
+    console.log("THE WEBHOOK BRUH",body)
 
-  try {
-    const {transactions} = await client.getTransactions(
-      access,
-      '2019-01-01',
-      '2019-01-20',
-    );
+    try{
 
-    res.status(200).json({transactions});
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({message: 'error sending transactions'});
+      const item_id = body.item_id;
+  
+      const pgItemId = await qs.WEB_get_pg_itemid(item_id)
+
+      const userID = await qs.WEB_get_userID(item_id)
+  
+      const InsertionStart = await qs.WEB_track_insertion(pgItemId.id, 'inserting')
+  
+      console.log('THE INSERTION BEGINNING', InsertionStart)
+  
+      //code up here to get set variables to stings of todays date, and another dat 30-45 days back
+
+      const {access_token} = await qs.WEB_get_accessToken(item_id)
+      
+  
+      const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
+  
+
+     const done = await qs.WEB_insert_transactions(transactions, userID.id)
+
+     if(done){ 
+       const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
+
+       console.log('THE INSERTION ENDING', InsertionEnd)
+     }
+  
+  
+    }catch(err){
+      console.log('ERROR', err)
+    }
+
   }
-});
+
+  res.end()
+})
+
+router.post('/transactions',checkAccessToken, async (req,res)=>{
+
+  const body = req.body;
+ 
+  
+
+  try{
+    const status = await qs.INFO_get_status(body.userid)
+
+
+    //I understand its redundant to have status.status, but just keep it. This error handling depends on it
+    if(!status){
+      res.status(330).json({message:"insertion process hasn't started"})
+    }
+
+    if(status.status ==="done"){
+
+      const categories = await qs.INFO_get_categories(body.userid)
+      const balance = await client.getBalance(body.access)
+      const accounts = balance.accounts
+      res.status(200).json({categories,accounts})
+
+    }else if(status.status ==="inserting"){
+
+      res.status(300).json({message:"we are inserting your data"})
+
+    }
+
+    res.end()
+
+  }catch(err){
+    console.log('THE ERROR IM LOOKING FOR',err)
+  }
+
+})
 
 module.exports = router;
