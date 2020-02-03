@@ -133,6 +133,14 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
 
     console.log(status)
 
+    if(status ==="done"){
+
+      const categories = await qs.INFO_get_categories(body.userid)
+
+      console.log(categories)
+
+    }
+
   }catch(err){
     console.log(err)
   }

@@ -114,6 +114,14 @@ const INFO_get_status = (Userid)=>{
   .first()
 }
 
+const INFO_get_categories = (Userid)=>{
+  return db('db')
+  .select('c.id', 'c.name', 'users.email')
+  .from('users')
+  .join('user_category as uc', 'users.id', 'uc.user_id')
+  .join('category as c', 'uc.category_id', 'c.id')
+  .where('users.id', Userid)
+} 
 
 
 
@@ -127,5 +135,6 @@ module.exports = {
   WEB_track_insertion,
   WEB_get_accessToken,
   WEB_insert_transactions,
-  INFO_get_status
+  INFO_get_status,
+  INFO_get_categories
 };
