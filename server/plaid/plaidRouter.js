@@ -84,9 +84,9 @@ router.post('/webhook', async (req,res)=>{
   
       const pgItemId = await qs.WEB_get_pg_itemid(item_id)
 
-      const {userID} = await qs.WEB_get_userID(item_id)
+      const userID = await qs.WEB_get_userID(item_id)
 
-      console.log('THE USERID', userID)
+      console.log('THE USERID', userID.id)
   
       const InsertionStart = await qs.WEB_track_insertion(pgItemId.id, 'inserting')
   
@@ -100,7 +100,7 @@ router.post('/webhook', async (req,res)=>{
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
   
 
-     const done = await qs.WEB_insert_transactions(transactions)
+     const done = await qs.WEB_insert_transactions(transactions, userID.id)
   
     const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
   

@@ -37,14 +37,15 @@ const sortCategory = TransactionItem => {
   }
 };
 
-const insert_transactions = trans => {
+const insert_transactions = (trans, Userid) => {
   return db("budget_item")
     .returning("id")
     .insert({
       name: trans.name,
       amount: trans.amount,
       payment_date: trans.date,
-      category_id: sortCategory(trans.category_id)
+      category_id: sortCategory(trans.category_id),
+      user_id:Userid
     });
 };
 
@@ -102,10 +103,10 @@ const WEB_get_accessToken = (plaidItemId)=>{
   .first()
 }
 
-const WEB_insert_transactions = async(list)=>{
+const WEB_insert_transactions = async(list,Userid)=>{
 
   return Promise.all(list.map(async(trans)=>{
-    const yeet = await insert_transactions(trans)
+    const yeet = await insert_transactions(trans,Userid)
     return{...trans, yeet:'done'}
   }))
 
