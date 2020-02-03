@@ -99,10 +99,14 @@ router.post('/webhook', async (req,res)=>{
   
 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
+
+     if(done){ 
+       const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
+
+       console.log('THE INSERTION ENDING', InsertionEnd)
+     }
   
-     const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
   
-      console.log('THE INSERTION ENDING', InsertionEnd)
     }catch(err){
       console.log('ERROR', err)
     }
