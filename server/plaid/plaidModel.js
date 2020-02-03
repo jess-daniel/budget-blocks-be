@@ -109,7 +109,7 @@ const INFO_get_status = (Userid)=>{
   .from('users')
   .join('item as i', 'users.id', 'i.user_id' )
   .join('item_insertions as ii', 'i.id', 'ii.pg_item_id')
-  .where('userd.id', Userid)
+  .where('users.id', Userid)
   .orderBy('ii.id', 'desc')
   .first()
 
