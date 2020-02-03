@@ -125,7 +125,7 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   //get the last thing inserted into the insertion table
 
   try{
-    const {status} = await qs.INFO_get_status(body.userid)
+    const status = await qs.INFO_get_status(body.userid)
 
     console.log("THE STATUS i'M LOOKING FOR",status)
 
@@ -147,7 +147,7 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
     res.end()
 
   }catch(err){
-    console.log(err)
+    console.log('THE ERROR IM LOOKING FOR',err)
   }
 
 })
