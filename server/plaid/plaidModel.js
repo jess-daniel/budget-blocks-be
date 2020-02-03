@@ -124,6 +124,14 @@ const INFO_get_status = (Userid)=>{
   .first()
 }
 
+//reserved for the functino below it
+const INFO_get_cat_transactions = (categoryID, userID)=>{
+  return db('db')
+  .select('*')
+  .from('budget_item')
+  .where({category_id:categoryID, user_id:userID})
+}
+
 const INFO_get_categories = (Userid)=>{
   return db('db')
   .select('c.id', 'c.name', 'users.email')
@@ -131,6 +139,13 @@ const INFO_get_categories = (Userid)=>{
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
   .where('users.id', Userid)
+  .then(async(categories)=>{
+
+    return Promise.all(categories.map(async(cat)=>{
+      const trans = INFO_get_cat_transactions(cat.id, Userid)
+      return{...cat, transactions:transactions}
+    }))
+  })
 } 
 
 
