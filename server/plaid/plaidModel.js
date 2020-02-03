@@ -105,14 +105,13 @@ const WEB_insert_transactions = async(list)=>{
 const INFO_get_status = (Userid)=>{
 
   return db('db')
-  .select('ii.id, ii.status')
+  .select('II.id, II.status')
   .from('users')
   .join('item as i', 'users.id', 'i.user_id' )
-  .join('item_insertions as ii', 'i.id', 'ii.pg_item_id')
+  .join('item_insertions as II', 'i.id', 'II.pg_item_id')
   .where('users.id', Userid)
-  .orderBy('ii.id', 'desc')
+  .orderBy('II.id', 'desc')
   .first()
-
 }
 
 
