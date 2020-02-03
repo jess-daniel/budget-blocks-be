@@ -129,7 +129,7 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
   //get the last thing inserted into the insertion table
 
   try{
-    const status = await qs.INFO_get_status(body.userid)
+    const {status} = await qs.INFO_get_status(body.userid)
 
     console.log(status)
 

@@ -105,7 +105,7 @@ const WEB_insert_transactions = async(list)=>{
 const INFO_get_status = (Userid)=>{
 
   return db('db')
-  .select('II.id, II.status')
+  .select('*')
   .from('users')
   .join('item as i', 'users.id', 'i.user_id' )
   .join('item_insertions as II', 'i.id', 'II.pg_item_id')
