@@ -74,6 +74,14 @@ const WEB_get_pg_itemid = (plaidItemId)=>{
   .first()
 }
 
+const WEB_get_userID = (plaidItemId)=>{
+  return db('db')
+  .select('users.id')
+  .from('item')
+  .join('users', 'item.user_id', 'users.id')
+  .where('item.item_id',plaidItemId)
+}
+
 const WEB_track_insertion=(pgItemId,status)=>{
   return db('item_insertions')
   .returning('id')
@@ -132,6 +140,7 @@ module.exports = {
   link_user_categories,
   getAccessToken,
   WEB_get_pg_itemid,
+  WEB_get_userID,
   WEB_track_insertion,
   WEB_get_accessToken,
   WEB_insert_transactions,
