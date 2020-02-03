@@ -136,7 +136,9 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
     if(status.status ==="done"){
 
       const categories = await qs.INFO_get_categories(body.userid)
-      res.status(200).json({categories})
+      const balance = await client.getBalance(body.access)
+      const accounts = balance.accounts
+      res.status(200).json({categories,accounts})
 
     }else if(status.status ==="inserting"){
 
