@@ -70,6 +70,10 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 //This is comming from PLAID, res.send or any variation will just be sending to plaid
 router.post('/webhook', async (req,res)=>{
   const body = req.body;
+
+  if(body.webhook_code ==="INITIAL_UPDATE"){
+    console.log('THIS IS THE INITAL 30 DAY PULL',body)
+  }
   
   if(body.webhook_code==="HISTORICAL_UPDATE"){
     console.log("THE WEBHOOK BRUH",body)
@@ -92,13 +96,6 @@ router.post('/webhook', async (req,res)=>{
   
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
   
-       //I needed to use Promise.all to get this to work asynchronously, but it doesn't need to be displayed in the first place so just leave is as is
-      // const done = await Promise.all(
-      //   transactions.map(async trans => {
-      //     const contents = await qs.insert_transactions(trans);
-      //     return trans;
-      //   }),
-      // );
 
      const done = await qs.WEB_insert_transactions(transactions)
   
