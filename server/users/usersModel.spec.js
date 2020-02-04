@@ -26,5 +26,5 @@ it("GET /categories/:userId", async function() {
 // Checks that the response to the categories is a json object
 it("Should return a JSON object", async function() {
   const response = await request(server).get("/categories/1");
-  expect(response.type).toMatcH(/json/i);
+  expect(response.type).toMatch(/json/i);
 });
