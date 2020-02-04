@@ -59,7 +59,7 @@ router.get(`/categories/:userId`, userExists, (req, res) => {
     });
 });
 
-router.put('/categories/userId', userExists, async (req,res)=>{
+router.put('/categories/:userId', userExists, async (req,res)=>{
 
   const id = req.params.userId;
   const body = req.body;
