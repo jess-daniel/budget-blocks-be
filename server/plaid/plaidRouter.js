@@ -121,13 +121,13 @@ router.post('/webhook', async (req,res)=>{
   res.end()
 })
 
-router.post('/transactions',checkAccessToken, async (req,res)=>{
+router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
-  const body = req.body;
+  const id = req.params.id;
  
   try{
     //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
-    const status = await qs.INFO_get_status(body.userid)
+    const status = await qs.INFO_get_status(id)
 
     //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
     if(!status){
@@ -137,7 +137,7 @@ router.post('/transactions',checkAccessToken, async (req,res)=>{
     //when the status is done, run a super query to get the categories and their transactions 
     if(status.status ==="done"){
 
-      const categories = await qs.INFO_get_categories(body.userid)
+      const categories = await qs.INFO_get_categories(id)
       const balance = await client.getBalance(body.access)
       const accounts = balance.accounts
       res.status(200).json({categories,accounts})

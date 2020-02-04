@@ -2,8 +2,10 @@ const qs = require('./plaidModel.js');
 
 //checks to see
 module.exports = (req, res, next) => {
-  const body = req.body;
-  qs.getAccessToken(body.userid)
+
+  const id = req.params.id;
+
+  qs.getAccessToken(id)
     .then(access => {
       if (access) {
         req.body.access = access.access_token;
