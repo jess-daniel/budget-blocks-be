@@ -152,7 +152,7 @@ const INFO_get_categories = (Userid)=>{
     return Promise.all(categories.map(async(cat)=>{
       const trans = await INFO_get_cat_transactions(cat.id, Userid)
       const amount = await INFO_get_amount_by_category(cat.id,Userid)
-      return{...cat, transactions:trans, total:amount}
+      return{...cat, transactions:trans, total:amount.total}
     }))
   })
 } 
