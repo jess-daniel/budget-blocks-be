@@ -139,7 +139,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
     if(status.status ==="done"){
 
       const categories = await qs.INFO_get_categories(id)
-      const balance = await client.getBalance(body.access)
+      const balance = await client.getBalance(req.body.access)
       const accounts = balance.accounts
       res.status(200).json({categories,accounts})
 
