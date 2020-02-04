@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
     .then(access => {
       if (access) {
         req.body.access = access.access_token;
+        console.log('MIDDLEWARE PASSED', req.body)
         next();
       } else {
         res
