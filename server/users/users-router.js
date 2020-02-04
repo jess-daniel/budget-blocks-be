@@ -68,6 +68,8 @@ router.put('/categories/:userId', userExists, async (req,res)=>{
 
     const update = await Users.editUserCategoryBudget(id,body.categoryid, body.budget)
 
+    res.status(204).json({update})
+
   }catch(err){
     console.log('PUT CATEGORY ERR',err)
   }
