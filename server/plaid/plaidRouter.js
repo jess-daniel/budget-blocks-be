@@ -124,7 +124,6 @@ router.post('/webhook', async (req,res)=>{
 router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
   const id = req.params.id;
-  console.log("THE ID IM USING", id)
  
   try{
     //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
