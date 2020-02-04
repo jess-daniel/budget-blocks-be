@@ -58,7 +58,7 @@ function checkAccessToken(UserID) {
 }
 
 // Returns the categories based upon the userId.
-function returnUserCategories(userId) {
+function returnUserCategories(UserId) {
   return db('db')
   .select('c.id', 'c.name', 'users.email', 'uc.budget')
   .from('users')
