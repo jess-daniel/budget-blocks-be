@@ -20,6 +20,7 @@ const add_An_Item = (Itemid, Userid) => {
     });
 };
 
+//Reserved strictly for the below function: insert_transactions
 const sortCategory = TransactionItem => {
   var i;
   for (i = 0; i <= data.length - 1; i++) {
@@ -142,7 +143,7 @@ const INFO_get_amount_by_category = (categoryID, userID)=>{
 
 const INFO_get_categories = (Userid)=>{
   return db('db')
-  .select('c.id', 'c.name', 'users.email')
+  .select('c.id', 'c.name', 'users.email', 'uc.budget')
   .from('users')
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
