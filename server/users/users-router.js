@@ -59,4 +59,19 @@ router.get(`/categories/:userId`, userExists, (req, res) => {
     });
 });
 
+router.put('/categories/userId', userExists, async (req,res)=>{
+
+  const id = req.params.userId;
+  const body = req.body;
+
+  try{
+
+    const update = await Users.editUserCategoryBudget(id,body.categoryid, body.budget)
+
+  }catch(err){
+    console.log('PUT CATEGORY ERR',err)
+  }
+
+})
+
 module.exports = router;

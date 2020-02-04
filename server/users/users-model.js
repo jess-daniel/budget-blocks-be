@@ -7,6 +7,7 @@ module.exports = {
   login,
   checkAccessToken,
   returnUserCategories,
+  editUserCategoryBudget
 };
 
 function allUsers() {
@@ -65,4 +66,12 @@ function returnUserCategories(Userid) {
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
   .where('users.id', Userid)
+}
+
+function editUserCategoryBudget(Userid, Categoryid, amount){
+  return db('user_category')
+  .returning(['user_id', 'category_id'])
+  .where({category_id:Categoryid, user_id:Userid})
+  .update({budget:amount})
+  
 }
