@@ -59,7 +59,7 @@ function checkAccessToken(UserID) {
 
 // Returns the categories based upon the userId.
 function returnUserCategories(userId) {
-  return db('user_cateogiry')
+  return db('user_category')
     .select('category.id as id', 'category.name as category')
     .from('user_category')
     .join('category', 'category.id', 'user_category.category_id')
