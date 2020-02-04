@@ -133,14 +133,11 @@ const INFO_get_cat_transactions = (categoryID, userID)=>{
 }
 
 const INFO_get_amount_by_category = (categoryID, userID)=>{
-  // return db('db')
-  // .select('amount')
-  // .from('budget_item')
-  // .where({category_id:categoryID, user_id:userID})
 
   return db('budget_item')
   .sum({total:'amount'})
   .where({category_id:categoryID, user_id:userID})
+  .first()
 }
 
 const INFO_get_categories = (Userid)=>{
