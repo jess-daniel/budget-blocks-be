@@ -1,8 +1,3 @@
-## Default Logins:
-
-`email: test@test.com`
-
-`password: password`
 
 # Information
 
@@ -42,7 +37,7 @@
     {
         "id": 1,
         "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Ikt5bGUiLCJpYXQiOjE1ODAyMzU0NzMsImV4cCI6MTU4MDI0OTg3M30.vOU1ZbHcLxOgCtD50Pu7JqHiudEc-0VYtDfbtXeqvlU",
-        "message": "Welcome Kyle!",
+        "message": "Welcome Yeet!",
         "LinkedAccount": false
     }
 
@@ -61,8 +56,7 @@
 
     {
         "AccessTokenInserted": 1,
-        "ItemIdInserted": 1,
-        "TransactionsInserted":[]
+        "ItemIdInserted": 1
     }
 
 ## (Plaid) **POST** /plaid/transactions
@@ -78,5 +72,73 @@
 **Returns the list of transactions for that user**
 
     {
-        "transactions":[array of transactions]
+        "categories":[
+             {
+                "id": 1,
+                "name": "Bank Fees",
+                "email": "Yeet",
+                "transactions": []
+            },
+            {
+                "id": 2,
+                "name": "Cash Advance",
+                "email": "Yeet",
+                "transactions": []
+            },
+            {
+                "id": 10,
+                "name": "Payment",
+                "email": "Yeet",
+                "transactions": [
+                    {
+                        "id": 2,
+                        "name": "AUTOMATIC PAYMENT - THANK",
+                        "amount": 2078.5,
+                        "payment_date": "2019-01-30",
+                        "category_id": 10,
+                        "user_id": 1
+                    },
+                    {
+                        "id": 5,
+                        "name": "CREDIT CARD 3333 PAYMENT *//",
+                        "amount": 25,
+                        "payment_date": "2019-01-21",
+                        "category_id": 10,
+                        "user_id": 1
+                    }
+                ]
+            },
+        ],
+        "accounts":[
+            {
+            "account_id": "BzkA8AKZagFaW6p68rqBtjbbePxMjMFwpoRrl",
+            "balances": {
+                "available": 100,
+                "current": 110,
+                "iso_currency_code": "USD",
+                "limit": null,
+                "unofficial_currency_code": null
+            },
+            "mask": "0000",
+            "name": "Plaid Checking",
+            "official_name": "Plaid Gold Standard 0% Interest Checking",
+            "subtype": "checking",
+            "type": "depository"
+            },
+            {
+            "account_id": "3eJoaoXb6DFxwaLab6rBfaJJv5BEaEFqjyvzL",
+            "balances": {
+                "available": 200,
+                "current": 210,
+                "iso_currency_code": "USD",
+                "limit": null,
+                "unofficial_currency_code": null
+            },
+            "mask": "1111",
+            "name": "Plaid Saving",
+            "official_name": "Plaid Silver Standard 0.1% Interest Saving",
+            "subtype": "savings",
+            "type": "depository"
+            }
+        ]
     }
