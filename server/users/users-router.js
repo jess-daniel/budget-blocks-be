@@ -38,7 +38,10 @@ router.get('/', restricted, (req, res) => {
 
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
 router.get(`/categories/:userId`, userExists, (req, res) => {
-  Users.returnUserCategories(req.params.userId)
+
+  const id = req.params.userId
+
+  Users.returnUserCategories(id)
     .then(categories => {
       if (categories.length > 0) {
         res.status(200).json(categories);
