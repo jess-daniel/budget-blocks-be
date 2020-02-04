@@ -18,6 +18,9 @@ exports.up = function(knex) {
         .notNullable()
         .onDelete('CASCADE')
         .onUpdate('CASCADE');
+
+        tbl.decimal('budget')
+        .nullable()
     })
 };
 
