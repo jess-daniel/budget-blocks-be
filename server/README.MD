@@ -59,13 +59,10 @@
         "ItemIdInserted": 1
     }
 
-## (Plaid) **POST** /plaid/transactions
+## (Plaid) **GET** /plaid/transactions/:userID
 
-**Expected body(could change in the fucture)**
+**This is no longer a post request,now you just pass the userID as a param in the url**
 
-    {
-        "userid": 1
-    }
 
 *When we implement the restricitve middleware, thers a chance it'll change to a get request and we'll get the user id from the authorization header token*
 
