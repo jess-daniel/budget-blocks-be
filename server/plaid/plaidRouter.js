@@ -97,9 +97,13 @@ router.post('/webhook', async (req,res)=>{
   
       //We just get the access token based on the ItemID plaid gave us to make sure we are accessing the transactions for that EXACT set of credentials
       const {access_token} = await qs.WEB_get_accessToken(item_id)
+
+      console.log('THE ACCESS KEY',access_token)
       
       //This is us getting the transactions 
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
+
+      console.log('THE TRANSACTINOS', transactions)
   
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
