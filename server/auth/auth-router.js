@@ -91,7 +91,7 @@ router.post('/login', validateUserCredentials, (req, res) => {
     })
     .catch(err=>{
       // console.log(err)
-      res.status(500).json({message:"Unable to find the user by the email provided"})
+      res.status(500).json({message:"Unable to find the user by the email provided "})
     })
 });
 
