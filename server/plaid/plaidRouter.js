@@ -131,7 +131,8 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
     //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
     if(!status){
-      res.status(330).json({message:"insertion process hasn't started"})
+      const code = 330
+      res.status(330).json({message:"insertion process hasn't started", code})
     }
 
     //when the status is done, run a super query to get the categories and their transactions 
@@ -143,8 +144,8 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
       res.status(200).json({categories,accounts})
 
     }else if(status.status ==="inserting"){
-
-      res.status(300).json({message:"we are inserting your data"})
+      const code = 300
+      res.status(300).json({message:"we are inserting your data",code})
 
     }
 
