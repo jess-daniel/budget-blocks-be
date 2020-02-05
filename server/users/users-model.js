@@ -72,6 +72,5 @@ function editUserCategoryBudget(Userid, Categoryid, amount){
   return db('user_category')
   .returning(['user_id', 'category_id'])
   .where({category_id:Categoryid, user_id:Userid})
-  .update({budget:amount})
-  
+  .update({budget:amount}, 'user_id')
 }

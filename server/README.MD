@@ -139,3 +139,50 @@
             }
         ]
     }
+
+## (User) **GET** /api/users/categories/param
+
+**You just pass the userID as a param in the url**
+
+    {
+        example: /api/users/categories/1(userid)
+    }
+
+**Returns the list of categories for that user**
+
+    [
+        {
+            "id": 1,
+            "name": "Bank Fees",
+            "email": "yeet",
+            "budget": null
+        },
+        {
+            "id": 2,
+            "name": "Cash Advance",
+            "email": "yeet",
+            "budget": null
+        }
+    ]
+
+## (User) **PUT** /api/users/categories/param
+
+**While hitting the endpoint, put the userid as a parameter on the end, then send the following object**
+
+    {
+        example: /api/users/categories/1(userid)
+    }
+
+    {    
+        "categoryid": 1,
+        "budget": 320
+    }
+
+**Returns the following object**
+
+    {
+        "userid": "1",
+        "categoryid": 20,
+        "amount": 320,
+        "status": "true"
+    }
