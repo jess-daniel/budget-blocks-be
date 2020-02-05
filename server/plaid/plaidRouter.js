@@ -69,7 +69,7 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
     });
   } catch (err) {
     console.log('access', err);
-    res.status(500).json(message:'cant insert at this time')
+    res.status(500).json({message:'cant insert at this time'})
   }
 });
 
