@@ -40,7 +40,7 @@ function userAlreadyExists(req, res, next) {
       console.log(error);
       res
         .status(500)
-        .send({error: 'Unable to find the user with the username provided.'});
+        .json({error: 'Unable to find the user with the username provided.'});
     });
 }
 
