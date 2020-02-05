@@ -103,11 +103,11 @@ router.post('/webhook', async (req,res)=>{
       //This is us getting the transactions 
       const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
 
-  
+      console.log("USERID", userID)
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
 
-     console.log('DONE AFTER INSERTING INTO OUR DB',done)
+     
 
      //basically makes sure that the notification that the download is complete waits on it actually completing.
      if(done){ 
