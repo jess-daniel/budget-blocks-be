@@ -39,6 +39,10 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
   const {publicToken} = req.body;
   const {userid} = req.body;
 
+  if(!publicToken || !userid){
+    res.status(400).json({message:"make sure there is a userid and publicToken key on the request object you send"})
+  }
+
   try {
     const {access_token} = await client.exchangePublicToken(publicToken);
 
@@ -65,6 +69,7 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
     });
   } catch (err) {
     console.log('access', err);
+    res.status(500).json(message:'cant insert at this time')
   }
 });
 
