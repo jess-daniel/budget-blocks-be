@@ -59,13 +59,10 @@
         "ItemIdInserted": 1
     }
 
-## (Plaid) **POST** /plaid/transactions
+## (Plaid) **GET** /plaid/transactions/:userID
 
-**Expected body(could change in the fucture)**
+**This is no longer a post request,now you just pass the userID as a param in the url**
 
-    {
-        "userid": 1
-    }
 
 *When we implement the restricitve middleware, thers a chance it'll change to a get request and we'll get the user id from the authorization header token*
 
@@ -141,4 +138,51 @@
             "type": "depository"
             }
         ]
+    }
+
+## (User) **GET** /api/users/categories/param
+
+**You just pass the userID as a param in the url**
+
+    {
+        example: /api/users/categories/1(userid)
+    }
+
+**Returns the list of categories for that user**
+
+    [
+        {
+            "id": 1,
+            "name": "Bank Fees",
+            "email": "yeet",
+            "budget": null
+        },
+        {
+            "id": 2,
+            "name": "Cash Advance",
+            "email": "yeet",
+            "budget": null
+        }
+    ]
+
+## (User) **PUT** /api/users/categories/param
+
+**While hitting the endpoint, put the userid as a parameter on the end, then send the following object**
+
+    {
+        example: /api/users/categories/1(userid)
+    }
+
+    {    
+        "categoryid": 1,
+        "budget": 320
+    }
+
+**Returns the following object**
+
+    {
+        "userid": "1",
+        "categoryid": 20,
+        "amount": 320,
+        "status": "true"
     }

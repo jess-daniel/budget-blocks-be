@@ -38,7 +38,10 @@ router.get('/', restricted, (req, res) => {
 
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
 router.get(`/categories/:userId`, userExists, (req, res) => {
-  Users.returnUserCategories(req.params.userId)
+
+  const id = req.params.userId
+
+  Users.returnUserCategories(id)
     .then(categories => {
       if (categories.length > 0) {
         res.status(200).json(categories);
@@ -55,5 +58,39 @@ router.get(`/categories/:userId`, userExists, (req, res) => {
         .json({message: 'Unable to return categories for the specified user.'});
     });
 });
+
+router.put('/categories/:userId', userExists, async (req,res)=>{
+
+  const id = req.params.userId;
+  const body = req.body;
+
+  try{
+
+    const update = await Users.editUserCategoryBudget(id,body.categoryid, body.budget)
+
+   console.log(update)
+
+   if(update ==1){
+     
+    res.status(202).json({
+      userid:id,
+      categoryid:body.categoryid,
+      amount:body.budget,
+      status:"true"
+    })
+   }else{
+     res.status(400).json({  userid:id,
+      categoryid:body.categoryid,
+      amount:body.budget,
+      status:"false"})
+   }
+
+
+  }catch(err){
+    console.log('PUT CATEGORY ERR',err)
+    res.status(500).json({message:'something went wrong'})
+  }
+
+})
 
 module.exports = router;
