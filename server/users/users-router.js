@@ -78,6 +78,7 @@ router.put('/categories/:userId', userExists, async (req,res)=>{
       amount:body.budget,
       status:"true"
     })
+    
    }else{
      res.status(400).json({  userid:id,
       categoryid:body.categoryid,
