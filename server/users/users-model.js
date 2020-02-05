@@ -8,7 +8,7 @@ module.exports = {
   checkAccessToken,
   returnUserCategories,
   editUserCategoryBudget,
-  getAllCategories
+  // getAllCategories
 };
 
 function allUsers() {
