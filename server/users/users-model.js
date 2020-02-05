@@ -1,4 +1,4 @@
-const db = require('../data/db-config');
+const db = require("../data/db-config");
 
 module.exports = {
   allUsers,
@@ -11,12 +11,12 @@ module.exports = {
 };
 
 function allUsers() {
-  return db('users');
+  return db("users");
 }
 
 function addUser(userData) {
-  return db('users')
-    .insert(userData, 'id')
+  return db("users")
+    .insert(userData, "id")
     .then(ids => {
       //took out the call to the findbyUser function, I thought we talked about just returning the user id
       return ids[0];
@@ -25,8 +25,8 @@ function addUser(userData) {
 
 //Middlewhere
 function findUserBy(filter) {
-  return db('users')
-    .select('id', 'email')
+  return db("users")
+    .select("id", "email")
     .where(filter)
     .first();
 }
@@ -35,41 +35,41 @@ function findUserBy(filter) {
 
 //This is to check if the user that logged in has a access_token.
 function login(Cred) {
-  return db('users')
-    .select('id', 'email', 'password')
-    .where({email: Cred.email})
+  return db("users")
+    .select("id", "email", "password")
+    .where({ email: Cred.email })
     .first()
     .then(async user => {
       const good = await checkAccessToken(user.id);
       if (good) {
-        return (user = {...user, LinkedAccount: true});
+        return (user = { ...user, LinkedAccount: true });
       } else {
-        return (user = {...user, LinkedAccount: false});
+        return (user = { ...user, LinkedAccount: false });
       }
     });
 }
 
 //This is to check if the user that logged in has a access_token.
 function checkAccessToken(UserID) {
-  return db('db')
-    .select('*')
-    .from('users_accessToken')
-    .where({user_id: UserID})
+  return db("db")
+    .select("*")
+    .from("users_accessToken")
+    .where({ user_id: UserID })
     .first();
 }
 
 // Returns the categories based upon the userId.
 function returnUserCategories(userId) {
-  return db('user_category')
-    .select('category.id as id', 'category.name as category')
-    .from('user_category')
-    .join('category', 'category.id', 'user_category.category_id')
-    .where({user_id: userId});
+  return db("user_category")
+    .select("category.id as id", "category.name as category")
+    .from("user_category")
+    .join("category", "category.id", "user_category.category_id")
+    .where({ user_id: userId });
 }
 
-function editUserCategoryBudget(Userid, Categoryid, amount){
-  return db('user_category')
-  .returning(['user_id', 'category_id'])
-  .where({category_id:Categoryid, user_id:Userid})
-  .update({budget:amount}, 'user_id')
+function editUserCategoryBudget(Userid, Categoryid, amount) {
+  return db("user_category")
+    .returning(["user_id", "category_id"])
+    .where({ category_id: Categoryid, user_id: Userid })
+    .update({ budget: amount }, "user_id");
 }
