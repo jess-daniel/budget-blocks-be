@@ -105,7 +105,12 @@ router.post('/webhook', async (req,res)=>{
       const {access_token} = await qs.WEB_get_accessToken(item_id)
 
       //This is us getting the transactions 
-      const {transactions} = await client.getTransactions(access_token, '2020-01-01', '2020-01-31');
+      var currentday = (new Date()).toISOString().replace(/-/g, '-').split('T')[0]
+      var today = new Date()
+      var prior = new Date().setDate(today.getDate()-30)
+      var prior = (new Date(prior)).toISOString().replace(/-/g, '-').split('T')[0]
+      console.log(currentday, prior)
+      const {transactions} = await client.getTransactions(access_token, currentday, prior);
 
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
