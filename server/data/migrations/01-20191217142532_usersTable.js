@@ -2,11 +2,18 @@ exports.up = function(knex) {
   return (
     knex.schema.createTable("users", tbl => {
         tbl.increments();
+
         tbl
           .string("email")
           .notNullable()
           .unique();
         tbl.string("password").notNullable();
+
+        tbl.decimal('income')
+        .nullable();
+
+        tbl.decimal('spending_goal')
+        .nullable();
       })
 
       // Creates a reference table so that an access token can be mapped to a specific user_id

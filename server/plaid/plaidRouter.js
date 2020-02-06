@@ -81,7 +81,8 @@ router.post('/webhook', async (req,res)=>{
   //   console.log('THIS IS THE INITAL 30 DAY PULL',body)
   // }
   
-  if(body.webhook_code==="HISTORICAL_UPDATE"){
+  //changed this to initial update becuase honestly we just need the last 30 days, not their life story 
+  if(body.webhook_code==="INITIAL_UPDATE"){
     console.log("THE WEBHOOK BRUH",body)
 
     try{
@@ -103,21 +104,15 @@ router.post('/webhook', async (req,res)=>{
       //We just get the access token based on the ItemID plaid gave us to make sure we are accessing the transactions for that EXACT set of credentials
       const {access_token} = await qs.WEB_get_accessToken(item_id)
 
-     
-      
       //This is us getting the transactions 
-      const {transactions} = await client.getTransactions(access_token,'2019-01-01','2019-01-31');
+      const {transactions} = await client.getTransactions(access_token);
 
-      
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
-
-     
 
      //basically makes sure that the notification that the download is complete waits on it actually completing.
      if(done){ 
        const InsertionEnd = await qs.WEB_track_insertion(pgItemId.id, 'done')
-
        console.log('THE INSERTION ENDING', InsertionEnd)
      }
   
@@ -126,7 +121,6 @@ router.post('/webhook', async (req,res)=>{
     }catch(err){
       console.log('ERROR', err)
     }
-
   }
 
 })

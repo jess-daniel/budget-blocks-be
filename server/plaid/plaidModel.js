@@ -132,7 +132,7 @@ const INFO_get_cat_transactions = (categoryID, userID)=>{
   .from('budget_item')
   .where({category_id:categoryID, user_id:userID})
 }
-
+//reserved for the function below it
 const INFO_get_amount_by_category = (categoryID, userID)=>{
 
   return db('budget_item')
