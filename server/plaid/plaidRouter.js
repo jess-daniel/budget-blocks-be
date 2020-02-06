@@ -77,9 +77,6 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 router.post('/webhook', async (req,res)=>{
   const body = req.body;
 
-  // if(body.webhook_code ==="INITIAL_UPDATE"){
-  //   console.log('THIS IS THE INITAL 30 DAY PULL',body)
-  // }
   
   //changed this to initial update becuase honestly we just need the last 30 days, not their life story 
   if(body.webhook_code==="INITIAL_UPDATE"){
@@ -114,7 +111,7 @@ router.post('/webhook', async (req,res)=>{
       console.log("DATE RANGE FOR TRANSACTIONS",start, end)
       
       //This is us getting the transactions 
-      const {transactions} = await client.getTransactions(access_token, start, end,{count:1});
+      const {transactions} = await client.getTransactions(access_token, start, end);
 
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
@@ -128,7 +125,7 @@ router.post('/webhook', async (req,res)=>{
      res.status(200)
   
     }catch(err){
-      console.log('ERROR', err)
+      console.log('INITAL ERROR', err)
     }
   }else if(body.webhook_code==="DEFAULT_UPDATE"){
     console.log('DEFAULT UPDATE', body)
@@ -155,11 +152,15 @@ router.post('/webhook', async (req,res)=>{
 
       //this is the current day formatted for plaid
       var end = (new Date()).toISOString().replace(/-/g, '-').split('T')[0]
+      //all three of these are to get 30 days behind the current day
+      var today = new Date()
+      var start = new Date().setDate(today.getDate()-30)
+      var start = (new Date(start)).toISOString().replace(/-/g, '-').split('T')[0]
    
       console.log("DATE RANGE FOR TRANSACTIONS",end, end)
       
       //This is us getting the transactions 
-      const {transactions} = await client.getTransactions(access_token, end, end);
+      const {transactions} = await client.getTransactions(access_token, start, end, {count:amountOfNew});
 
       //This is a more refined version of what I had before on line 54. 
       const done = await qs.WEB_insert_transactions(transactions, userID.id)
@@ -172,7 +173,7 @@ router.post('/webhook', async (req,res)=>{
   
      res.status(200)
     }catch(err){
-      console.log("ERROR",err)
+      console.log("UPDATE ERROR",err)
     }
 
   }
