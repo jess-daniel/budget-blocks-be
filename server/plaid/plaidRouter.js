@@ -117,7 +117,7 @@ router.post('/webhook', async (req,res)=>{
       const yate = `${prior}`
       console.log("NOT SURE WHAT THE DIFFERENCE IS",currentday, prior, start, end)
 
-      const {transactions} = await client.getTransactions(access_token, yeet, yate);
+      const {transactions} = await client.getTransactions(access_token, prior, currentday);
 
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
