@@ -20,6 +20,7 @@ module.exports = async(req,res,next)=>{
             body.item_id = item_id
             body.pgItemId = pgItemId
             body.userID = userID
+            next();
         }
 
     }catch(err){
