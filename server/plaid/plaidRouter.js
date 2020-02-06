@@ -104,20 +104,17 @@ router.post('/webhook', async (req,res)=>{
       //We just get the access token based on the ItemID plaid gave us to make sure we are accessing the transactions for that EXACT set of credentials
       const {access_token} = await qs.WEB_get_accessToken(item_id)
 
-      //This is us getting the transactions 
-      var currentday = (new Date()).toISOString().replace(/-/g, '-').split('T')[0]
+      //this is the current day
+      var end = (new Date()).toISOString().replace(/-/g, '-').split('T')[0]
+      //all three of these are to get 30 days behind the current day
       var today = new Date()
-      var prior = new Date().setDate(today.getDate()-30)
-      var prior = (new Date(prior)).toISOString().replace(/-/g, '-').split('T')[0]
+      var start = new Date().setDate(today.getDate()-30)
+      var start = (new Date(start)).toISOString().replace(/-/g, '-').split('T')[0]
       
-      const start = '2020-01-01'
-      const end = '2020-01-31'
-
-      const yeet = `${currentday}`
-      const yate = `${prior}`
-      console.log("NOT SURE WHAT THE DIFFERENCE IS",currentday, prior, start, end)
-
-      const {transactions} = await client.getTransactions(access_token, prior, currentday);
+      console.log("DATE RANGE FOR TRANSACTIONS",start, end)
+      
+      //This is us getting the transactions 
+      const {transactions} = await client.getTransactions(access_token, start, end);
 
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
