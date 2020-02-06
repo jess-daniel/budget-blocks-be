@@ -121,6 +121,7 @@ router.post('/webhook', async (req,res)=>{
        console.log('THE INSERTION ENDING', InsertionEnd)
      }
   
+     res.status(200)
   
     }catch(err){
       console.log('ERROR', err)
@@ -128,12 +129,15 @@ router.post('/webhook', async (req,res)=>{
 
   }
 
-  res.end()
 })
 
 router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
   const id = req.params.id;
+
+  if(!id){
+    res.status(400).json({message:'please add a param to the end of the endpoint'})
+  }
  
   try{
     //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.

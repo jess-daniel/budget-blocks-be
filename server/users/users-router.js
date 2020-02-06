@@ -41,6 +41,10 @@ router.get(`/categories/:userId`, userExists, (req, res) => {
 
   const id = req.params.userId
 
+  if(!id){
+    res.status(400).json({message:'please add a parameter at the end of the endpoint'})
+  }
+
   Users.returnUserCategories(id)
     .then(categories => {
       if (categories.length > 0) {
@@ -63,6 +67,10 @@ router.put('/categories/:userId', userExists, async (req,res)=>{
 
   const id = req.params.userId;
   const body = req.body;
+
+  if(!id||!body){
+    res.status(400).json({message:'please add a parameter at the end of the endpoint and a body to the request'})
+  }
 
   try{
 
