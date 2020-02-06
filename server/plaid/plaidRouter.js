@@ -109,11 +109,15 @@ router.post('/webhook', async (req,res)=>{
       var today = new Date()
       var prior = new Date().setDate(today.getDate()-30)
       var prior = (new Date(prior)).toISOString().replace(/-/g, '-').split('T')[0]
-      console.log(currentday, prior)
-
+      
       const start = '2020-01-01'
       const end = '2020-01-31'
-      const {transactions} = await client.getTransactions(access_token, start, end);
+
+      const yeet = `${currentday}`
+      const yate = `${prior}`
+      console.log("NOT SURE WHAT THE DIFFERENCE IS",currentday, prior, start, end)
+
+      const {transactions} = await client.getTransactions(access_token, yeet, yate);
 
       //This is a more refined version of what I had before on line 54. 
      const done = await qs.WEB_insert_transactions(transactions, userID.id)
