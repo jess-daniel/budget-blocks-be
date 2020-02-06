@@ -14,35 +14,12 @@ module.exports = async(req,res,next)=>{
         //This is getting the userID for later. We need to get the userID from the item_id plaid gave us to get the EXACT user
         const userID = await qs.WEB_get_userID(item_id)
 
-        const InsertionStart = await qs.WEB_track_insertion(pgItemId.id, 'inserting')
-
-        console.log('THE INSERTION BEGINNING', InsertionStart)
-
-        //We just get the access token based on the ItemID plaid gave us to make sure we are accessing the transactions for that EXACT set of credentials
-        const {access_token} = await qs.WEB_get_accessToken(item_id)
-
-        //this is the current day
-        var end = (new Date()).toISOString().replace(/-/g, '-').split('T')[0]
-        //all three of these are to get 30 days behind the current day
-        var today = new Date()
-        var start = new Date().setDate(today.getDate()-30)
-        var start = (new Date(start)).toISOString().replace(/-/g, '-').split('T')[0]
-        
-        console.log("DATE RANGE FOR TRANSACTIONS",start, end)
-
-        if(!item_id || !pgItemId || !userID || !InsertionStart || !access_token || !start || !end){
-            console.log('WEB-MIDDLEWARE ERROR')
+        if(!item_id || !pgItemId || !userID){
+            console.log('WEB-MIDLEWARE ERROR')
         }else{
-
             body.item_id = item_id
             body.pgItemId = pgItemId
             body.userID = userID
-            body.InsertionStart = InsertionStart
-            body.access_token = access_token
-            body.start = start
-            body.end = end
-
-            next();
         }
 
     }catch(err){
