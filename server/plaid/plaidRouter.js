@@ -104,7 +104,7 @@ router.post('/webhook', webhookMiddle, async (req,res)=>{
       console.log("DATE RANGE FOR TRANSACTIONS",body.start, body.end)
       
       //This is us getting the transactions 
-      const {transactions} = await client.getTransactions(access_token, start, end);
+      const {transactions} = await client.getTransactions(access_token, body.start, body.end);
 
       //This is a more refined version of what I had before on line 54. 
       const done = await qs.WEB_insert_transactions(transactions, body.userID.id)
