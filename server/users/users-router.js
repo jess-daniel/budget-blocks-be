@@ -1,48 +1,49 @@
-const router = require('express').Router();
-const Users = require('./users-model.js');
-const restricted = require('../auth/restricted-middleware.js');
+const router = require("express").Router();
+const Users = require("./users-model.js");
+const restricted = require("../auth/restricted-middleware.js");
 
 // Middleware to check if a specified userId exists
 function userExists(req, res, next) {
   let id = req.params.userId;
 
-  Users.findUserBy({id})
+  Users.findUserBy({ id })
     .then(response => {
       // if a response is returned, the user exists so we can retrieve the list of catergories
       // Else, allow the next function to be passed
       if (response) {
         next();
       } else {
-        res.status(400).json({error: 'The specified userId does not exist.'});
+        res.status(400).json({ error: "The specified userId does not exist." });
       }
     })
     .catch(error => {
       console.log(error);
       res.status(500).json({
         error:
-          'Unable to retrieve the list of categories for the specified userId.',
+          "Unable to retrieve the list of categories for the specified userId."
       });
     });
 }
 
-router.get('/', restricted, (req, res) => {
+router.get("/", restricted, (req, res) => {
   Users.allUsers()
     .then(response => {
       res.status(200).json(response);
     })
     .catch(error => {
       console.log(error);
-      res.status(400).json({error: 'Unable to retrieve a list of users'});
+      res.status(400).json({ error: "Unable to retrieve a list of users" });
     });
 });
 
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
 router.get(`/categories/:userId`, userExists, (req, res) => {
+  const id = req.params.userId;
 
-  const id = req.params.userId
-
-  if(!id){
-    res.status(400).json({message:'please add a parameter at the end of the endpoint'})
+  if (!id) {
+    res
+      .status(400)
+      .json({ message: "please add a parameter at the end of the endpoint" });
   }
 
   Users.returnUserCategories(id)
@@ -52,55 +53,63 @@ router.get(`/categories/:userId`, userExists, (req, res) => {
       } else {
         res
           .status(404)
-          .json({message: 'The specified user ID does not exist.'});
+          .json({ message: "The specified user ID does not exist." });
       }
     })
     .catch(error => {
       console.log(error);
       res
         .status(500)
-        .json({message: 'Unable to return categories for the specified user.'});
+        .json({
+          message: "Unable to return categories for the specified user."
+        });
     });
 });
 
-router.put('/categories/:userId', userExists, async (req,res)=>{
-
+router.put("/categories/:userId", userExists, async (req, res) => {
   const id = req.params.userId;
   const body = req.body;
 
-  if(!id||!body){
-    res.status(400).json({message:'please add a parameter at the end of the endpoint and a body to the request'})
+  if (!id || !body) {
+    res
+      .status(400)
+      .json({
+        message:
+          "please add a parameter at the end of the endpoint and a body to the request"
+      });
   }
 
-  try{
+  try {
+    const update = await Users.editUserCategoryBudget(
+      id,
+      body.categoryid,
+      body.budget
+    );
 
-    const update = await Users.editUserCategoryBudget(id,body.categoryid, body.budget)
+    console.log(update);
 
-   console.log(update)
-
-   if(update ==1){
-     
-    res.status(202).json({
-      userid:id,
-      categoryid:body.categoryid,
-      amount:body.budget,
-      status:"true"
-    })
-    
-   }else{
-     res.status(400).json({  userid:id,
-      categoryid:body.categoryid,
-      amount:body.budget,
-      status:"false"})
-   }
-
-
-  }catch(err){
-    console.log('PUT CATEGORY ERR',err)
-    res.status(500).json({message:'something went wrong'})
+    if (update == 1) {
+      res.status(202).json({
+        userid: id,
+        categoryid: body.categoryid,
+        amount: body.budget,
+        status: "true"
+      });
+    } else {
+      res
+        .status(400)
+        .json({
+          userid: id,
+          categoryid: body.categoryid,
+          amount: body.budget,
+          status: "false"
+        });
+    }
+  } catch (err) {
+    console.log("PUT CATEGORY ERR", err);
+    res.status(500).json({ message: "something went wrong" });
   }
-
-})
+});
 
 
 module.exports = router;
