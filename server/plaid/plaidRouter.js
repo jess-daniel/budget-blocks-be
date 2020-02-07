@@ -129,7 +129,7 @@ router.post('/webhook', webhookMiddle, async (req,res)=>{
       console.log("DATE RANGE FOR TRANSACTIONS",body.start, body.end)
       
       //This is us getting the transactions 
-      const {transactions} = await client.getTransactions(access_token, body.start, body.end, {count:amountOfNew});
+      const {transactions} = await client.getTransactions (access_token, body.start, body.end, {count:amountOfNew});
 
       //This is a more refined version of what I had before on line 54. 
       const done = await qs.WEB_insert_transactions(transactions, body.userID.id)
@@ -172,6 +172,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
       const categories = await qs.INFO_get_categories(id)
       const balance = await client.getBalance(req.body.access)
+      //if balances is falsy, then fall back on our own data's snapshot of the data
       const accounts = balance.accounts
       res.status(200).json({categories,accounts})
 
@@ -185,6 +186,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
   }catch(err){
     console.log('THE ERROR IM LOOKING FOR',err)
+    res.status(500).json({message:'cant get transactions'})
   }
 
 })

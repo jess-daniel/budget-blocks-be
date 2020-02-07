@@ -28,7 +28,7 @@ function addUser(userData) {
 //Middlewhere
 function findUserBy(filter) {
   return db("users")
-    .select("id", "email")
+    .select("id", "email", "income", "spending_goal")
     .where(filter)
     .first();
 }

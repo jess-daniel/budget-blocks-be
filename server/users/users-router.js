@@ -36,6 +36,21 @@ router.get("/", restricted, (req, res) => {
     });
 });
 
+router.get('/user/:userId', userExists, async(req,res)=>{
+  const id = req.params.userId
+
+  try{
+
+    const user = await Users.findUserBy({id})
+
+    res.status(200).json({user})
+
+  }catch(err){
+    console.log(err)
+    res.status(500).json({message:'cant get user right now'})
+  }
+})
+
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
 router.get(`/categories/:userId`, userExists, (req, res) => {
   const id = req.params.userId;
