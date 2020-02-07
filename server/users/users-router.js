@@ -71,20 +71,11 @@ router.put("/categories/:userId", userExists, async (req, res) => {
   const body = req.body;
 
   if (!id || !body) {
-    res
-      .status(400)
-      .json({
-        message:
-          "please add a parameter at the end of the endpoint and a body to the request"
-      });
+    res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
   }
 
   try {
-    const update = await Users.editUserCategoryBudget(
-      id,
-      body.categoryid,
-      body.budget
-    );
+    const update = await Users.editUserCategoryBudget(id,body.categoryid,body.budget);
 
     console.log(update);
 
@@ -110,6 +101,32 @@ router.put("/categories/:userId", userExists, async (req, res) => {
     res.status(500).json({ message: "something went wrong" });
   }
 });
+
+router.put('/income/:userId', userExists, async(req,res)=>{
+  const body = req.body
+  const Userid = req.params.userId
+
+  try{
+    const id = await Users.editUserIncome(Userid,body)
+    res.status(201).json({id})
+  }catch(err){
+    res.status(500).json({message:'somthing went wrong'})
+  }
+
+})
+
+router.put('/spendinggoal/:userId', userExists, async(req,res)=>{
+  const body = req.body
+  const Userid = req.params.userId
+
+  try{
+    const id = await Users.editUserSpending(Userid, body)
+    res.status(201).json({id})
+  }catch(err){
+    res.status(500).json({message:'smothing went wrong'})
+  }
+
+})
 
 
 module.exports = router;

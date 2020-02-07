@@ -7,7 +7,9 @@ module.exports = {
   login,
   checkAccessToken,
   returnUserCategories,
-  editUserCategoryBudget
+  editUserCategoryBudget,
+  editUserIncome,
+  editUserSpending
 };
 
 function allUsers() {
@@ -61,7 +63,7 @@ function checkAccessToken(UserID) {
 // Returns the categories based upon the userId.
 function returnUserCategories(Userid) {
   return db('db')
-  .select('c.id', 'c.name', 'users.email', 'uc.budget')
+  .select('c.id', 'c.name', 'users.email', 'uc.budget', 'users.income', 'users.spending_goal')
   .from('users')
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
@@ -75,4 +77,16 @@ function editUserCategoryBudget(Userid, Categoryid, amount){
   .update({budget:amount}, 'user_id')
 }
 
+function editUserIncome(Userid, body){
+  return db('users')
+  .returning('id')
+  .where({id:Userid})
+  .update({income:body.income}, 'id')
+}
 
+function editUserSpending(Userid, body){
+  return db('users')
+  .returning('id')
+  .where({id:Userid})
+  .update({spending_goal:body.spending_goal}, 'id')
+}
