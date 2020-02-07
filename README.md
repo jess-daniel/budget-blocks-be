@@ -5,7 +5,9 @@
 🚫 Each student has a required minimum number of meaningful PRs each week per the rubric. Contributing to docs does NOT count as a PR to meet your weekly requirements.
 
 # Badges
+
 ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Lambda-School-Labs/budget-blocks-be)
+![Code Climate coverage](https://img.shields.io/codeclimate/coverage/Lambda-School-Labs/budget-blocks-be)
 
 # API Documentation
 
