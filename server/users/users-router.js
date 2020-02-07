@@ -111,20 +111,5 @@ router.put("/categories/:userId", userExists, async (req, res) => {
   }
 });
 
-//This is a reserve endpoint just in case. Keep it commented, but leave it
-
-// router.get('/allcategories', async (req,res)=>{
-
-//   try{
-
-//     const categories = await Users.getAllCategories()
-//     res.status(200).json({categories})
-
-//   }catch(err){
-//     console.log('error',err)
-//     res.status(500).json({message:'sorry couldnt get the categorues'})
-//   }
-
-// })
 
 module.exports = router;

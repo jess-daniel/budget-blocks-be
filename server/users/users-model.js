@@ -7,8 +7,7 @@ module.exports = {
   login,
   checkAccessToken,
   returnUserCategories,
-  editUserCategoryBudget,
-  // getAllCategories
+  editUserCategoryBudget
 };
 
 function allUsers() {
@@ -76,10 +75,4 @@ function editUserCategoryBudget(Userid, Categoryid, amount){
   .update({budget:amount}, 'user_id')
 }
 
-//Keep this but keep it commented
 
-// function getAllCategories(){
-//   return db('db')
-//   .select("*")
-//   .from('category')
-// }
