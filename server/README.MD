@@ -223,3 +223,22 @@
     {
         "id":1
     }
+
+## (User) **GET** /api/users/user/:param
+
+**While hitting the endpoint, put the userid as the parameter on the end**
+
+    {
+        example: /api/users/user/1
+    }
+
+**Returns the following object**
+
+    {
+        "user": {
+            "id": 1,
+            "email": "Yeet",
+            "income": 4200,
+            "spending_goal": 205
+        }
+    }
