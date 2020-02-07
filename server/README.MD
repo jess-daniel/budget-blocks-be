@@ -186,3 +186,40 @@
         "amount": 320,
         "status": "true"
     }
+
+## (User) **PUT** /api/users/income/:param
+
+**While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
+
+    {
+        example: /api/users/income/1(userid)
+    }
+
+    {
+	    "income":3100
+    }
+
+**Returns the id of the updated record**
+
+    {
+        "id":1
+    }
+
+## (User) **PUT** /api/users/spendinggoal/:param
+
+**While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
+
+
+    {
+        example: /api/users/spendinggoal/1(userid)
+    }
+
+    {
+	    "spending_goal":205
+    }
+
+**Returns the id of the updated record**
+
+    {
+        "id":1
+    }
