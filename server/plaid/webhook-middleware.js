@@ -22,7 +22,7 @@ module.exports = async(req,res,next)=>{
       var start = (new Date(start)).toISOString().replace(/-/g, '-').split('T')[0]
 
         if(!item_id || !pgItemId || !userID){
-            console.log('WEB-MIDLEWARE ERROR')
+            console.log(`item_id:${item_id}, pgItemId:${pgItemId}, userID:${userID}`)
         }else{
             body.item_id = item_id
             body.pgItemId = pgItemId
@@ -33,6 +33,6 @@ module.exports = async(req,res,next)=>{
         }
 
     }catch(err){
-        console.log('WEB-MIDLEWARE ERROR')
+        console.log('WEB-MIDLEWARE', err)
     }
 }
