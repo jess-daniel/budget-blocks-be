@@ -92,7 +92,7 @@ router.put("/categories/:userId", userExists, async (req, res) => {
   try {
     const update = await Users.editUserCategoryBudget(id,body.categoryid,body.budget);
 
-    console.log(update);
+    
 
     if (update == 1) {
       res.status(202).json({
