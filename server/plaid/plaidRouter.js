@@ -183,7 +183,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
     if(status.status ==="done"){
 
       const categories = await qs.INFO_get_categories(id)
-      const cat = categories.map((cat)=>{
+      const cat = categories.filter((cat)=>{
         if(cat != null){
           return cat
         }
