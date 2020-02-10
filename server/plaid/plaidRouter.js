@@ -97,6 +97,12 @@ router.post('/webhook', webhookMiddle, async (req,res)=>{
       //This is us getting the transactions 
       const {transactions} = await client.getTransactions(access_token, body.start, body.end);
 
+      if(!transactions){
+        const InsertionFail = await qs.WEB_track_insertion(body.pgItemId.id, 'failure')
+
+        res.status(500).json({message:'contacting Plaid failed', status:InsertionFail.status})
+      }
+
       //This is a more refined version of what I had before on line 54. 
       const done = await qs.WEB_insert_transactions(transactions, body.userID.id)
 
@@ -130,6 +136,12 @@ router.post('/webhook', webhookMiddle, async (req,res)=>{
       
       //This is us getting the transactions 
       const {transactions} = await client.getTransactions (access_token, body.start, body.end, {count:amountOfNew});
+
+      if(!transactions){
+        const InsertionFail = await qs.WEB_track_insertion(body.pgItemId.id, 'failure')
+
+        res.status(500).json({message:'contacting Plaid failed', status:InsertionFail.status})
+      }
 
       //This is a more refined version of what I had before on line 54. 
       const done = await qs.WEB_insert_transactions(transactions, body.userID.id)
