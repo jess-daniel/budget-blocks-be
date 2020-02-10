@@ -183,10 +183,16 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
     if(status.status ==="done"){
 
       const categories = await qs.INFO_get_categories(id)
+      const cat = categories.map((cat)=>{
+        if(cat != null){
+          return cat
+        }
+      })
+
       const balance = await client.getBalance(req.body.access)
       //if balances is falsy, then fall back on our own data's snapshot of the data
       const accounts = balance.accounts
-      res.status(200).json({categories,accounts})
+      res.status(200).json({Categories:cat,accounts})
 
     }else if(status.status ==="inserting"){
       const code = 300
