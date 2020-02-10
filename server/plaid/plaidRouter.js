@@ -170,37 +170,64 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
   }
  
   try{
-    //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
-    const status = await qs.INFO_get_status(id)
+      //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
+      const status = await qs.INFO_get_status(id)
 
-    //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
-    if(!status){
-      const code = 330
-      res.status(330).json({message:"insertion process hasn't started", code})
-    }
-
-    //when the status is done, run a super query to get the categories and their transactions 
-    if(status.status ==="done"){
-
-      const categories = await qs.INFO_get_categories(id)
-      const cat = categories.filter((cat)=>{
-        if(cat != null){
-          return cat
+      //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
+      if(!status){
+        const code = 330
+        res.status(330).json({message:"insertion process hasn't started", code})
+      }else{
+        switch(status.status){
+          case 'done':
+              const categories = await qs.INFO_get_categories(id)
+              const cat = categories.filter((cat)=>{
+                if(cat != null){
+                  return cat
+                }
+              })
+              const balance = await client.getBalance(req.body.access)
+              //if balances is falsy, then fall back on our own data's snapshot of the data
+              const accounts = balance.accounts
+              res.status(200).json({Categories:cat,accounts})
+              break;
+          case 'inserting':
+              const insertCode = 300
+              res.status(insertCode).json({message:"we are inserting your data",insertCode})
+              break;
+          case 'failure':
+              const failureCode = 503
+              res.status(failureCode).json({message:'could not connect to plaid', failureCode})
         }
-      })
+      }
 
-      const balance = await client.getBalance(req.body.access)
-      //if balances is falsy, then fall back on our own data's snapshot of the data
-      const accounts = balance.accounts
-      res.status(200).json({Categories:cat,accounts})
+    //   //when the status is done, run a super query to get the categories and their transactions 
+    //   if(status.status ==="done"){
 
-    }else if(status.status ==="inserting"){
-      const code = 300
-      res.status(300).json({message:"we are inserting your data",code})
+    //     const categories = await qs.INFO_get_categories(id)
+    //     const cat = categories.filter((cat)=>{
+    //       if(cat != null){
+    //         return cat
+    //       }
+    //     })
 
-    }
+    //     const balance = await client.getBalance(req.body.access)
+    //     //if balances is falsy, then fall back on our own data's snapshot of the data
+    //     const accounts = balance.accounts
+    //     res.status(200).json({Categories:cat,accounts})
 
-    res.end()
+    //   }else if(status.status ==="inserting"){
+    //     const code = 300
+    //     res.status(300).json({message:"we are inserting your data",code})
+
+    //   }else if(status.status === 'failure'){
+    //     const code = 503
+    //     res.status(code).json({message:'could not connect to plaid', code})
+    //   }
+
+
+
+    // res.end()
 
   }catch(err){
     console.log('THE ERROR IM LOOKING FOR',err)
