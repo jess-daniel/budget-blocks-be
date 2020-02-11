@@ -174,7 +174,7 @@ const insert_accounts = (body, pgItemId)=>{
   })
 }
 
-const PLAID_insert_accounts = (list, pgItemId)=>{
+const PLAID_insert_accounts = async(list, pgItemId)=>{
 
   return Promise.all(list.map(async(acct)=>{
     const yeet = await insert_accounts(acct, pgItemId)
