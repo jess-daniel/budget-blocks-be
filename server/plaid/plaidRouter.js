@@ -53,9 +53,9 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    const accounts = await client.getBalance(access_token);
+    // const accounts = await client.getBalance(access_token);
 
-    const doneAccounts = await qs.PLAID_insert_accounts(accounts,Itemid)
+    // const doneAccounts = await qs.PLAID_insert_accounts(accounts,Itemid)
 
   
     //same thing, it just needs to insert into the user_category linking table the default categories
@@ -176,7 +176,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
   try{
       //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
       const status = await qs.INFO_get_status(id)
-      const pgItemId = await qs.PLAID_get_pg_item_id(id)
+      // const pgItemId = await qs.PLAID_get_pg_item_id(id)
       //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
       if(!status){
         const code = 330
@@ -191,13 +191,13 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
                   return cat
                 }
               })
-              const yeet = await qs.PLAID_get_accounts(pgItemId)
-              // const balance = await client.getBalance(req.body.access)
-              //if balances is falsy, then fall back on our own data's snapshot of the data
+              // const yeet = await qs.PLAID_get_accounts(pgItemId)
+              const balance = await client.getBalance(req.body.access)
+              // if balances is falsy, then fall back on our own data's snapshot of the data
 
-              // const accounts = balance.accounts
+              const accounts = balance.accounts
 
-              res.status(200).json({Categories:cat,yeet})
+              res.status(200).json({Categories:cat,accounts})
               break;
           case 'inserting':
               const insertCode = 300
