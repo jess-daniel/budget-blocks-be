@@ -46,7 +46,8 @@ const insert_transactions = (trans, Userid) => {
       amount: trans.amount,
       payment_date: trans.date,
       category_id: sortCategory(trans.category_id),
-      user_id:Userid
+      user_id:Userid,
+      account_id:trans.account_id
     });
 };
 
