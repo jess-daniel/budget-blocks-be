@@ -49,7 +49,7 @@ function PLAID_find_user(filter) {
     .first()
     .then(async(user)=>{
       const Totalbudget = await get_total_budget(user.id)
-      return {...user, Totalbudget}
+      return {...user, Totalbudget: Totalbudget.total}
     })
 }
 
