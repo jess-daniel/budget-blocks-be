@@ -70,18 +70,6 @@
 
     {
         "categories":[
-             {
-                "id": 1,
-                "name": "Bank Fees",
-                "email": "Yeet",
-                "transactions": []
-            },
-            {
-                "id": 2,
-                "name": "Cash Advance",
-                "email": "Yeet",
-                "transactions": []
-            },
             {
                 "id": 10,
                 "name": "Payment",
