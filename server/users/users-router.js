@@ -130,12 +130,12 @@ router.put('/income/:userId', userExists, async(req,res)=>{
 
 })
 
-router.put('/spendinggoal/:userId', userExists, async(req,res)=>{
+router.put('/savinggoal/:userId', userExists, async(req,res)=>{
   const body = req.body
   const Userid = req.params.userId
 
   try{
-    const id = await Users.editUserSpending(Userid, body)
+    const id = await Users.editUserSaving(Userid, body)
     res.status(201).json({id})
   }catch(err){
     res.status(500).json({message:'smothing went wrong'})

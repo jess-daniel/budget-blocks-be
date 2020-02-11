@@ -205,17 +205,17 @@
         "id":1
     }
 
-## (User) **PUT** /api/users/spendinggoal/:param
+## (User) **PUT** /api/users/savinggoal/:param
 
 **While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
 
 
     {
-        example: /api/users/spendinggoal/1(userid)
+        example: /api/users/savinggoal/1(userid)
     }
 
     {
-	    "spending_goal":205
+	    "saving_goal":205
     }
 
 **Returns the id of the updated record**
@@ -239,6 +239,6 @@
             "id": 1,
             "email": "Yeet",
             "income": 4200,
-            "spending_goal": 205
+            "saving_goal": 205
         }
     }

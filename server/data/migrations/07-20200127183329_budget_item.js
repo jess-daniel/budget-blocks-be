@@ -29,6 +29,16 @@ exports.up = function(knex) {
     .notNullable()
     .onDelete('CASCADE')
     .onUpdate('CASCADE');
+
+    tbl.string('account_id')
+    .unsigned()
+    .references('account_id')
+    .inTable('bank_account')
+    .notNullable()
+    .onDelete('CASCADE')
+    .onUpdate('CASCADE');
+
+
   })
 };
 

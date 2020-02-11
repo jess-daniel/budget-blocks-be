@@ -9,7 +9,7 @@ module.exports = {
   returnUserCategories,
   editUserCategoryBudget,
   editUserIncome,
-  editUserSpending
+  editUserSaving
 };
 
 function allUsers() {
@@ -28,7 +28,7 @@ function addUser(userData) {
 //Middlewhere
 function findUserBy(filter) {
   return db("users")
-    .select("id", "email", "income", "spending_goal")
+    .select("id", "email", "income", "saving_goal")
     .where(filter)
     .first();
 }
@@ -63,7 +63,7 @@ function checkAccessToken(UserID) {
 // Returns the categories based upon the userId.
 function returnUserCategories(Userid) {
   return db('db')
-  .select('c.id', 'c.name', 'users.email', 'uc.budget', 'users.income as Users income', 'users.spending_goal as Users spending goal')
+  .select('c.id', 'c.name', 'users.email', 'uc.budget', 'users.income as Users income', 'users.saving_goal as Users saving goal')
   .from('users')
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
@@ -84,9 +84,9 @@ function editUserIncome(Userid, body){
   .update({income:body.income}, 'id')
 }
 
-function editUserSpending(Userid, body){
+function editUserSaving(Userid, body){
   return db('users')
   .returning('id')
   .where({id:Userid})
-  .update({spending_goal:body.spending_goal}, 'id')
+  .update({saving_goal:body.saving_goal}, 'id')
 }
