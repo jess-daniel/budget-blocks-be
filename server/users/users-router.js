@@ -39,6 +39,10 @@ router.get("/", restricted, (req, res) => {
 router.get('/user/:userId', userExists, async(req,res)=>{
   const id = req.params.userId
 
+  if(!id){
+    res.status(400).json({message:'please add a parameter at the end of the endpoint'})
+  }
+
   try{
 
     const user = await Users.findUserBy({id})
@@ -119,11 +123,15 @@ router.put("/categories/:userId", userExists, async (req, res) => {
 
 router.put('/income/:userId', userExists, async(req,res)=>{
   const body = req.body
-  const Userid = req.params.userId
+  const id = req.params.userId
+
+  if (!id || !body) {
+    res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
+  }
 
   try{
-    const id = await Users.editUserIncome(Userid,body)
-    res.status(201).json({id})
+    const yeet = await Users.editUserIncome(id,body)
+    res.status(201).json({yeet})
   }catch(err){
     res.status(500).json({message:'somthing went wrong'})
   }
@@ -132,11 +140,15 @@ router.put('/income/:userId', userExists, async(req,res)=>{
 
 router.put('/savinggoal/:userId', userExists, async(req,res)=>{
   const body = req.body
-  const Userid = req.params.userId
+  const id = req.params.userId
+
+  if (!id || !body) {
+    res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
+  }
 
   try{
-    const id = await Users.editUserSaving(Userid, body)
-    res.status(201).json({id})
+    const yeet = await Users.editUserSaving(id, body)
+    res.status(201).json({yeet})
   }catch(err){
     res.status(500).json({message:'smothing went wrong'})
   }
