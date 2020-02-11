@@ -25,12 +25,24 @@ function addUser(userData) {
     });
 }
 
+function get_total_budget(userID){
+  
+  return db('user_category')
+  .sum({total:'budget'})
+  .where({user_id:userID})
+  .first()
+}
+
 //Middlewhere
 function findUserBy(filter) {
   return db("users")
     .select("id", "email", "income", "saving_goal")
     .where(filter)
-    .first();
+    .first()
+    .then(async(user)=>{
+      const Totalbudget = await get_total_budget(user.id)
+      return {...user, Totalbudget}
+    })
 }
 
 //This is the login, searching just by email works since all emails are unique(Gmail duh) and in our own database the email column is set to unique

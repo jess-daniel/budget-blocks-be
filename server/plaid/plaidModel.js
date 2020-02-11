@@ -142,6 +142,7 @@ const INFO_get_amount_by_category = (categoryID, userID)=>{
   .first()
 }
 
+
 const INFO_get_categories = (Userid)=>{
   return db('db')
   .select('c.id', 'c.name', 'users.email', 'uc.budget')
