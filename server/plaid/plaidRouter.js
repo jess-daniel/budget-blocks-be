@@ -171,6 +171,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
 
   if(!id){
     res.status(400).json({message:'please add a param to the end of the endpoint'})
+    
   }
  
   try{
