@@ -9,7 +9,8 @@ module.exports = {
   returnUserCategories,
   editUserCategoryBudget,
   editUserIncome,
-  editUserSaving
+  editUserSaving,
+  PLAID_find_user
 };
 
 function allUsers() {
@@ -26,7 +27,7 @@ function addUser(userData) {
 }
 
 function get_total_budget(userID){
-  
+
   return db('user_category')
   .sum({total:'budget'})
   .where({user_id:userID})
@@ -35,6 +36,13 @@ function get_total_budget(userID){
 
 //Middlewhere
 function findUserBy(filter) {
+  return db("users")
+    .select("id", "email", "income", "saving_goal")
+    .where(filter)
+    .first()
+}
+
+function PLAID_find_user(filter) {
   return db("users")
     .select("id", "email", "income", "saving_goal")
     .where(filter)

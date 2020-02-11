@@ -45,7 +45,7 @@ router.get('/user/:userId', userExists, async(req,res)=>{
 
   try{
 
-    const user = await Users.findUserBy({id})
+    const user = await Users.PLAID_find_user({id})
 
     res.status(200).json({user})
 
