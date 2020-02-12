@@ -12,7 +12,7 @@ exports.up = function(knex) {
         tbl.decimal('income')
         .nullable();
 
-        tbl.decimal('spending_goal')
+        tbl.decimal('saving_goal')
         .nullable();
       })
 

@@ -9,7 +9,8 @@ module.exports = {
   returnUserCategories,
   editUserCategoryBudget,
   editUserIncome,
-  editUserSpending
+  editUserSaving,
+  PLAID_find_user
 };
 
 function allUsers() {
@@ -25,12 +26,31 @@ function addUser(userData) {
     });
 }
 
+function get_total_budget(userID){
+
+  return db('user_category')
+  .sum({total:'budget'})
+  .where({user_id:userID})
+  .first()
+}
+
 //Middlewhere
 function findUserBy(filter) {
   return db("users")
-    .select("id", "email", "income", "spending_goal")
+    .select("id", "email", "income", "saving_goal")
     .where(filter)
-    .first();
+    .first()
+}
+
+function PLAID_find_user(filter) {
+  return db("users")
+    .select("id", "email", "income", "saving_goal")
+    .where(filter)
+    .first()
+    .then(async(user)=>{
+      const Totalbudget = await get_total_budget(user.id)
+      return {...user, Totalbudget: Totalbudget.total}
+    })
 }
 
 //This is the login, searching just by email works since all emails are unique(Gmail duh) and in our own database the email column is set to unique
@@ -63,7 +83,7 @@ function checkAccessToken(UserID) {
 // Returns the categories based upon the userId.
 function returnUserCategories(Userid) {
   return db('db')
-  .select('c.id', 'c.name', 'users.email', 'uc.budget', 'users.income as Users income', 'users.spending_goal as Users spending goal')
+  .select('c.id', 'c.name', 'users.email', 'uc.budget', 'users.income as Users income', 'users.saving_goal as Users saving goal')
   .from('users')
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
@@ -84,9 +104,9 @@ function editUserIncome(Userid, body){
   .update({income:body.income}, 'id')
 }
 
-function editUserSpending(Userid, body){
+function editUserSaving(Userid, body){
   return db('users')
   .returning('id')
   .where({id:Userid})
-  .update({spending_goal:body.spending_goal}, 'id')
+  .update({saving_goal:body.saving_goal}, 'id')
 }

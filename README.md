@@ -6,8 +6,8 @@
 
 # Badges
 
-![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Lambda-School-Labs/budget-blocks-be)
-![Code Climate coverage](https://img.shields.io/codeclimate/coverage/Lambda-School-Labs/budget-blocks-be)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Lambda-School-Labs/budget-blocks-be)](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
+[![Code Climate coverage](https://img.shields.io/codeclimate/coverage/Lambda-School-Labs/budget-blocks-be)](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
 
 # API Documentation
 

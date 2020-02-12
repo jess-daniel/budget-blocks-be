@@ -1,0 +1,12 @@
+{
+  "name": "budget-blocks-be",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
+}

@@ -46,7 +46,8 @@ const insert_transactions = (trans, Userid) => {
       amount: trans.amount,
       payment_date: trans.date,
       category_id: sortCategory(trans.category_id),
-      user_id:Userid
+      user_id:Userid,
+      account_id:trans.account_id
     });
 };
 
@@ -141,6 +142,7 @@ const INFO_get_amount_by_category = (categoryID, userID)=>{
   .first()
 }
 
+
 const INFO_get_categories = (Userid)=>{
   return db('db')
   .select('c.id', 'c.name', 'users.email', 'uc.budget')
@@ -160,6 +162,45 @@ const INFO_get_categories = (Userid)=>{
   })
 } 
 
+const insert_accounts = (body, pgItemId)=>{
+  return db('bank_account')
+  .returning('id')
+  .insert({
+    account_id:body.account_id,
+    balance:body.balances.available,
+    official_name:body.official_name,
+    subtype:body.subtype,
+    type:body.type,
+    mask:body.mask,
+    pg_item_id:pgItemId
+  })
+}
+
+const PLAID_insert_accounts = async(list, pgItemId)=>{
+
+  return Promise.all(list.map(async(acct)=>{
+    const yeet = await insert_accounts(acct, pgItemId)
+    return{...acct, yeet:'done'}
+  }))
+}
+
+const PLAID_get_pg_item_id = (userID)=>{
+
+  return db('db')
+  .select('i.id')
+  .from('users')
+  .join('item as i', 'users.id', 'i.user_id')
+  .where('users.id', userID)
+  .first()
+}
+
+const PLAID_get_accounts = (pgItemId)=>{
+  return db('db')
+  .select('*')
+  .from('bank_account')
+  .where('pg_item_id', pgItemId)
+}
+
 
 
 module.exports = {
@@ -174,5 +215,8 @@ module.exports = {
   WEB_get_accessToken,
   WEB_insert_transactions,
   INFO_get_status,
-  INFO_get_categories
+  INFO_get_categories,
+  PLAID_insert_accounts,
+  PLAID_get_pg_item_id,
+  PLAID_get_accounts
 };
