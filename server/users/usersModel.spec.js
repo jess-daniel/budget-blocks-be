@@ -5,6 +5,10 @@ const db = require("../data/db-config");
 
 describe("Users Model", function() {
   // Checks the response is correct
+  afterAll(() => {
+    server.close();
+  });
+
   it("GET /users", async function() {
     const response = await request(server).get("/");
     expect(response.status).toBe(200);
@@ -23,7 +27,7 @@ it("GET /categories/:userId", async function() {
   expect(response.status).toBe(200);
 });
 
-// Checks that the response to the categories is a json object
+// // Checks that the response to the categories is a json object
 it("Should return a JSON object", async function() {
   const response = await request(server).get("/categories/1");
   expect(response.type).toMatch(/json/i);
