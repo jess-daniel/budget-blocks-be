@@ -70,18 +70,6 @@
 
     {
         "categories":[
-             {
-                "id": 1,
-                "name": "Bank Fees",
-                "email": "Yeet",
-                "transactions": []
-            },
-            {
-                "id": 2,
-                "name": "Cash Advance",
-                "email": "Yeet",
-                "transactions": []
-            },
             {
                 "id": 10,
                 "name": "Payment",
@@ -205,17 +193,17 @@
         "id":1
     }
 
-## (User) **PUT** /api/users/spendinggoal/:param
+## (User) **PUT** /api/users/savinggoal/:param
 
 **While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
 
 
     {
-        example: /api/users/spendinggoal/1(userid)
+        example: /api/users/savinggoal/1(userid)
     }
 
     {
-	    "spending_goal":205
+	    "saving_goal":205
     }
 
 **Returns the id of the updated record**
@@ -229,7 +217,7 @@
 **While hitting the endpoint, put the userid as the parameter on the end**
 
     {
-        example: /api/users/user/1
+        example: /api/users/user/1(userid)
     }
 
 **Returns the following object**
@@ -239,6 +227,10 @@
             "id": 1,
             "email": "Yeet",
             "income": 4200,
-            "spending_goal": 205
+            "saving_goal": 205,
+            "Totalbudget":1400
+
         }
     }
+
+**Keep in mind, the totalbudget will be null since if the user hasn't set a budget for at least one of the categories. The endpoint to set a category budget for a specific user is above**
