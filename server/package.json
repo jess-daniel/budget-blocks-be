@@ -25,11 +25,18 @@
     "supertest": "^4.0.2"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**",
+      "!**/__tests__/**"
+    ],
     "testEnvironment": "node"
   },
   "scripts": {
     "server": "nodemon index.js",
     "start": "node index.js",
-    "test": "jest --watch"
+    "test": "jest --detectOpenHandles --forceExit",
+    "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
   }
 }
