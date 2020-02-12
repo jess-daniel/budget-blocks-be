@@ -85,6 +85,12 @@ const WEB_get_userID = (plaidItemId)=>{
   .where('item.item_id',plaidItemId)
   .first()
 }
+//reserved for error logging,under no circumstances will we use this for the front end
+const WEB_get_all_item_data =()=>{
+  return db('db')
+  .select('*')
+  .from('item')
+}
 
 const WEB_track_insertion=(pgItemId,status)=>{
   return db('item_insertions')
@@ -214,6 +220,7 @@ module.exports = {
   WEB_track_insertion,
   WEB_get_accessToken,
   WEB_insert_transactions,
+  WEB_get_all_item_data,
   INFO_get_status,
   INFO_get_categories,
   PLAID_insert_accounts,

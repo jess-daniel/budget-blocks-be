@@ -24,7 +24,10 @@ module.exports = async(req,res,next)=>{
       var start = (new Date(start)).toISOString().replace(/-/g, '-').split('T')[0]
 
         if(!item_id || !pgItemId || !userID){
+            const items = await qs.WEB_get_all_item_data()
             console.log(`item_id:${item_id}, pgItemId:${pgItemId}, userID:${userID}`)
+            console.log("here are the items in the db", items)
+            res.end()
         }else{
             body.item_id = item_id
             body.pgItemId = pgItemId
