@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
+    "coverage": "cd server && jest --coverage --detectOpenHandles --forceExit || true"
   },
   "devDependencies": {
     "jest": "^25.1.0"
