@@ -180,7 +180,6 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
       const status = await qs.INFO_get_status(id)
       const pgItemId = await qs.PLAID_get_pg_item_id(id)
 
-      console.log("HERE IS THE PGITEMID AND BALANCES THAT I CAN SEND", pgItemId, balances)
       //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
       if(!status){
         const code = 330
