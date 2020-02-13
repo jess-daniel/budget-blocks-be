@@ -196,16 +196,21 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
               })
               //first get the latest balance info
               const balance = await client.getBalance(req.body.access)
-              const accounts = balance.accounts
-              //update our records
-
-              const updatedAccounts = await qs.PLAID_update_accounts(accounts)
-              
-              //get our records
-              const balances = await qs.PLAID_get_accounts(pgItemId.id)
-              
-              //send categories and account balances back to the user
-              res.status(200).json({Categories:cat,accounts: balances})
+              if(!balance){
+                //if Plaid is down just send what we have
+                console.log("PLAID IS DOWN")
+                const balances = await qs.PLAID_get_accounts(pgItemId.id)
+                res.status(200).json({Categories:cat, accounts:balances})
+              }else{
+                //if Plaid is up, take the most recent and update our db, and send them back in our db's format
+                const accounts = balance.accounts
+                //update our records
+                const updatedAccounts = await qs.PLAID_update_accounts(accounts)
+                //get our records
+                const balances = await qs.PLAID_get_accounts(pgItemId.id)
+                //send categories and account balances back to the user
+                res.status(200).json({Categories:cat,accounts: balances})
+              }
               break;
           case 'inserting':
               const insertCode = 300
