@@ -182,10 +182,10 @@ const insert_accounts = (body, pgItemId)=>{
   })
 }
 
-const PLAID_insert_accounts = async(list, pgItemId)=>{
+const PLAID_insert_accounts = async(accounts, pgItemId)=>{
 
-  return Promise.all(list.map(async(acct)=>{
-    const yeet = await insert_accounts(acct, pgItemId)
+  return Promise.all(accounts.map(async(acct)=>{
+    const yate = await insert_accounts(acct, pgItemId)
     return{...acct, yeet:'done'}
   }))
 }

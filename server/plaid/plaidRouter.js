@@ -53,9 +53,9 @@ router.post('/token_exchange', publicTokenExists, async (req, res) => {
 
     const Itemid = await qs.add_An_Item(item.item_id, userid);
 
-    // const accounts = await client.getBalance(access_token);
+    const accounts = await client.getBalance(access_token);
 
-    // const doneAccounts = await qs.PLAID_insert_accounts(accounts,Itemid)
+    const doneAccounts = await qs.PLAID_insert_accounts(accounts,Itemid)
 
   
     //same thing, it just needs to insert into the user_category linking table the default categories
