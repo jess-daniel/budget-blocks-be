@@ -1,4 +1,4 @@
-exports.idAndBody = (res,res,next)=>{
+exports.idAndBody = (req,res,next)=>{
     const body = req.body
     const id = req.params.userId
   
