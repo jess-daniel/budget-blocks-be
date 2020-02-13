@@ -96,34 +96,24 @@
         ],
         "accounts":[
             {
-            "account_id": "BzkA8AKZagFaW6p68rqBtjbbePxMjMFwpoRrl",
-            "balances": {
-                "available": 100,
-                "current": 110,
-                "iso_currency_code": "USD",
-                "limit": null,
-                "unofficial_currency_code": null
-            },
-            "mask": "0000",
-            "name": "Plaid Checking",
-            "official_name": "Plaid Gold Standard 0% Interest Checking",
-            "subtype": "checking",
-            "type": "depository"
+                "id": 1,
+                "account_id": "kNnnbgZ9RATKbD1dqrl5I3jKLEz97eIWbw8n4",
+                "balance": 100,
+                "official_name": "Plaid Gold Standard 0% Interest Checking",
+                "subtype": "checking",
+                "type": "depository",
+                "mask": "0000",
+                "pg_item_id": 1
             },
             {
-            "account_id": "3eJoaoXb6DFxwaLab6rBfaJJv5BEaEFqjyvzL",
-            "balances": {
-                "available": 200,
-                "current": 210,
-                "iso_currency_code": "USD",
-                "limit": null,
-                "unofficial_currency_code": null
-            },
-            "mask": "1111",
-            "name": "Plaid Saving",
-            "official_name": "Plaid Silver Standard 0.1% Interest Saving",
-            "subtype": "savings",
-            "type": "depository"
+                "id": 2,
+                "account_id": "lPbbW8MvRAhv5wlgKzkLiNZ6zMj4BviZvJrQD",
+                "balance": 200,
+                "official_name": "Plaid Silver Standard 0.1% Interest Saving",
+                "subtype": "savings",
+                "type": "depository",
+                "mask": "1111",
+                "pg_item_id": 1
             }
         ]
     }
