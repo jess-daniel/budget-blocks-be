@@ -114,12 +114,13 @@ router.post('/webhook', webhookMiddle, async (req,res)=>{
      if(done){ 
        const InsertionEnd = await qs.WEB_track_insertion(body.pgItemId.id, 'done')
        console.log('THE INSERTION ENDING', InsertionEnd)
+       res.status(200)
      }
   
-     res.status(200)
   
     }catch(err){
       console.log('INITAL ERROR', err)
+      res.status(500)
     }
   }else if(body.webhook_code==="DEFAULT_UPDATE"){
     console.log('DEFAULT UPDATE', body)
@@ -177,7 +178,10 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
   try{
       //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
       const status = await qs.INFO_get_status(id)
-      // const pgItemId = await qs.PLAID_get_pg_item_id(id)
+      const pgItemId = await qs.PLAID_get_pg_item_id(id)
+      const balances = await qs.PLAID_get_accounts(pgItemId)
+
+      console.log("HERE IS THE PGITEMID AND BALANCES THAT I CAN SEND", pgItemId, balances)
       //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
       if(!status){
         const code = 330
@@ -192,9 +196,12 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
                   return cat
                 }
               })
-              // const yeet = await qs.PLAID_get_accounts(pgItemId)
               const balance = await client.getBalance(req.body.access)
               // if balances is falsy, then fall back on our own data's snapshot of the data
+              // if(!balance){
+              //   const balances = await qs.PLAID_get_accounts(pgItemId)
+
+              // }
 
               const accounts = balance.accounts
 
