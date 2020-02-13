@@ -169,7 +169,6 @@ const INFO_get_categories = (Userid)=>{
 } 
 
 const insert_accounts = (body, pgItemId)=>{
-  console.log("ACCOUNT I'M ATTEMPTING TO INSERT",body)
   return db('bank_account')
   .returning('id')
   .insert({
