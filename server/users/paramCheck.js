@@ -9,7 +9,7 @@ exports.idAndBody = (req,res,next)=>{
     }
 }
 
-exports.onlyId=(res,res,next)=>{
+exports.onlyId=(req,res,next)=>{
     const body = req.body
     const id = req.params.userId
   
