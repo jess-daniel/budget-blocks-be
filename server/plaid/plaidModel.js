@@ -206,7 +206,7 @@ const PLAID_get_accounts = (pgItemId)=>{
   return db('db')
   .select('*')
   .from('bank_account')
-  // .where('pg_item_id', pgItemId)
+  .where('pg_item_id', pgItemId)
 }
 
 

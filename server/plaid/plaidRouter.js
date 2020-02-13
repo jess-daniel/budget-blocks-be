@@ -179,7 +179,7 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
       //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
       const status = await qs.INFO_get_status(id)
       const pgItemId = await qs.PLAID_get_pg_item_id(id)
-      const balances = await qs.PLAID_get_accounts(pgItemId)
+      const balances = await qs.PLAID_get_accounts(pgItemId.id)
 
       console.log("HERE IS THE PGITEMID AND BALANCES THAT I CAN SEND", pgItemId, balances)
       //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
