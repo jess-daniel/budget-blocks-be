@@ -20,6 +20,7 @@ const add_An_Item = (Itemid, Userid) => {
     });
 };
 
+//Reserved strictly for the below function: insert_transactions
 const sortCategory = TransactionItem => {
   var i;
   for (i = 0; i <= data.length - 1; i++) {
@@ -45,7 +46,8 @@ const insert_transactions = (trans, Userid) => {
       amount: trans.amount,
       payment_date: trans.date,
       category_id: sortCategory(trans.category_id),
-      user_id:Userid
+      user_id:Userid,
+      account_id:trans.account_id
     });
 };
 
@@ -82,6 +84,12 @@ const WEB_get_userID = (plaidItemId)=>{
   .join('users', 'item.user_id', 'users.id')
   .where('item.item_id',plaidItemId)
   .first()
+}
+//reserved for error logging,under no circumstances will we use this for the front end
+const WEB_get_all_item_data =()=>{
+  return db('db')
+  .select('*')
+  .from('item')
 }
 
 const WEB_track_insertion=(pgItemId,status)=>{
@@ -124,17 +132,26 @@ const INFO_get_status = (Userid)=>{
   .first()
 }
 
-//reserved for the functino below it
+//reserved for the function below it
 const INFO_get_cat_transactions = (categoryID, userID)=>{
   return db('db')
   .select('*')
   .from('budget_item')
   .where({category_id:categoryID, user_id:userID})
 }
+//reserved for the function below it
+const INFO_get_amount_by_category = (categoryID, userID)=>{
+
+  return db('budget_item')
+  .sum({total:'amount'})
+  .where({category_id:categoryID, user_id:userID})
+  .first()
+}
+
 
 const INFO_get_categories = (Userid)=>{
   return db('db')
-  .select('c.id', 'c.name', 'users.email')
+  .select('c.id', 'c.name', 'users.email', 'uc.budget')
   .from('users')
   .join('user_category as uc', 'users.id', 'uc.user_id')
   .join('category as c', 'uc.category_id', 'c.id')
@@ -143,10 +160,52 @@ const INFO_get_categories = (Userid)=>{
 
     return Promise.all(categories.map(async(cat)=>{
       const trans = await INFO_get_cat_transactions(cat.id, Userid)
-      return{...cat, transactions:trans}
+      const amount = await INFO_get_amount_by_category(cat.id,Userid)
+      if(trans.length >0){
+        return{...cat, transactions:trans, total:amount.total}
+      }
     }))
   })
 } 
+
+const insert_accounts = (body, pgItemId)=>{
+  return db('bank_account')
+  .returning('id')
+  .insert({
+    account_id:body.account_id,
+    balance:body.balances.available,
+    official_name:body.official_name,
+    subtype:body.subtype,
+    type:body.type,
+    mask:body.mask,
+    pg_item_id:pgItemId
+  })
+}
+
+const PLAID_insert_accounts = async(accounts, pgItemId)=>{
+
+  return Promise.all(accounts.map(async(acct)=>{
+    const yate = await insert_accounts(acct, pgItemId)
+    return{...acct, yeet:'done'}
+  }))
+}
+
+const PLAID_get_pg_item_id = (userID)=>{
+
+  return db('db')
+  .select('i.id')
+  .from('users')
+  .join('item as i', 'users.id', 'i.user_id')
+  .where('users.id', userID)
+  .first()
+}
+
+const PLAID_get_accounts = (pgItemId)=>{
+  return db('db')
+  .select('*')
+  .from('bank_account')
+  .where('pg_item_id', pgItemId)
+}
 
 
 
@@ -161,6 +220,10 @@ module.exports = {
   WEB_track_insertion,
   WEB_get_accessToken,
   WEB_insert_transactions,
+  WEB_get_all_item_data,
   INFO_get_status,
-  INFO_get_categories
+  INFO_get_categories,
+  PLAID_insert_accounts,
+  PLAID_get_pg_item_id,
+  PLAID_get_accounts
 };

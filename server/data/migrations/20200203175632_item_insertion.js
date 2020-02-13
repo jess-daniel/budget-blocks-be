@@ -1,4 +1,3 @@
-
 exports.up = function(knex) {
 
     return knex.schema.createTable('item_insertions', tbl=>{
@@ -17,11 +16,8 @@ exports.up = function(knex) {
         .onUpdate('CASCADE');
 
     })
-  
 };
 
 exports.down = function(knex) {
-
     return knex.schema.dropTableIfExists('item_insertions')
-  
 };

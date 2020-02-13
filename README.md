@@ -4,6 +4,11 @@
 
 🚫 Each student has a required minimum number of meaningful PRs each week per the rubric. Contributing to docs does NOT count as a PR to meet your weekly requirements.
 
+# Badges
+
+![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Lambda-School-Labs/budget-blocks-be)
+![Code Climate coverage](https://img.shields.io/codeclimate/coverage/Lambda-School-Labs/budget-blocks-be)
+
 # API Documentation
 
 #### 1️⃣ Backend delpoyed at [🚫name service here](🚫add URL here) <br>
@@ -42,10 +47,11 @@ To get the server running locally:
 
 #### User Routes
 
-| Method | Endpoint             | Access Control | Description                                  |
-| ------ | -------------------- | -------------- | -------------------------------------------- |
-| GET    | `/api/auth/login`    | all users      | Email & password required. Returns JWT token |
-| GET    | `/api/auth/register` | all users      | Email & password required.                   |
+| Method | Endpoint                        | Access Control | Description                                  |
+| ------ | ------------------------------- | -------------- | -------------------------------------------- |
+| GET    | `/api/auth/login`               | all users      | Email & password required. Returns JWT token |
+| GET    | `/api/auth/register`            | all users      | Email & password required.                   |
+| GET    | `/api/users/categories/:userId` | all users      | Returns a list of user categories.           |
 
 # Data Model
 
@@ -121,9 +127,10 @@ create a .env file that includes the following:
 🚫 These are just examples, replace them with the specifics for your app
 
 _ STAGING_DB - optional development db for using functionality not available in SQLite
-_ NODE*ENV - set to "development" until ready for "production"
-* JWT*SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-_=+)') for i in range(50)])
-_ SENDGRID_API_KEY - this is generated in your Sendgrid account \* stripe_secret - this is generated in the Stripe dashboard
+_ NODE\*ENV - set to "development" until ready for "production"
+
+- JWT*SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;*(-_=+)') for i in range(50)])
+  _ SENDGRID_API_KEY - this is generated in your Sendgrid account \* stripe_secret - this is generated in the Stripe dashboard
 
 ## Contributing
 
