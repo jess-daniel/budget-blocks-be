@@ -216,8 +216,7 @@ const update_accounts = (body)=>{
     official_name:body.official_name ? body.official_name: body.name,
     subtype:body.subtype,
     type:body.type,
-    mask:body.mask,
-    pg_item_id:pgItemId
+    mask:body.mask
   })
   .where({account_id:body.account_id})
 }
