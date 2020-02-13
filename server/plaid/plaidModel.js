@@ -169,6 +169,7 @@ const INFO_get_categories = (Userid)=>{
 } 
 
 const insert_accounts = (body, pgItemId)=>{
+  console.log("ACCOUNT I'M ATTEMPTING TO INSERT",body)
   return db('bank_account')
   .returning('id')
   .insert({
@@ -183,6 +184,8 @@ const insert_accounts = (body, pgItemId)=>{
 }
 
 const PLAID_insert_accounts = async(accounts, pgItemId)=>{
+
+  
 
   return Promise.all(accounts.map(async(acct)=>{
     const yate = await insert_accounts(acct, pgItemId)
