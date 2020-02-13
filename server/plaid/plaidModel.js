@@ -175,7 +175,7 @@ const insert_accounts = (body, pgItemId)=>{
   .insert({
     account_id:body.account_id,
     balance:body.balances.available ? body.balances.available: body.balances.current,
-    official_name:body.official_name,
+    official_name:body.official_name ? body.official_name: body.name,
     subtype:body.subtype,
     type:body.type,
     mask:body.mask,
