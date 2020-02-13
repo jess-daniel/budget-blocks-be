@@ -184,8 +184,6 @@ const insert_accounts = (body, pgItemId)=>{
 
 const PLAID_insert_accounts = async(accounts, pgItemId)=>{
 
-  
-
   return Promise.all(accounts.map(async(acct)=>{
     const yate = await insert_accounts(acct, pgItemId)
     return{...acct, yeet:'done'}
@@ -209,6 +207,29 @@ const PLAID_get_accounts = (pgItemId)=>{
   .where('pg_item_id', pgItemId)
 }
 
+const update_accounts = (body)=>{
+  return db('bank_account')
+  .returning('id')
+  .update({
+    account_id:body.account_id,
+    balance:body.balances.available ? body.balances.available: body.balances.current,
+    official_name:body.official_name ? body.official_name: body.name,
+    subtype:body.subtype,
+    type:body.type,
+    mask:body.mask,
+    pg_item_id:pgItemId
+  })
+  .where({account_id:body.account_id})
+}
+
+const PLAID_update_accounts = (accounts)=>{
+
+  return Promise.all(accounts.map(async(acct)=>{
+    const yate = await update_accounts(acct)
+    return{...acct, yeet:'done'}
+  }))
+}
+
 
 
 module.exports = {
@@ -227,5 +248,6 @@ module.exports = {
   INFO_get_categories,
   PLAID_insert_accounts,
   PLAID_get_pg_item_id,
-  PLAID_get_accounts
+  PLAID_get_accounts,
+  PLAID_update_accounts
 };

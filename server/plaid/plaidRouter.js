@@ -179,7 +179,6 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
       //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
       const status = await qs.INFO_get_status(id)
       const pgItemId = await qs.PLAID_get_pg_item_id(id)
-      const balances = await qs.PLAID_get_accounts(pgItemId.id)
 
       console.log("HERE IS THE PGITEMID AND BALANCES THAT I CAN SEND", pgItemId, balances)
       //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
@@ -196,16 +195,18 @@ router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
                   return cat
                 }
               })
+              //first get the latest balance info
               const balance = await client.getBalance(req.body.access)
-              // if balances is falsy, then fall back on our own data's snapshot of the data
-              // if(!balance){
-              //   const balances = await qs.PLAID_get_accounts(pgItemId)
-
-              // }
-
               const accounts = balance.accounts
+              //update our records
 
-              res.status(200).json({Categories:cat,accounts})
+              const updatedAccounts = await qs.PLAID_update_accounts(accounts)
+              
+              //get our records
+              const balances = await qs.PLAID_get_accounts(pgItemId.id)
+              
+              //send categories and account balances back to the user
+              res.status(200).json({Categories:cat,accounts: balances})
               break;
           case 'inserting':
               const insertCode = 300
