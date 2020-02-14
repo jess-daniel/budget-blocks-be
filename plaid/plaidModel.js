@@ -166,10 +166,14 @@ const INFO_get_categories = Userid => {
       try {
         return Promise.all(
           categories.map(async cat => {
-            const trans = await INFO_get_cat_transactions(cat.id, Userid);
-            const amount = await INFO_get_amount_by_category(cat.id, Userid);
-            if (trans.length > 0) {
-              return { ...cat, transactions: trans, total: amount.total };
+            try{
+              const trans = await INFO_get_cat_transactions(cat.id, Userid);
+              const amount = await INFO_get_amount_by_category(cat.id, Userid);
+              if (trans.length > 0) {
+                return { ...cat, transactions: trans, total: amount.total };
+              }
+            }catch(err){
+              console.log(err)
             }
           })
         );
