@@ -23,7 +23,8 @@ function addUser(userData) {
     .then(ids => {
       //took out the call to the findbyUser function, I thought we talked about just returning the user id
       return ids[0];
-    });
+    })
+    .catch(error => console.log(error));
 }
 
 function get_total_budget(userID) {
@@ -53,7 +54,8 @@ function PLAID_find_user(filter) {
       } catch (error) {
         console.log(error);
       }
-    });
+    })
+    .catch(error => console.log(error));
 }
 
 //This is the login, searching just by email works since all emails are unique(Gmail duh) and in our own database the email column is set to unique
@@ -75,7 +77,8 @@ function login(Cred) {
       } catch (error) {
         console.log(error);
       }
-    });
+    })
+    .catch(error => console.log(error));
 }
 
 //This is to check if the user that logged in has a access_token.
