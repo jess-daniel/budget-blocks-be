@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.87% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/101</span>
+                <span class='fraction'>0/101</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.87% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/101</span>
+                <span class='fraction'>0/101</span>
             </div>
         
             
@@ -318,18 +318,18 @@
 <a name='L259'></a><a href='#L259'>259</a>
 <a name='L260'></a><a href='#L260'>260</a>
 <a name='L261'></a><a href='#L261'>261</a>
-<a name='L262'></a><a href='#L262'>262</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<a name='L262'></a><a href='#L262'>262</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,7 +354,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -398,8 +398,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -517,8 +517,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -578,19 +578,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">require("dotenv").config();
-const express = require("express");
-const plaid = require("plaid");
-const qs = require("./plaidModel.js");
-const data = require("./data.js");
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >require("dotenv").config();</span>
+const express = <span class="cstat-no" title="statement not covered" >require("express");</span>
+const plaid = <span class="cstat-no" title="statement not covered" >require("plaid");</span>
+const qs = <span class="cstat-no" title="statement not covered" >require("./plaidModel.js");</span>
+const data = <span class="cstat-no" title="statement not covered" >require("./data.js");</span>
 &nbsp;
-const checkAccessToken = require("./getAccessToken-middleware.js");
-const webhookMiddle = require("./webhook-middleware.js");
+const checkAccessToken = <span class="cstat-no" title="statement not covered" >require("./getAccessToken-middleware.js");</span>
+const webhookMiddle = <span class="cstat-no" title="statement not covered" >require("./webhook-middleware.js");</span>
 &nbsp;
-const router = express.Router();
+const router = <span class="cstat-no" title="statement not covered" >express.Router();</span>
 &nbsp;
-const client = new plaid.Client(
+const client = <span class="cstat-no" title="statement not covered" >new plaid.Client(</span>
   process.env.PLAID_CLIENT_ID,
   process.env.PLAID_SECRET,
   process.env.PLAID_PUBLIC_KEY,
@@ -615,7 +615,7 @@ function <span class="fstat-no" title="function not covered" >publicTokenExists(
   }
 }
 &nbsp;
-router.post("/token_exchange", publicTokenExists, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >router.post("/token_exchange", publicTokenExists, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
   const { publicToken } = <span class="cstat-no" title="statement not covered" >req.body;</span>
   const { userid } = <span class="cstat-no" title="statement not covered" >req.body;</span>
 &nbsp;
@@ -659,7 +659,7 @@ router.post("/token_exchange", publicTokenExists, <span class="fstat-no" title="
 });
 &nbsp;
 //This is comming from PLAID, res.send or any variation will just be sending to plaid
-router.post("/webhook", webhookMiddle, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >router.post("/webhook", webhookMiddle, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
   const body = <span class="cstat-no" title="statement not covered" >req.body;</span>
 &nbsp;
   //changed this to initial update becuase honestly we just need the last 30 days, not their life story
@@ -778,7 +778,7 @@ router.post("/webhook", webhookMiddle, <span class="fstat-no" title="function no
   }
 });
 &nbsp;
-router.get("/transactions/:id", checkAccessToken, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >router.get("/transactions/:id", checkAccessToken, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {</span>
   const id = <span class="cstat-no" title="statement not covered" >req.params.id;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  try {</span>
@@ -839,7 +839,7 @@ router.get("/transactions/:id", checkAccessToken, <span class="fstat-no" title="
   }
 });
 &nbsp;
-module.exports = router;
+<span class="cstat-no" title="statement not covered" >module.exports = router;</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -847,7 +847,7 @@ module.exports = router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Feb 14 2020 12:54:42 GMT-0800 (Pacific Standard Time)
+                at Fri Feb 14 2020 13:22:45 GMT-0800 (Pacific Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
