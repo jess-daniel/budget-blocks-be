@@ -28,7 +28,7 @@ server.use(
 );
 
 server.use("/api/auth", authRouter);
-server.use("/api/users", userRouter);
+//  server.use("/api/users", userRouter);
 // server.use("/plaid", plaidRouter);
 
 server.use("/", (req, res) => {
