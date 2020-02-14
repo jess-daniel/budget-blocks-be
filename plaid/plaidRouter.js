@@ -12,7 +12,7 @@ const router = express.Router();
 const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
   process.env.PLAID_SECRET,
-  process.env.PLAID_PUBLIC_KEY
+  process.env.PLAID_PUBLIC_KEY,
   plaid.environments[process.env.PLAID_ENV],
   { version: "2019-05-29", clientApp: "Plaid Quickstart" }
 );
@@ -39,12 +39,10 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
   const { userid } = req.body;
 
   if (!publicToken || !userid) {
-    res
-      .status(400)
-      .json({
-        message:
-          "make sure there is a userid and publicToken key on the request object you send"
-      });
+    res.status(400).json({
+      message:
+        "make sure there is a userid and publicToken key on the request object you send"
+    });
   }
 
   try {
@@ -113,12 +111,10 @@ router.post("/webhook", webhookMiddle, async (req, res) => {
           "failure"
         );
 
-        res
-          .status(500)
-          .json({
-            message: "contacting Plaid failed",
-            status: InsertionFail.status
-          });
+        res.status(500).json({
+          message: "contacting Plaid failed",
+          status: InsertionFail.status
+        });
       }
 
       //This is a more refined version of what I had before on line 54.
@@ -173,12 +169,10 @@ router.post("/webhook", webhookMiddle, async (req, res) => {
           "failure"
         );
 
-        res
-          .status(500)
-          .json({
-            message: "contacting Plaid failed",
-            status: InsertionFail.status
-          });
+        res.status(500).json({
+          message: "contacting Plaid failed",
+          status: InsertionFail.status
+        });
       }
 
       //This is a more refined version of what I had before on line 54.
