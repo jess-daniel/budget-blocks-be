@@ -28,8 +28,8 @@ server.use(
 );
 
 server.use("/api/auth", authRouter);
-// server.use("/api/users", userRouter);
-// server.use("/plaid", plaidRouter);
+server.use("/api/users", userRouter);
+server.use("/plaid", plaidRouter);
 
 server.use("/", (req, res) => {
   res.send({ message: "API is up and running..." });
