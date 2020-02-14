@@ -18,7 +18,8 @@ const add_An_Item = (Itemid, Userid) => {
     .insert({ item_id: Itemid, user_id: Userid })
     .then(ids => {
       return ids[0];
-    }).catch(error => console.log(error);
+    })
+    .catch(error => console.log(error));
 };
 
 //Reserved strictly for the below function: insert_transactions
@@ -97,7 +98,8 @@ const WEB_track_insertion = (pgItemId, status) => {
     .insert({ pg_item_id: pgItemId, status: status })
     .then(ids => {
       return ids[0];
-    }).catch(error => console.log(error);
+    })
+    .catch(error => console.log(error));
 };
 
 const WEB_get_accessToken = plaidItemId => {
@@ -174,7 +176,8 @@ const INFO_get_categories = Userid => {
       } catch (error) {
         console.log(error);
       }
-    }).catch(error => console.log(error));
+    })
+    .catch(error => console.log(error));
 };
 
 const insert_accounts = (body, pgItemId) => {
