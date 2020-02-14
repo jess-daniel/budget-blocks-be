@@ -201,16 +201,20 @@ const insert_accounts = (body, pgItemId) => {
 };
 
 const PLAID_insert_accounts = async (accounts, pgItemId) => {
-  return Promise.all(
-    accounts.map(async acct => {
-      try {
-        const yate = await insert_accounts(acct, pgItemId);
-        return { ...acct, yeet: "done" };
-      } catch (error) {
-        console.log(error);
-      }
-    })
-  );
+  try{
+    return Promise.all(
+      accounts.map(async acct => {
+        try {
+          const yate = await insert_accounts(acct, pgItemId);
+          return { ...acct, yeet: "done" };
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    )
+  }catch(err){
+    console.log(err)
+  }
 };
 
 const PLAID_get_pg_item_id = userID => {
