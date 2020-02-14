@@ -102,7 +102,6 @@ function editUserIncome(Userid, body){
   .returning('id')
   .where({id:Userid})
   .update({income:body.income}, 'id')
-  .first()
 }
 
 function editUserSaving(Userid, body){
@@ -110,5 +109,4 @@ function editUserSaving(Userid, body){
   .returning('id')
   .where({id:Userid})
   .update({saving_goal:body.saving_goal}, 'id')
-  .first()
 }
