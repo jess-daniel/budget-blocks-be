@@ -18,4 +18,4 @@ jobs:
         with:
           coverageCommand: npm run coverage
           debug: true
-          coverageLocations: "server"
+          coverageLocations: "server/"
