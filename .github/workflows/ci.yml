@@ -18,4 +18,4 @@ jobs:
           CI: true
         with:
           coverageCommand: npm run coverage
-          debug: true
+          debug: false
