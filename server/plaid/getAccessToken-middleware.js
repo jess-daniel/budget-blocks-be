@@ -5,6 +5,10 @@ module.exports = (req, res, next) => {
 
   const id = req.params.id;
 
+  if(!id){
+    res.status(400).json({message:'please add a param to the end of the endpoint'})
+  }
+
   qs.getAccessToken(id)
     .then(access => {
       if (access) {
