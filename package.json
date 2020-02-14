@@ -40,6 +40,6 @@
     "server": "nodemon index.js",
     "start": "node index.js",
     "test": "jest --detectOpenHandles --forceExit",
-    "coverage": "jest --coverage --detectOpenHandles"
+    "coverage": "jest --coverage --detectOpenHandles --forceExit || true"
   }
 }
