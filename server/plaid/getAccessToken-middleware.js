@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
 
   const id = req.params.id;
 
-  if(id == null|| id == undefined){
+  if(!id||id == null|| id == undefined){
     res.status(400).json({message:'please add a param to the end of the endpoint'})
   }else{
     console.log("ID THAT SHOULD FAIL", id)
