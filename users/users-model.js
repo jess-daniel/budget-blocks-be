@@ -26,12 +26,11 @@ function addUser(userData) {
     });
 }
 
-function get_total_budget(userID){
-
-  return db('user_category')
-  .sum({total:'budget'})
-  .where({user_id:userID})
-  .first()
+function get_total_budget(userID) {
+  return db("user_category")
+    .sum({ total: "budget" })
+    .where({ user_id: userID })
+    .first();
 }
 
 //Middlewhere
@@ -39,7 +38,7 @@ function findUserBy(filter) {
   return db("users")
     .select("id", "email", "income", "saving_goal")
     .where(filter)
-    .first()
+    .first();
 }
 
 function PLAID_find_user(filter) {
@@ -47,10 +46,14 @@ function PLAID_find_user(filter) {
     .select("id", "email", "income", "saving_goal")
     .where(filter)
     .first()
-    .then(async(user)=>{
-      const Totalbudget = await get_total_budget(user.id)
-      return {...user, Totalbudget: Totalbudget.total}
-    })
+    .then(async user => {
+      try {
+        const Totalbudget = await get_total_budget(user.id);
+        return { ...user, Totalbudget: Totalbudget.total };
+      } catch (error) {
+        console.log(error);
+      }
+    });
 }
 
 //This is the login, searching just by email works since all emails are unique(Gmail duh) and in our own database the email column is set to unique
@@ -62,11 +65,15 @@ function login(Cred) {
     .where({ email: Cred.email })
     .first()
     .then(async user => {
-      const good = await checkAccessToken(user.id);
-      if (good) {
-        return (user = { ...user, LinkedAccount: true });
-      } else {
-        return (user = { ...user, LinkedAccount: false });
+      try {
+        const good = await checkAccessToken(user.id);
+        if (good) {
+          return (user = { ...user, LinkedAccount: true });
+        } else {
+          return (user = { ...user, LinkedAccount: false });
+        }
+      } catch (error) {
+        console.log(error);
       }
     });
 }
@@ -82,31 +89,38 @@ function checkAccessToken(UserID) {
 
 // Returns the categories based upon the userId.
 function returnUserCategories(Userid) {
-  return db('db')
-  .select('c.id', 'c.name', 'users.email', 'uc.budget', 'users.income as Users income', 'users.saving_goal as Users saving goal')
-  .from('users')
-  .join('user_category as uc', 'users.id', 'uc.user_id')
-  .join('category as c', 'uc.category_id', 'c.id')
-  .where('users.id', Userid)
+  return db("db")
+    .select(
+      "c.id",
+      "c.name",
+      "users.email",
+      "uc.budget",
+      "users.income as Users income",
+      "users.saving_goal as Users saving goal"
+    )
+    .from("users")
+    .join("user_category as uc", "users.id", "uc.user_id")
+    .join("category as c", "uc.category_id", "c.id")
+    .where("users.id", Userid);
 }
 
-function editUserCategoryBudget(Userid, Categoryid, amount){
-  return db('user_category')
-  .returning(['user_id', 'category_id'])
-  .where({category_id:Categoryid, user_id:Userid})
-  .update({budget:amount}, 'user_id')
+function editUserCategoryBudget(Userid, Categoryid, amount) {
+  return db("user_category")
+    .returning(["user_id", "category_id"])
+    .where({ category_id: Categoryid, user_id: Userid })
+    .update({ budget: amount }, "user_id");
 }
 
-function editUserIncome(Userid, body){
-  return db('users')
-  .returning('id')
-  .where({id:Userid})
-  .update({income:body.income}, 'id')
+function editUserIncome(Userid, body) {
+  return db("users")
+    .returning("id")
+    .where({ id: Userid })
+    .update({ income: body.income }, "id");
 }
 
-function editUserSaving(Userid, body){
-  return db('users')
-  .returning('id')
-  .where({id:Userid})
-  .update({saving_goal:body.saving_goal}, 'id')
+function editUserSaving(Userid, body) {
+  return db("users")
+    .returning("id")
+    .where({ id: Userid })
+    .update({ saving_goal: body.saving_goal }, "id");
 }

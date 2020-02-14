@@ -62,8 +62,12 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
     //if I have time, I'll come back to this to optimize it like line 102
     const doneData = Promise.all(
       data.map(async d => {
-        const contents = await qs.link_user_categories(d.id, userid);
-        return d;
+        try {
+          const contents = await qs.link_user_categories(d.id, userid);
+          return d;
+        } catch (error) {
+          console.log(error);
+        }
       })
     );
 

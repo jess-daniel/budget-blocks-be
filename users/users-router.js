@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
-const paramCheck = require('./paramCheck.js');
+const paramCheck = require("./paramCheck.js");
 
 // Middleware to check if a specified userId exists
 function userExists(req, res, next) {
@@ -37,20 +37,18 @@ router.get("/", restricted, (req, res) => {
     });
 });
 
-router.get('/user/:userId', userExists, paramCheck.onlyId, async(req,res)=>{
-  const id = req.params.userId
+router.get("/user/:userId", userExists, paramCheck.onlyId, async (req, res) => {
+  const id = req.params.userId;
 
-  try{
+  try {
+    const user = await Users.PLAID_find_user({ id });
 
-    const user = await Users.PLAID_find_user({id})
-
-    res.status(200).json({user})
-
-  }catch(err){
-    console.log(err)
-    res.status(500).json({message:'cant get user right now'})
+    res.status(200).json({ user });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "cant get user right now" });
   }
-})
+});
 
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
 router.get(`/categories/:userId`, userExists, paramCheck.onlyId, (req, res) => {
@@ -68,69 +66,81 @@ router.get(`/categories/:userId`, userExists, paramCheck.onlyId, (req, res) => {
     })
     .catch(error => {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          message: "Unable to return categories for the specified user."
-        });
+      res.status(500).json({
+        message: "Unable to return categories for the specified user."
+      });
     });
 });
 
-router.put("/categories/:userId", userExists, paramCheck.idAndBody, async (req, res) => {
-  const id = req.params.userId;
-  const body = req.body;
+router.put(
+  "/categories/:userId",
+  userExists,
+  paramCheck.idAndBody,
+  async (req, res) => {
+    const id = req.params.userId;
+    const body = req.body;
 
-  try {
-    const update = await Users.editUserCategoryBudget(id,body.categoryid,body.budget);
-    console.log("THE RESULT OF THE UPDATE", update)
-    if (update) {
-      res.status(202).json({
-        userid: id,
-        categoryid: body.categoryid,
-        amount: body.budget,
-        status: "true"
-      });
-    } else {
-      res
-        .status(400)
-        .json({
+    try {
+      const update = await Users.editUserCategoryBudget(
+        id,
+        body.categoryid,
+        body.budget
+      );
+      console.log("THE RESULT OF THE UPDATE", update);
+      if (update) {
+        res.status(202).json({
+          userid: id,
+          categoryid: body.categoryid,
+          amount: body.budget,
+          status: "true"
+        });
+      } else {
+        res.status(400).json({
           userid: id,
           categoryid: body.categoryid,
           amount: body.budget,
           status: "false"
         });
+      }
+    } catch (err) {
+      console.log("PUT CATEGORY ERR", err);
+      res.status(500).json({ message: "something went wrong" });
     }
-  } catch (err) {
-    console.log("PUT CATEGORY ERR", err);
-    res.status(500).json({ message: "something went wrong" });
   }
-});
+);
 
-router.put('/income/:userId', userExists, paramCheck.idAndBody, async(req,res)=>{
-  const body = req.body
-  const id = req.params.userId
+router.put(
+  "/income/:userId",
+  userExists,
+  paramCheck.idAndBody,
+  async (req, res) => {
+    const body = req.body;
+    const id = req.params.userId;
 
-  try{
-    const yeet = await Users.editUserIncome(id,body)
-    res.status(201).json({yeet})
-  }catch(err){
-    res.status(500).json({message:'somthing went wrong'})
+    try {
+      const yeet = await Users.editUserIncome(id, body);
+      res.status(201).json({ yeet });
+    } catch (err) {
+      res.status(500).json({ message: "somthing went wrong" });
+    }
   }
+);
 
-})
+router.put(
+  "/savinggoal/:userId",
+  userExists,
+  paramCheck.idAndBody,
+  async (req, res) => {
+    const body = req.body;
+    const id = req.params.userId;
 
-router.put('/savinggoal/:userId', userExists, paramCheck.idAndBody, async(req,res)=>{
-  const body = req.body
-  const id = req.params.userId
-
-  try{
-    const yeet = await Users.editUserSaving(id, body)
-    res.status(201).json({yeet})
-  }catch(err){
-    res.status(500).json({message:'smothing went wrong'})
+    try {
+      const yeet = await Users.editUserSaving(id, body);
+      res.status(201).json({ yeet });
+    } catch (err) {
+      res.status(500).json({ message: "smothing went wrong" });
+    }
   }
-
-})
-
+);
 
 module.exports = router;
