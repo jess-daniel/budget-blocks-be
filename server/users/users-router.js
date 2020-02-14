@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
+const paramCheck = require('./paramCheck.js');
 
 // Middleware to check if a specified userId exists
 function userExists(req, res, next) {
@@ -36,12 +37,8 @@ router.get("/", restricted, (req, res) => {
     });
 });
 
-router.get('/user/:userId', userExists, async(req,res)=>{
+router.get('/user/:userId', userExists, paramCheck.onlyId, async(req,res)=>{
   const id = req.params.userId
-
-  if(!id){
-    res.status(400).json({message:'please add a parameter at the end of the endpoint'})
-  }
 
   try{
 
@@ -56,14 +53,8 @@ router.get('/user/:userId', userExists, async(req,res)=>{
 })
 
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
-router.get(`/categories/:userId`, userExists, (req, res) => {
+router.get(`/categories/:userId`, userExists, paramCheck.onlyId, (req, res) => {
   const id = req.params.userId;
-
-  if (!id) {
-    res
-      .status(400)
-      .json({ message: "please add a parameter at the end of the endpoint" });
-  }
 
   Users.returnUserCategories(id)
     .then(categories => {
@@ -85,20 +76,14 @@ router.get(`/categories/:userId`, userExists, (req, res) => {
     });
 });
 
-router.put("/categories/:userId", userExists, async (req, res) => {
+router.put("/categories/:userId", userExists, paramCheck.idAndBody, async (req, res) => {
   const id = req.params.userId;
   const body = req.body;
 
-  if (!id || !body) {
-    res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
-  }
-
   try {
     const update = await Users.editUserCategoryBudget(id,body.categoryid,body.budget);
-
-    
-
-    if (update == 1) {
+    console.log("THE RESULT OF THE UPDATE", update)
+    if (update) {
       res.status(202).json({
         userid: id,
         categoryid: body.categoryid,
@@ -121,13 +106,9 @@ router.put("/categories/:userId", userExists, async (req, res) => {
   }
 });
 
-router.put('/income/:userId', userExists, async(req,res)=>{
+router.put('/income/:userId', userExists, paramCheck.idAndBody, async(req,res)=>{
   const body = req.body
   const id = req.params.userId
-
-  if (!id || !body) {
-    res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
-  }
 
   try{
     const yeet = await Users.editUserIncome(id,body)
@@ -138,13 +119,9 @@ router.put('/income/:userId', userExists, async(req,res)=>{
 
 })
 
-router.put('/savinggoal/:userId', userExists, async(req,res)=>{
+router.put('/savinggoal/:userId', userExists, paramCheck.idAndBody, async(req,res)=>{
   const body = req.body
   const id = req.params.userId
-
-  if (!id || !body) {
-    res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
-  }
 
   try{
     const yeet = await Users.editUserSaving(id, body)
