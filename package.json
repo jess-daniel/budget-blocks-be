@@ -30,7 +30,9 @@
       "!**/node_modules/**",
       "!**/vendor/**",
       "!**/__tests__/**",
-      "!**/coverage/**"
+      "!**/coverage/**",
+      "!**/plaid/**",
+      "!**/data/**"
     ],
     "testEnvironment": "node"
   },
