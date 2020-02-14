@@ -6,6 +6,7 @@ const data = require('./data.js');
 
 const checkAccessToken = require("./getAccessToken-middleware.js");
 const webhookMiddle = require('./webhook-middleware.js');
+const paramCheck = require("../users/paramCheck.js");
 
 const router = express.Router();
 
@@ -166,15 +167,10 @@ router.post('/webhook', webhookMiddle, async (req,res)=>{
 
 })
 
-router.get('/transactions/:id',checkAccessToken, async (req,res)=>{
+router.get('/transactions/:id',checkAccessToken, paramCheck.onlyId, async (req,res)=>{
 
   const id = req.params.id;
 
-  if(!id){
-    res.status(400).json({message:'please add a param to the end of the endpoint'})
-    
-  }
- 
   try{
       //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
       const status = await qs.INFO_get_status(id)
