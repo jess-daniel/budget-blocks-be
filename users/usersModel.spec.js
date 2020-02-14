@@ -10,25 +10,42 @@ describe("Users Model", function() {
   });
 
   it("GET /users", async function() {
-    const response = await request(server).get("/");
-    expect(response.status).toBe(200);
+    try {
+      const response = await request(server).get("/");
+      expect(response.status).toBe(200);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   // Ensures that the response is a json object
+
   it("Should return a JSON object", async function() {
-    const response = await request(server).get("/");
-    expect(response.type).toMatch(/json/i);
+    try {
+      const response = await request(server).get("/");
+      expect(response.type).toMatch(/json/i);
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
 
 // Checks if the response of categories of user id 1 to not be 0
 it("GET /categories/:userId", async function() {
-  const response = await request(server).get("/categories/1");
-  expect(response.status).toBe(200);
+  try {
+    const response = await request(server).get("/categories/1");
+    expect(response.status).toBe(200);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // // Checks that the response to the categories is a json object
 it("Should return a JSON object", async function() {
-  const response = await request(server).get("/categories/1");
-  expect(response.type).toMatch(/json/i);
+  try {
+    const response = await request(server).get("/categories/1");
+    expect(response.type).toMatch(/json/i);
+  } catch (error) {
+    console.log(error);
+  }
 });

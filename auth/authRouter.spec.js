@@ -11,12 +11,16 @@ describe("Users Login & Register", function() {
 
   it("Should allow a new user to be created", async function() {
     // Registers a new user
-    await Users.addUser({ email: "test@test.com", password: "password" });
-    const response = await request(server).post("/register");
+    try {
+      await Users.addUser({ email: "test@test.com", password: "password" });
+      const response = await request(server).post("/register");
 
-    // Checks the DB if that newly created yser exists
-    const users = await db("users");
-    expect(users).toHaveLength(1);
+      // Checks the DB if that newly created yser exists
+      const users = await db("users");
+      expect(users).toHaveLength(1);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   // describe("Registration", async function() {
