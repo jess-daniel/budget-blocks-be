@@ -6,7 +6,6 @@ module.exports = {
   addUser,
   findUserBy,
   login,
-  checkAccessToken,
   returnUserCategories,
   editUserCategoryBudget,
   editUserIncome,
