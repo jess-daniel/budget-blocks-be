@@ -5,6 +5,8 @@ const qs = require("./plaidModel.js");
 const data = require("./data.js");
 const jwt = require("jsonwebtoken");
 
+const paramCheck = require('../users/paramCheck.js');
+
 const checkAccessToken = require("./getAccessToken-middleware.js");
 
 const router = express.Router();
@@ -81,7 +83,7 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
   }
 });
 
-router.get("/transactions/:id", checkAccessToken, async (req, res) => {
+router.get("/transactions/:id", paramCheck.tokenMatchesUserId, checkAccessToken, async (req, res) => {
   const id = req.params.id;
 
   try {
