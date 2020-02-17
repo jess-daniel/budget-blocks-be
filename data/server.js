@@ -31,7 +31,7 @@ server.use(
 
 server.use("/api/auth", authRouter);
 server.use("/api/users", userRouter);
-server.use("/plaid/webhook", plaidRouter);
+server.use("/plaid/webhook", webhookRouter);
 server.use("/plaid", authenticate, plaidRouter);
 
 server.use("/", (req, res) => {

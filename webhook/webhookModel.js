@@ -17,7 +17,7 @@ const client = new plaid.Client(
 );
 
 //This is comming from PLAID, res.send or any variation will just be sending to plaid
-router.post("/webhook", webhookMiddle, async (req, res) => {
+router.post("/", webhookMiddle, async (req, res) => {
   const body = req.body;
 
   //changed this to initial update becuase honestly we just need the last 30 days, not their life story
