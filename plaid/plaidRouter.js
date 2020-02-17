@@ -84,7 +84,7 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
 });
 
 router.get("/transactions/:userId", paramCheck.tokenMatchesUserId, checkAccessToken, async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.userId;
 
   try {
     //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
