@@ -1,6 +1,7 @@
 const express = require("express");
-const qs = require("./plaidModel.js");
-const data = require("./data.js");
+const plaid = require("plaid");
+const qs = require("../plaid/plaidModel.js");
+const data = require("../plaid/data.js");
 
 const router = express.Router();
 
@@ -8,10 +9,10 @@ const router = express.Router();
 const webhookMiddle = require("./webhook-middleware.js");
 
 const client = new plaid.Client(
-  process.env.PLAID_CLIENT_ID || ${{ secrets.plaidClientId }},
-  process.env.PLAID_SECRET || ${{ secrets.secret }},
-  process.env.PLAID_PUBLIC_KEY || ${{ secrets.publicKey }},
-  plaid.environments[process.env.PLAID_ENV] || ${{ secrets.plaidEnvironment }},
+  process.env.PLAID_CLIENT_ID,
+  process.env.PLAID_SECRET,
+  process.env.PLAID_PUBLIC_KEY,
+  plaid.environments[process.env.PLAID_ENV],
   { version: "2019-05-29", clientApp: "Plaid Quickstart" }
 );
 

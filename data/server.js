@@ -10,6 +10,7 @@ const authenticate = require("../auth/restricted-middleware");
 const authRouter = require("../auth/auth-router");
 const userRouter = require("../users/users-router");
 const plaidRouter = require("../plaid/plaidRouter.js");
+const webhookRouter = require("../webhook/webhookModel");
 
 // Server initialization
 const knex = require("./db-config");
