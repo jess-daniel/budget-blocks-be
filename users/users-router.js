@@ -27,29 +27,6 @@ function userExists(req, res, next) {
     });
 }
 
-// Checks if the params that are passed match to the header that is being passed
-function tokenMatchesUserId(req, res, next) {
-  let paramId = parseInt(req.params.userId);
-  const { authorization } = req.headers;
-  const secret = process.env.JWT_SECRET || "secretkey";
-
-  // Verifies the token and then allows the endpoint to be accessed
-  jwt.verify(authorization, secret, function(error, validToken) {
-    if (error) {
-      res.status(400).json({ error: "Not able to validate the user." });
-    } else {
-      if (paramId == validToken.user_id) {
-        next();
-      } else {
-        res.status(403).json({
-          error:
-            "The user id you are trying to pass does not match with the web token."
-        });
-      }
-    }
-  });
-}
-
 router.get("/", restricted, (req, res) => {
   Users.allUsers()
     .then(response => {
@@ -65,7 +42,7 @@ router.get(
   "/user/:userId",
   userExists,
   paramCheck.onlyId,
-  tokenMatchesUserId,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const id = req.params.userId;
 
@@ -85,7 +62,7 @@ router.get(
   `/categories/:userId`,
   userExists,
   paramCheck.onlyId,
-  tokenMatchesUserId,
+  paramCheck.tokenMatchesUserId,
   (req, res) => {
     const id = req.params.userId;
 
@@ -112,7 +89,7 @@ router.put(
   "/categories/:userId",
   userExists,
   paramCheck.idAndBody,
-  tokenMatchesUserId,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const id = req.params.userId;
     const body = req.body;
@@ -149,7 +126,7 @@ router.put(
   "/income/:userId",
   userExists,
   paramCheck.idAndBody,
-  tokenMatchesUserId,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const body = req.body;
     const id = req.params.userId;
@@ -167,7 +144,7 @@ router.put(
   "/savinggoal/:userId",
   userExists,
   paramCheck.idAndBody,
-  tokenMatchesUserId,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const body = req.body;
     const id = req.params.userId;
