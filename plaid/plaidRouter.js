@@ -10,10 +10,10 @@ const webhookMiddle = require("./webhook-middleware.js");
 const router = express.Router();
 
 const client = new plaid.Client(
-  process.env.PLAID_CLIENT_ID || ${{ secrets.plaidClientId }},
-  process.env.PLAID_SECRET || ${{ secrets.secret }},
-  process.env.PLAID_PUBLIC_KEY || ${{ secrets.publicKey }},
-  plaid.environments[process.env.PLAID_ENV] || ${{ secrets.plaidEnvironment }},
+  process.env.PLAID_CLIENT_ID ,
+  process.env.PLAID_SECRET ,
+  process.env.PLAID_PUBLIC_KEY,
+  plaid.environments[process.env.PLAID_ENV],
   { version: "2019-05-29", clientApp: "Plaid Quickstart" }
 );
 
