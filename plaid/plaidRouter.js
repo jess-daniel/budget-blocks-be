@@ -3,6 +3,7 @@ const express = require("express");
 const plaid = require("plaid");
 const qs = require("./plaidModel.js");
 const data = require("./data.js");
+const jwt = require("jsonwebtoken");
 
 const checkAccessToken = require("./getAccessToken-middleware.js");
 
