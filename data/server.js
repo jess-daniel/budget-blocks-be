@@ -4,11 +4,12 @@ const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
 const graphqlHTTP = require("express-graphql");
+const authenticate = require("../auth/restricted-middleware");
 
 // user Routes
 const authRouter = require("../auth/auth-router");
 const userRouter = require("../users/users-router");
-// const plaidRouter = require("../plaid/plaidRouter.js");
+const plaidRouter = require("../plaid/plaidRouter.js");
 
 // Server initialization
 const knex = require("./db-config");
@@ -29,7 +30,8 @@ server.use(
 
 server.use("/api/auth", authRouter);
 server.use("/api/users", userRouter);
-// server.use("/plaid", plaidRouter);
+server.use("/plaid/webhook", plaidRouter);
+server.use("/plaid", authenticate, plaidRouter);
 
 server.use("/", (req, res) => {
   res.send({ message: "API is up and running..." });
