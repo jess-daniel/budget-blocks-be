@@ -3,7 +3,7 @@ const qs = require('./plaidModel.js');
 //checks to see
 module.exports = (req, res, next) => {
 
-  const id = req.params.id;
+  const id = req.params.userId;
 
   if(!id||isNaN(id)){
     res.status(400).json({message:'please add a param to the end of the endpoint'})
