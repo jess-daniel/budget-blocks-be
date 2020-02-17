@@ -1,3 +1,6 @@
 version: "2"
 exclude_patterns:
   - "**/__tests__/"
+  - "/webhook"
+  - "coverage"
+  - "server.js"

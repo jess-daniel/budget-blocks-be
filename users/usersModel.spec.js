@@ -5,8 +5,8 @@ const db = require("../data/db-config");
 
 describe("Users Model", function() {
   // Checks the response is correct
-  afterAll(() => {
-    server.close();
+  afterAll(done => {
+    return server && server.close(done);
   });
 
   it("GET /users", async function() {
