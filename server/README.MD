@@ -6,6 +6,10 @@
 - Uses JWT web tokens to store user information and verifies the keys by using a JWT_SECRET environment variable (will need to create)
 - JWT token contains user_id, and email
 
+## Postgres
+
+- The backend is now running on Postgres, so things won't clear everytime the dev branch is commited to. In addition to that, you can create an account and sign up with plaid useing user/pass_good just once now. No more cre-creating accounts unless we need to wipe the DB. 
+
 
 ## (auth) **POST** /api/auth/register
 

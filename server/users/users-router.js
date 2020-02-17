@@ -82,7 +82,8 @@ router.put("/categories/:userId", userExists, paramCheck.idAndBody, async (req, 
 
   try {
     const update = await Users.editUserCategoryBudget(id,body.categoryid,body.budget);
-    if (update == 1) {
+    console.log("THE RESULT OF THE UPDATE", update)
+    if (update) {
       res.status(202).json({
         userid: id,
         categoryid: body.categoryid,
