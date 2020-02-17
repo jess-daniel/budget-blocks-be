@@ -1,4 +1,5 @@
 const db = require("../data/db-config");
+const Plaid = require("../plaid/plaidModel");
 
 module.exports = {
   allUsers,
@@ -68,7 +69,7 @@ function login(Cred) {
     .first()
     .then(async user => {
       try {
-        const good = await checkAccessToken(user.id);
+        const good = await Plaid.getAccessToken(user.id);
         if (good) {
           return (user = { ...user, LinkedAccount: true });
         } else {
@@ -82,13 +83,13 @@ function login(Cred) {
 }
 
 //This is to check if the user that logged in has a access_token.
-function checkAccessToken(UserID) {
-  return db("db")
-    .select("*")
-    .from("users_accessToken")
-    .where({ user_id: UserID })
-    .first();
-}
+// function checkAccessToken(UserID) {
+//   return db("db")
+//     .select("*")
+//     .from("users_accessToken")
+//     .where({ user_id: UserID })
+//     .first();
+// }
 
 // Returns the categories based upon the userId.
 function returnUserCategories(Userid) {
