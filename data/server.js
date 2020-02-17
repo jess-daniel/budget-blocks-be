@@ -31,6 +31,7 @@ server.use(
 
 server.use("/api/auth", authRouter);
 server.use("/api/users", userRouter);
+//make sure this endpoint it handled by its own router
 server.use("/plaid/webhook", webhookRouter);
 server.use("/plaid", authenticate, plaidRouter);
 
