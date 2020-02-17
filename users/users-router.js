@@ -86,7 +86,6 @@ router.put(
         body.categoryid,
         body.budget
       );
-      console.log("THE RESULT OF THE UPDATE", update);
       if (update) {
         res.status(202).json({
           userid: id,
