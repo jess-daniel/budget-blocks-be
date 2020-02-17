@@ -81,15 +81,6 @@ function login(Cred) {
     .catch(error => console.log(error));
 }
 
-//This is to check if the user that logged in has a access_token.
-// function checkAccessToken(UserID) {
-//   return db("db")
-//     .select("*")
-//     .from("users_accessToken")
-//     .where({ user_id: UserID })
-//     .first();
-// }
-
 // Returns the categories based upon the userId.
 function returnUserCategories(Userid) {
   return db("db")

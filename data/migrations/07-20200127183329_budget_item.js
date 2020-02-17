@@ -13,7 +13,6 @@ exports.up = function(knex) {
 
     tbl.string('payment_date')
     
-
     tbl.integer('category_id')
     .unsigned()
     .references('id')

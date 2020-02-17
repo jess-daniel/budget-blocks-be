@@ -8,7 +8,6 @@ module.exports = (req, res, next) => {
   if(!id||isNaN(id)){
     res.status(400).json({message:'please add a param to the end of the endpoint'})
   }else{
-    console.log("ID THAT SHOULD FAIL", id)
     qs.getAccessToken(id)
       .then(access => {
         if (access) {
