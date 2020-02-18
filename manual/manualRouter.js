@@ -56,13 +56,13 @@ router.post('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, pa
 
 router.patch('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
     const body = req.body
-    const id = req.params.userId
+    
 
-    if(!body.name){
-        res.status(401).json({message:'please add name to object'})
+    if(!body.name|| !body.transactionId){
+        res.status(401).json({message:'please add name/transaction id to object'})
     }else{
         try{
-            const update = await qs.editTransaction(body, id)
+            const update = await qs.editTransaction(body)
             res.status(201).json({update})
         }catch(err){
             console.log(err)
