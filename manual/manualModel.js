@@ -17,10 +17,10 @@ const insert_transactions = (body, userId)=>{
     })
 }
 
-const editTransaction = (body)=>{
+const editTransaction = (body, userId, tranId)=>{
     return db ('manual_budget_item')
-    .update({name:body.name})
-    .where({id: body.transactionId}, 'id')
+    .update({body})
+    .where({id: tranId, user_id:userId}, 'id')
 }
 
 const getAllTrans = (userId)=>{
