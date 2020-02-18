@@ -34,7 +34,7 @@ server.use("/api/auth", authRouter);
 server.use("/api/users", userRouter);
 server.use("/plaid/webhook", webhookRouter);
 server.use("/plaid", authenticate, plaidRouter);
-server.user('/manual/', manualRouter);
+server.use('/manual/', manualRouter);
 
 server.use("/", (req, res) => {
   res.send({ message: "API is up and running..." });
