@@ -11,6 +11,7 @@ const authRouter = require("../auth/auth-router");
 const userRouter = require("../users/users-router");
 const plaidRouter = require("../plaid/plaidRouter.js");
 const webhookRouter = require("../webhook/webhookModel");
+const manualRouter = require("../manual/manualRouter.js");
 
 // Server initialization
 const knex = require("./db-config");
@@ -33,6 +34,7 @@ server.use("/api/auth", authRouter);
 server.use("/api/users", userRouter);
 server.use("/plaid/webhook", webhookRouter);
 server.use("/plaid", authenticate, plaidRouter);
+server.user('/manual/', manualRouter);
 
 server.use("/", (req, res) => {
   res.send({ message: "API is up and running..." });
