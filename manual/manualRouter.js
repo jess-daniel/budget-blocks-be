@@ -59,8 +59,8 @@ router.patch('/transaction/:userId/:tranId', paramCheck.onlyId, paramCheck.userE
     const id = req.params.userId
     const tranId = req.params.tranId
 
-    if(!body.name|| !body.transactionId){
-        res.status(401).json({message:'please add name/transaction id to object'})
+    if(!body){
+        res.status(401).json({message:'please add object'})
     }else{
         try{
             const update = await qs.editTransaction(body, id, tranId)
