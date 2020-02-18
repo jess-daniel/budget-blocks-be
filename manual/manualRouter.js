@@ -5,28 +5,48 @@ const data = require('../plaid/data.js');
 const paramCheck = require('../users/paramCheck.js')
 const User = require('../users/users-model.js')
 
+//manual model
+const qs = require('./manualModel.js')
+
 const express = require('express')
 const router = express.Router()
 
 router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
 
     const userid = req.params.userId
+    try{
 
-    //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
-    const doneData = Promise.all(
-        data.map(async d => {
-          try {
-            const contents = await Plaid.link_user_categories(d.id, userid);
-            return d;
-          } catch (error) {
-            console.log(error);
-          }
-        })
-      );
+        //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
+        const doneData = Promise.all(
+            data.map(async d => {
+              try {
+                const contents = await Plaid.link_user_categories(d.id, userid);
+                return d;
+              } catch (error) {
+                console.log(error);
+              }
+            })
+          );
+    
+        const categories = await User.returnUserCategories(userid)
+    
+        res.status(200).json(categories)
+    }catch(err){
+        console.log(err)
+        res.status(500).json({err})
+    }
+})
 
-    const categories = await User.returnUserCategories(userid)
+router.post ('/transaction:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+    const body = req.body
+    const id = req.params.userId
+    if(!body.amount || !body.payment_date || !body.category_id){
+        res.status(401).json({message:'please send with the correct body'})
+    }else{
+        const yeet = await qs.insert_transactions(body, id)
+        res.status(200).json({yeet})
+    }
 
-    res.status(200).json(categories)
 })
 
 module.exports = router;
