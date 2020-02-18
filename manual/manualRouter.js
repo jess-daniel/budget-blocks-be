@@ -76,7 +76,7 @@ router.get('/transaction/:userId', async(req,res)=>{
 
     const id =req.params.userId
     try{
-        const list = await qs.getAllTrans(id)
+        const list = await qs.MANUAL_get_categories(id)
         res.status(200).json(list)
 
     }catch(err){

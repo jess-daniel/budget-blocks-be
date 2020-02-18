@@ -18,9 +18,9 @@ const insert_transactions = (body, userId)=>{
 }
 
 const editTransaction = (body, userId, tranId)=>{
-    return db ('manual_budget_item')
-    .update(body)
-    .where({id: tranId, user_id:userId}, 'id')
+    return db('manual_budget_item')
+    .where({id: tranId, user_id:userId})
+    .update(body, 'id')
 }
 
 const getAllTrans = (userId)=>{
@@ -30,8 +30,53 @@ const getAllTrans = (userId)=>{
     .where('user_id', userId)
 }
 
+//reserved for the function below it
+const MANUAL_get_cat_transactions = (categoryID, userID) => {
+    return db("db")
+      .select("*")
+      .from("manual_budget_item")
+      .where({ category_id: categoryID, user_id: userID });
+  };
+  //reserved for the function below it
+  const MANUAL_get_amount_by_category = (categoryID, userID) => {
+    return db("manual_budget_item")
+      .sum({ total: "amount" })
+      .where({ category_id: categoryID, user_id: userID })
+      .first();
+  };
+
+const MANUAL_get_categories = Userid => {
+    return db("db")
+      .select("c.id", "c.name", "users.email", "uc.budget")
+      .from("users")
+      .join("user_category as uc", "users.id", "uc.user_id")
+      .join("category as c", "uc.category_id", "c.id")
+      .where("users.id", Userid)
+      .then(async categories => {
+        try {
+          return Promise.all(
+            categories.map(async cat => {
+              try{
+                const trans = await MANUAL_get_cat_transactions(cat.id, Userid);
+                const amount = await MANUAL_get_amount_by_category(cat.id, Userid);
+                if (trans.length > 0) {
+                  return { ...cat, transactions: trans, total: amount.total };
+                }
+              }catch(err){
+                console.log(err)
+              }
+            })
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch(error => console.log(error));
+  };
+
 module.exports = {
     insert_transactions,
     editTransaction,
-    getAllTrans
+    getAllTrans,
+    MANUAL_get_categories
 }
