@@ -80,7 +80,7 @@ const link_user_and_category = (categoryId, userId)=>{
 
 const insert_categories = (body, userId)=>{
   return db('category')
-  .insert(body)
+  .insert(body, 'id')
   .then(ids=>{
     return ids[0]
   })
