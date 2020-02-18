@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
-
+const Users = require("./users-model.js");
 exports.idAndBody = (req,res,next)=>{
     const body = req.body
     const id = req.params.userId
   
-    if (!id || !body) {
+    if (!id || !body || isNaN(id)) {
       res.status(400).json({message:"please add a parameter at the end of the endpoint and a body to the request"});
     }else{
         next()
@@ -12,10 +12,9 @@ exports.idAndBody = (req,res,next)=>{
 }
 
 exports.onlyId=(req,res,next)=>{
-    const body = req.body
     const id = req.params.userId
   
-    if (!id) {
+    if (!id || isNaN(id)) {
       res.status(400).json({message:"please add a parameter at the end of the endpoint"});
     }else{
         next()
@@ -43,4 +42,27 @@ exports.tokenMatchesUserId = (req,res,next)=>{
       }
     }
   });
+}
+
+// Middleware to check if a specified userId exists
+exports.userExists =(req, res, next)=> {
+  let id = req.params.userId;
+
+  Users.findUserBy({ id })
+    .then(response => {
+      // if a response is returned, the user exists so we can retrieve the list of catergories
+      // Else, allow the next function to be passed
+      if (response) {
+        next();
+      } else {
+        res.status(400).json({ error: "The specified userId does not exist." });
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({
+        error:
+          "Unable to retrieve the list of categories for the specified userId."
+      });
+    });
 }

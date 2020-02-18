@@ -4,28 +4,7 @@ const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
 const paramCheck = require("./paramCheck.js");
 
-// Middleware to check if a specified userId exists
-function userExists(req, res, next) {
-  let id = req.params.userId;
 
-  Users.findUserBy({ id })
-    .then(response => {
-      // if a response is returned, the user exists so we can retrieve the list of catergories
-      // Else, allow the next function to be passed
-      if (response) {
-        next();
-      } else {
-        res.status(400).json({ error: "The specified userId does not exist." });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        error:
-          "Unable to retrieve the list of categories for the specified userId."
-      });
-    });
-}
 
 router.get("/", restricted, (req, res) => {
   Users.allUsers()
@@ -40,7 +19,7 @@ router.get("/", restricted, (req, res) => {
 
 router.get(
   "/user/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.onlyId,
   paramCheck.tokenMatchesUserId,
   async (req, res) => {
@@ -60,7 +39,7 @@ router.get(
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
 router.get(
   `/categories/:userId`,
-  userExists,
+  paramCheck.userExists,
   paramCheck.onlyId,
   paramCheck.tokenMatchesUserId,
   (req, res) => {
@@ -87,7 +66,7 @@ router.get(
 
 router.put(
   "/categories/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.idAndBody,
   paramCheck.tokenMatchesUserId,
   async (req, res) => {
@@ -124,7 +103,7 @@ router.put(
 
 router.put(
   "/income/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.idAndBody,
   paramCheck.tokenMatchesUserId,
   async (req, res) => {
@@ -142,7 +121,7 @@ router.put(
 
 router.put(
   "/savinggoal/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.idAndBody,
   paramCheck.tokenMatchesUserId,
   async (req, res) => {
