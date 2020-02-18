@@ -19,7 +19,7 @@ const insert_transactions = (body, userId)=>{
 
 const editTransaction = (body)=>{
     return db ('manual_budget_item')
-    .update(body.name)
+    .update({name:body.name})
     .where({id: body.transactionId}, 'id')
 }
 
