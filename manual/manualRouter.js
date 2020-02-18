@@ -37,7 +37,7 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
     }
 })
 
-router.post('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.post('/transaction/:userId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
     const body = req.body
     const id = req.params.userId
     if(!body.amount || !body.payment_date || !body.category_id){
@@ -54,14 +54,11 @@ router.post('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, pa
 
 })
 
-router.patch('/transaction/:userId/:tranId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.patch('/transaction/:userId/:tranId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
     const body = req.body
     const id = req.params.userId
     const tranId = req.params.tranId
 
-    if(!body){
-        res.status(401).json({message:'please add object'})
-    }else{
         try{
             const update = await qs.editTransaction(body, id, tranId)
             res.status(201).json({update})
@@ -69,10 +66,10 @@ router.patch('/transaction/:userId/:tranId', paramCheck.onlyId, paramCheck.userE
             console.log(err)
             res.status(500).json(err)
         }
-    }
+    
 })
 
-router.get('/transaction/:userId', async(req,res)=>{
+router.get('/transaction/:userId',paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
 
     const id =req.params.userId
     try{
@@ -89,5 +86,24 @@ router.get('/transaction/:userId', async(req,res)=>{
         res.status(500).json(err)
     }
 })
+
+router.post('/categories/:userId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+
+    const id = req.params.userId
+    const body = req.body
+
+    try{
+
+        const addedCat = await qs.insert_categories(body, id)
+        res.status(201).json({addedCat})
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json(err)
+    }
+
+})
+
+
 
 module.exports = router;

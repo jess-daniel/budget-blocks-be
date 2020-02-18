@@ -72,11 +72,27 @@ const MANUAL_get_categories = Userid => {
         }
       })
       .catch(error => console.log(error));
-  };
+}
+
+const link_user_and_category = (categoryId, userId)=>{
+
+}
+
+const insert_categories = (body, userId)=>{
+  return db('category')
+  .insert(body.name)
+  .then(ids=>{
+    return ids[0]
+  })
+  .catch(err=>{
+    console.log(err)
+  })
+}
 
 module.exports = {
     insert_transactions,
     editTransaction,
     getAllTrans,
-    MANUAL_get_categories
+    MANUAL_get_categories,
+    insert_categories
 }

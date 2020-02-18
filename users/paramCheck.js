@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Users = require("./users-model.js");
+
 exports.idAndBody = (req,res,next)=>{
     const body = req.body
     const id = req.params.userId
