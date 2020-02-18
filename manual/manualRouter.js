@@ -37,7 +37,7 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
     }
 })
 
-router.post ('/transaction:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.post ('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
     const body = req.body
     const id = req.params.userId
     if(!body.amount || !body.payment_date || !body.category_id){
