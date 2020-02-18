@@ -37,16 +37,51 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
     }
 })
 
-router.post ('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.post('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
     const body = req.body
     const id = req.params.userId
     if(!body.amount || !body.payment_date || !body.category_id){
         res.status(401).json({message:'please send with the correct body'})
     }else{
-        const yeet = await qs.insert_transactions(body, id)
-        res.status(200).json({yeet})
+        try{
+            const yeet = await qs.insert_transactions(body, id)
+            res.status(200).json({yeet})
+        }catch(err){
+            console.log(err)
+            res.status(500).json(err)
+        }
     }
 
+})
+
+router.patch('/transaction/:userId', paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+    const body = req.body
+    const id = req.params.userId
+
+    if(!body.name){
+        res.status(401).json({message:'please add name to object'})
+    }else{
+        try{
+            const update = await qs.editTransaction(body, id)
+            res.status(201).json({update})
+        }catch(err){
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+})
+
+router.get('/transaction/:userId', async(req,res)=>{
+
+    const id =req.params.userId
+    try{
+        const list = await qs.getAllTrans(id)
+        res.status(200).json(list)
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json(err)
+    }
 })
 
 module.exports = router;
