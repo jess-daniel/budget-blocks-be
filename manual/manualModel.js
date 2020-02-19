@@ -83,12 +83,12 @@ const insert_categories = (body, userId)=>{
   return db('category')
   .insert({name:body.name}, 'id')
   .then(async(ids)=>{
-    console.log("THE ID", ids[0])
     try{
       const link = await link_user_and_category(ids[0], userId, body.budget)
     }catch(err){
       console.log(err)
     }
+    return ids[0]
   })
   .catch(err=>{
     console.log(err)
