@@ -30,7 +30,11 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
     
         const categories = await User.returnUserCategories(userid)
     
-        res.status(200).json(categories)
+        if(categories){
+            res.status(204)
+        }else{
+            res.status(409)
+        }
     }catch(err){
         console.log(err)
         res.status(500).json({err})
@@ -44,8 +48,8 @@ router.post('/transaction/:userId', paramCheck.idAndBody, paramCheck.userExists,
         res.status(401).json({message:'please send with the correct body'})
     }else{
         try{
-            const yeet = await qs.insert_transactions(body, id)
-            res.status(200).json({yeet})
+            const inserted = await qs.insert_transactions(body, id)
+            res.status(200).json({inserted})
         }catch(err){
             console.log(err)
             res.status(500).json(err)
