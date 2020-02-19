@@ -74,15 +74,21 @@ const MANUAL_get_categories = Userid => {
       .catch(error => console.log(error));
 }
 
-const link_user_and_category = (categoryId, userId)=>{
-
+const link_user_and_category = (categoryId, userId, bud)=>{
+  return db ('user_category')
+  .insert({category_id:categoryId, user_id:userId, budget:bud})
 }
 
 const insert_categories = (body, userId)=>{
   return db('category')
-  .insert(body, 'id')
-  .then(ids=>{
-    return ids[0]
+  .insert({name:body.name}, 'id')
+  .then(async(ids)=>{
+    console.log("THE ID", ids[0])
+    try{
+      const link = await link_user_and_category(ids[0], userId, body.budget)
+    }catch(err){
+      console.log(err)
+    }
   })
   .catch(err=>{
     console.log(err)
