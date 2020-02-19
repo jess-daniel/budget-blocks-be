@@ -192,7 +192,9 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 
     {
         "email": "Yeet",
-        "password": "Yeet"
+        "password": "Yeet",
+        "first_name": "Kyle",
+        "last_name": "Lambda"
     }
 
 **Returns the id of the newly created user:201 Status**

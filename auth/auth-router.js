@@ -44,9 +44,18 @@ function userAlreadyExists(req, res, next) {
     });
 }
 
+function Checknames(req,res,next){
+  let body = req.body
+  if(!body.last_name || !body.first_name){
+    res.status(400).json({message:'please provide first and last name'})
+  }else{
+    next()
+  }
+}
+
 router.post(
   '/register',
-  [userAlreadyExists, validateUserCredentials],
+  [userAlreadyExists, validateUserCredentials, Checknames],
   (req, res) => {
     let user = req.body;
 

@@ -44,7 +44,7 @@ function findUserBy(filter) {
 
 function PLAID_find_user(filter) {
   return db("users")
-    .select("id", "email", "income", "saving_goal")
+    .select("id", "email", "income", "saving_goal", "last_name", "first_name")
     .where(filter)
     .first()
     .then(async user => {
