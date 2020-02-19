@@ -86,4 +86,18 @@ describe("Users Login & Register", () => {
     expect(response.status).toBeDefined();
     expect(response.body.error).toBe("Please provide a password.");
   });
+
+  test("Should return an error if no token is passed in", async () => {
+    const response = await request(server).get("/api/users");
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe(
+      "You must be logged in to access this information."
+    );
+  });
+
+  test("Should return a list of users", async () => {
+    const response = await Users.allUsers();
+
+    expect(response).toBeDefined();
+  });
 });
