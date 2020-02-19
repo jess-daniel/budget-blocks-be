@@ -95,10 +95,30 @@ const insert_categories = (body, userId)=>{
   })
 }
 
-const editCategory = (body, catId)=>{
+const editCategoryBudget = (catid, userid, bud)=>{
+  return db('user_category')
+  .where({category_id:catid, user_id:userid})
+  .update({budget:bud})
+}
+
+
+const editCategory = (body, catId, userId)=>{
   return db('category')
   .where({id:catId})
-  .update(body.name, "id")
+  .update({name:body.name}, "id")
+  .then(async(ids)=>{
+    console.log('THE ID', ids[0])
+    if(body.budget){
+      try{
+        const yeet = await editCategoryBudget(catId, userId, body.budget)
+        return ids[0]
+      }catch(err){
+        console.log(err)
+      }
+    }else{
+      return ids[0]
+    }
+  })
 
 }
 
