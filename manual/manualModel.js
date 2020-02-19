@@ -95,10 +95,18 @@ const insert_categories = (body, userId)=>{
   })
 }
 
+const editCategory = (body, catId)=>{
+  return db('category')
+  .where({id:catId})
+  .update(body, "id")
+
+}
+
 module.exports = {
     insert_transactions,
     editTransaction,
     getAllTrans,
     MANUAL_get_categories,
-    insert_categories
+    insert_categories,
+    editCategory
 }

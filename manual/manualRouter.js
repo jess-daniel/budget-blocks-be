@@ -31,9 +31,9 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
         const categories = await User.returnUserCategories(userid)
     
         if(categories){
-            res.status(204)
+            res.status(204).json({message:'categories made'})
         }else{
-            res.status(409)
+            res.status(409).json({message:'categories not made'})
         }
     }catch(err){
         console.log(err)
@@ -107,6 +107,15 @@ router.post('/categories/:userId', paramCheck.idAndBody, paramCheck.userExists, 
     }
 
 })
+
+// router.patch('categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+//     const id = req.params.userId
+//     const catId = req.params.catId
+
+//     if(catId >24){
+
+//     }
+// })
 
 
 
