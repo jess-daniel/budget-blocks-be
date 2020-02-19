@@ -4,4 +4,3 @@ exclude_patterns:
   - "/webhook"
   - "/webhook/plaidRouter.js"
   - "coverage"
-  - "server.js"
