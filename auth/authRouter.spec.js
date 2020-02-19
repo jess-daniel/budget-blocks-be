@@ -17,18 +17,16 @@ describe("Users Login & Register", () => {
     beforeAll(async () => {
       await db("users").truncate();
     });
+
     test("Should allow a new user to be created", async () => {
-      // Registers a new user
+      // Registers a new user;
 
-      const testing = await Users.addUser({
-        email: "test@test.com",
-        password: "password"
-      });
+      const user = { email: "test@test.com", password: "password" };
+      const response = await request(server)
+        .post("/api/auth/register")
+        .send(user);
 
-      const response = await request(server).post("/register");
-      // Checks the DB if that newly created yser exists
-      const users = await db("users");
-      expect(users).toHaveLength(1);
+      expect(response.status).toBe(201);
     });
   });
 
@@ -53,8 +51,16 @@ describe("Users Login & Register", () => {
     );
   });
 
-  test("Should return an error if the user does not exist", async () => {
-    const user = { email: "fake@test.com", password: "password" };
+  test("Should return an error if body is missing", async () => {
+    const response = await request(server).post("/api/auth/login");
+
+    expect(response.body.error).toBe(
+      "No information was passed into the body."
+    );
+  });
+
+  test("Should return an error if no email is provided", async () => {
+    const user = { password: "password" };
 
     // await Users.login(user);
     const response = await request(server)
@@ -62,10 +68,22 @@ describe("Users Login & Register", () => {
       .send(user);
     // console.log(response);
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
     expect(response.status).toBeDefined();
-    expect(response.body.message).toBe(
-      "Unable to find the user by the email provided "
-    );
+    expect(response.body.error).toBe("Please provide an email.");
+  });
+
+  test("Should return an error if no password is provided", async () => {
+    const user = { email: "test@test.com" };
+
+    // await Users.login(user);
+    const response = await request(server)
+      .post("/api/auth/login")
+      .send(user);
+    // console.log(response);
+
+    expect(response.status).toBe(400);
+    expect(response.status).toBeDefined();
+    expect(response.body.error).toBe("Please provide a password.");
   });
 });

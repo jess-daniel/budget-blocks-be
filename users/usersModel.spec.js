@@ -32,4 +32,20 @@ describe("Users Model", function() {
     const response = await request(server).get("/categories/1");
     expect(response.type).toMatch(/json/i);
   });
+
+  it("Should return a list of users", async () => {
+    const response = await Users.allUsers();
+    expect(response).toBeDefined();
+  });
+
+  it("Should get total budget", async () => {
+    const response = await Users.get_total_budget(1);
+    expect(response).toBeDefined();
+    expect(response.total).toBeDefined();
+  });
+
+  it("Should return user categories", async () => {
+    const response = await Users.returnUserCategories(1);
+    expect(response).toBeDefined();
+  });
 });

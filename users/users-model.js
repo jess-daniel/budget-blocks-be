@@ -10,7 +10,8 @@ module.exports = {
   editUserCategoryBudget,
   editUserIncome,
   editUserSaving,
-  PLAID_find_user
+  PLAID_find_user,
+  get_total_budget
 };
 
 function allUsers() {
