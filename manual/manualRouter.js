@@ -108,7 +108,7 @@ router.post('/categories/:userId', paramCheck.idAndBody, paramCheck.userExists, 
 
 })
 
-router.patch('categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
     const id = req.params.userId
     const catId = req.params.catId
     const body = req.body;
