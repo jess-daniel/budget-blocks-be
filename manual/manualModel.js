@@ -98,7 +98,7 @@ const insert_categories = (body, userId)=>{
 const editCategory = (body, catId)=>{
   return db('category')
   .where({id:catId})
-  .update(body, "id")
+  .update(body.name, "id")
 
 }
 
