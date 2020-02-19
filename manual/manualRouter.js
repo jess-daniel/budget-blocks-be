@@ -108,14 +108,23 @@ router.post('/categories/:userId', paramCheck.idAndBody, paramCheck.userExists, 
 
 })
 
-// router.patch('categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
-//     const id = req.params.userId
-//     const catId = req.params.catId
+router.patch('categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+    const id = req.params.userId
+    const catId = req.params.catId
+    const body = req.body;
 
-//     if(catId >24){
-
-//     }
-// })
+    if(catId >24){
+        try{
+            const updated = await qs.editCategory(body, catId)
+            res.status(201).json({updated})
+        }catch(err){
+            console.log(err)
+            res.status(500).json({err})
+        }
+    }else{
+        res.status(400).json({message:"you just tried to change a default category"})
+    }
+})
 
 
 
