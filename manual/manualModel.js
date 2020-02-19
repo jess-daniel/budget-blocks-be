@@ -95,10 +95,37 @@ const insert_categories = (body, userId)=>{
   })
 }
 
+const editCategoryBudget = (catid, userid, bud)=>{
+  return db('user_category')
+  .where({category_id:catid, user_id:userid})
+  .update({budget:bud})
+}
+
+
+const editCategory = (body, catId, userId)=>{
+  return db('category')
+  .where({id:catId})
+  .update({name:body.name}, "id")
+  .then(async(ids)=>{
+    if(body.budget){
+      try{
+        const yeet = await editCategoryBudget(catId, userId, body.budget)
+        return ids[0]
+      }catch(err){
+        console.log(err)
+      }
+    }else{
+      return ids[0]
+    }
+  })
+
+}
+
 module.exports = {
     insert_transactions,
     editTransaction,
     getAllTrans,
     MANUAL_get_categories,
-    insert_categories
+    insert_categories,
+    editCategory
 }

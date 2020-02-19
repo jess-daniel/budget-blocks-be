@@ -30,7 +30,11 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
     
         const categories = await User.returnUserCategories(userid)
     
-        res.status(200).json(categories)
+        if(categories){
+            res.status(204).json({message:'categories made'})
+        }else{
+            res.status(409).json({message:'categories not made'})
+        }
     }catch(err){
         console.log(err)
         res.status(500).json({err})
@@ -44,8 +48,8 @@ router.post('/transaction/:userId', paramCheck.idAndBody, paramCheck.userExists,
         res.status(401).json({message:'please send with the correct body'})
     }else{
         try{
-            const yeet = await qs.insert_transactions(body, id)
-            res.status(200).json({yeet})
+            const inserted = await qs.insert_transactions(body, id)
+            res.status(200).json({inserted})
         }catch(err){
             console.log(err)
             res.status(500).json(err)
@@ -102,6 +106,28 @@ router.post('/categories/:userId', paramCheck.idAndBody, paramCheck.userExists, 
         res.status(500).json(err)
     }
 
+})
+
+router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+    const id = req.params.userId
+    const catId = req.params.catId
+    const body = req.body;
+
+    if(catId >24){
+        try{
+            const updated = await qs.editCategory(body, catId, id)
+            if(updated){
+                res.status(201).json({updated})
+            }else{
+                res.status(400).json({message:'somthing went wrong, check the logs'})
+            }
+        }catch(err){
+            console.log(err)
+            res.status(500).json({err})
+        }
+    }else{
+        res.status(400).json({message:"you just tried to change a default category"})
+    }
 })
 
 
