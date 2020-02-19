@@ -116,7 +116,11 @@ router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.user
     if(catId >24){
         try{
             const updated = await qs.editCategory(body, catId, id)
-            res.status(201).json({updated})
+            if(updated){
+                res.status(201).json({updated})
+            }else{
+                res.status(400).json({message:'somthing went wrong, check the logs'})
+            }
         }catch(err){
             console.log(err)
             res.status(500).json({err})

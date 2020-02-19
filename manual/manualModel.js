@@ -107,7 +107,6 @@ const editCategory = (body, catId, userId)=>{
   .where({id:catId})
   .update({name:body.name}, "id")
   .then(async(ids)=>{
-    console.log('THE ID', ids[0])
     if(body.budget){
       try{
         const yeet = await editCategoryBudget(catId, userId, body.budget)

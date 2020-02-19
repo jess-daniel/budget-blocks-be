@@ -519,3 +519,28 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
     {
       "addedCat" : 25
     }
+
+## (Manual) **PATCH** /manual/categories/:userId/:catId
+
+**You must pass the userid and categoryid to this endpoints parameters.Like the other endpoints under manual, this is for manual users only that have made a custom category. If you try to edit a default category with this endpoint you will get an error**
+
+        {
+            example: /manual/categories/1(userId)/25(catId)
+        }
+
+**The expected object can include the name or the name and budget.Either of these are fine, but you must include a name**
+
+        {
+            name: "toilet paper"
+        }
+
+        {
+            name:"toilet paper",
+            budget: 60
+        }
+
+**Expected returned body will be a 201 status and the id of the category updated**
+
+        {
+            updated:25
+        }
