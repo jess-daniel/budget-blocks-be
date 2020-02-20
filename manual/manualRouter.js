@@ -16,25 +16,31 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
     const userid = req.params.userId
     try{
 
-        //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
-        const doneData = Promise.all(
-            data.map(async d => {
-              try {
-                const contents = await Plaid.link_user_categories(d.id, userid);
-                return d;
-              } catch (error) {
-                console.log(error);
-              }
-            })
-          );
-    
         const categories = await User.returnUserCategories(userid)
-    
-        if(categories){
-            res.status(204).json({message:'categories made'})
+        if(!categories){
+            //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
+            const doneData = Promise.all(
+                data.map(async d => {
+                  try {
+                    const contents = await Plaid.link_user_categories(d.id, userid);
+                    return d;
+                  } catch (error) {
+                    console.log(error);
+                  }
+                })
+              );
+
+            const newCategories = await User.returnUserCategories(userid)
+
+            if(newCategories){
+                res.status(204).json({message:'categories made'})
+            }else{
+                res.status(409).json({message:'categories not made'})
+            }
         }else{
-            res.status(409).json({message:'categories not made'})
+            res.status(205).json({message:'categories are already there'})
         }
+    
     }catch(err){
         console.log(err)
         res.status(500).json({err})
