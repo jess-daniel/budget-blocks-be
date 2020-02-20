@@ -10,7 +10,8 @@ module.exports = {
   editUserCategoryBudget,
   editUserIncome,
   editUserSaving,
-  PLAID_find_user
+  PLAID_find_user,
+  get_total_budget
 };
 
 function allUsers() {
@@ -44,7 +45,7 @@ function findUserBy(filter) {
 
 function PLAID_find_user(filter) {
   return db("users")
-    .select("id", "email", "income", "saving_goal", "last_name", "first_name")
+    .select("id", "email", "income", "saving_goal")
     .where(filter)
     .first()
     .then(async user => {
