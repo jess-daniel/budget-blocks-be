@@ -147,13 +147,15 @@ const INFO_get_cat_transactions = (categoryID, userID) => {
     .from("budget_item")
     .where({ category_id: categoryID, user_id: userID });
 };
-//reserved for the functino below it
-const INFO_get_cat_manual_transactions = (categoryID, userID) =>{
-  return db('db')
-  .select("*")
-  .from("manual_budget_item")
-  .where({category_id: categoryID, user_id:userID})
-}
+
+//reserved for the function below it
+const INFO_get_cat_manual_transactions = (categoryID, userID) => {
+  return db("db")
+    .select("*")
+    .from("manual_budget_item")
+    .where({ category_id: categoryID, user_id: userID });
+};
+
 //reserved for the function below it
 const INFO_get_amount_by_category = (categoryID, userID) => {
   return db("budget_item")
@@ -178,7 +180,6 @@ const INFO_get_categories = Userid => {
     .join("category as c", "uc.category_id", "c.id")
     .where("users.id", Userid)
     .then(async categories => {
-      console.log('THE CATS', categories)
       try {
         return Promise.all(
           categories.map(async cat => {
