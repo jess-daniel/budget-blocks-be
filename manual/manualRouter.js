@@ -130,12 +130,12 @@ router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.user
     }
 })
 
-router.delete('/transaction/:tranId', paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.delete('/transaction/:userId', paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
 
-    const id = req.params.tranId
+    const tranId = req.params.userId
 
     try{
-        const deleted = await qs.deleteTransaction(id)
+        const deleted = await qs.deleteTransaction(tranId)
         res.status(200).json({deleted})
     }catch(err){
         console.log(err)
@@ -144,9 +144,9 @@ router.delete('/transaction/:tranId', paramCheck.onlyId,paramCheck.userExists, p
 
 })
 
-router.delete('/categories/:catId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.delete('/categories/:userId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
 
-    const catId = req.params.catId
+    const catId = req.params.userId
     if(catId>24){
         try{
             const deleted = await qs.deleteCategory(catId)
