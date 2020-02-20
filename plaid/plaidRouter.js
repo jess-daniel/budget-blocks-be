@@ -119,7 +119,6 @@ router.get("/transactions/:userId", paramCheck.tokenMatchesUserId, checkAccessTo
         //when the status is done, run a super query to get the categories and their transactions
         case "done":
           const categories = await qs.INFO_get_categories(id);
-          console.log('THE CATS', categories)
           const cat = categories.filter(cat => {
             if (cat != null) {
               return cat;
