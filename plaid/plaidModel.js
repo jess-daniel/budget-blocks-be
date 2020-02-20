@@ -166,14 +166,14 @@ const INFO_get_categories = Userid => {
       try {
         return Promise.all(
           categories.map(async cat => {
-            try{
+            try {
               const trans = await INFO_get_cat_transactions(cat.id, Userid);
               const amount = await INFO_get_amount_by_category(cat.id, Userid);
               if (trans.length > 0) {
                 return { ...cat, transactions: trans, total: amount.total };
               }
-            }catch(err){
-              console.log(err)
+            } catch (err) {
+              console.log(err);
             }
           })
         );
@@ -201,7 +201,7 @@ const insert_accounts = (body, pgItemId) => {
 };
 
 const PLAID_insert_accounts = async (accounts, pgItemId) => {
-  try{
+  try {
     return Promise.all(
       accounts.map(async acct => {
         try {
@@ -211,9 +211,9 @@ const PLAID_insert_accounts = async (accounts, pgItemId) => {
           console.log(error);
         }
       })
-    )
-  }catch(err){
-    console.log(err)
+    );
+  } catch (err) {
+    console.log(err);
   }
 };
 
