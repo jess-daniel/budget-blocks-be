@@ -38,7 +38,6 @@ router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramChec
                 res.status(409).json({message:'categories not made'})
             }
         }else{
-            console.log(categories)
             res.status(205).json({message:'categories are already there'})
         }
     
