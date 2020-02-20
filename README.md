@@ -399,6 +399,8 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
             "email": "Yeet",
             "income": 4200,
             "saving_goal": 205,
+            "last_name": "Lambda",
+            "first_name": "Kyle",
             "Totalbudget":1400
 
         }
