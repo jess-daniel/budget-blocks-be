@@ -130,9 +130,9 @@ router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.user
     }
 })
 
-router.delete('/transaction/:userId', paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.delete('/transaction/:userId/:tranId', paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
 
-    const tranId = req.params.userId
+    const tranId = req.params.tranId
 
     try{
         const deleted = await qs.deleteTransaction(tranId)
@@ -144,9 +144,9 @@ router.delete('/transaction/:userId', paramCheck.onlyId,paramCheck.userExists, p
 
 })
 
-router.delete('/categories/:userId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.delete('/categories/:userId/:catId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
 
-    const catId = req.params.userId
+    const catId = req.params.catId
     if(catId>24){
         try{
             const deleted = await qs.deleteCategory(catId)
