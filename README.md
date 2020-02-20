@@ -548,3 +548,31 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
         {
             updated:25
         }
+
+## (Manual) **DELETE** /manual/transaction/:userId/:tranId
+
+**You need to pass the userId and tranId to this endpoint**
+
+        {
+            example: /manual/transaction/1(userId)/1(tranId)
+        }
+
+**Expected return will be a 200 status with a 1 for true(completed) or 0 for false(incomplete)**
+
+        {
+            deleted: 1
+        }
+
+## (Manual) **DELETE** /manual/categories/:userId/:catId
+
+**You must pass the userid and categoryid to this endpoints parameters.Like the other endpoints under manual, this is for manual users only that have made a custom category. If you try to delete a default category with this endpoint you will get an error**
+
+        {
+            example: /manual/categories/1/25
+        }
+
+**Expected return will be a 200 status with a 1 for true(completed) or 0 for false(incomplete)**
+
+        {
+            deleted: 1
+        }
