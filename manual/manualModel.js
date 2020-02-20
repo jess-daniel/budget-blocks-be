@@ -118,7 +118,18 @@ const editCategory = (body, catId, userId)=>{
       return ids[0]
     }
   })
+}
 
+const deleteTransaction = (tranId)=>{
+  return db('manual_budget_item')
+  .where({id:tranId})
+  .del()
+}
+
+const deleteCategory = (catId)=>{
+  return db('category')
+  .where({id:catId})
+  .del()
 }
 
 module.exports = {
@@ -127,5 +138,7 @@ module.exports = {
     getAllTrans,
     MANUAL_get_categories,
     insert_categories,
-    editCategory
+    editCategory,
+    deleteTransaction,
+    deleteCategory
 }

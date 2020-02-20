@@ -130,6 +130,36 @@ router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.user
     }
 })
 
+router.delete('/transaction/:tranId', paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+
+    const id = req.params.tranId
+
+    try{
+        const deleted = await qs.deleteTransaction(id)
+        res.status(200).json({deleted})
+    }catch(err){
+        console.log(err)
+        res.status(500).json({err})
+    }
+
+})
+
+router.delete('/categories/:catId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
+
+    const catId = req.params.catId
+    if(catId>24){
+        try{
+            const deleted = await qs.deleteCategory(catId)
+            res.status(200).json({deleted})
+        }catch(err){
+            console.log(err)
+            res.status(500).json({err})
+        }
+    }else{
+        res.status(400).json({message:'You just tried to delete a default category'})
+    }
+})
+
 
 
 module.exports = router;
