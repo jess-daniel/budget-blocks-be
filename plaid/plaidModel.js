@@ -191,8 +191,7 @@ const INFO_get_categories = Userid => {
               const manualAmount = await INFO_get_manual_amount_by_category(cat.id, Userid)
               if (trans.length > 0 || manualTrans.length > 0) {
                 return { ...cat, transactions: trans, manualTransactions:manualTrans, 
-                  total: amount.total,
-                  Manualtotal:manualAmount.total};
+                  total: amount.total+manualAmount.total};
               }
             }catch(err){
               console.log(err)
