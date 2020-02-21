@@ -188,7 +188,7 @@ const INFO_get_categories = Userid => {
               const manualTrans = await INFO_get_cat_manual_transactions(cat.id, Userid)
               const amount = await INFO_get_amount_by_category(cat.id, Userid)
               const manualAmount = await INFO_get_manual_amount_by_category(cat.id, Userid)
-              const trueTotal = amount.total+manualAmount.total
+              const trueTotal = Number(amount.total)+Number(manualAmount.total)
               if (trans.length > 0 || manualTrans.length > 0) {
                 return { ...cat, transactions: trans, manualTransactions:manualTrans, 
                   total: trueTotal};
