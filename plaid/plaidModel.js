@@ -180,7 +180,6 @@ const INFO_get_categories = Userid => {
     .join("category as c", "uc.category_id", "c.id")
     .where("users.id", Userid)
     .then(async categories => {
-      console.log('THE CATS', categories)
       try {
         return Promise.all(
           categories.map(async cat => {
