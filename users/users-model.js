@@ -10,7 +10,7 @@ module.exports = {
   editUserCategoryBudget,
   editUserIncome,
   editUserSaving,
-  PLAID_find_userm,
+  PLAID_find_user,
   get_total_budget
 };
 
