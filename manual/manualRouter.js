@@ -161,7 +161,7 @@ router.patch(
 );
 
 router.delete(
-  "/transaction/:tranId",
+  "/transaction/:userId/:tranId",
   paramCheck.onlyId,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
