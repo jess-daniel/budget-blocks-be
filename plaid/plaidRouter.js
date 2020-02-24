@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const plaid = require("plaid");
 const qs = require("./plaidModel.js");
-const User = require('../users/users-model.js');
 const data = require("./data.js");
 const jwt = require("jsonwebtoken");
 
@@ -61,39 +60,23 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
 
     const doneAccounts = await qs.PLAID_insert_accounts(accounts, Itemid);
 
-    const categories = await User.returnUserCategories(userid)
-    if(categories.length == 0){
-      //same thing, it just needs to insert into the user_category linking table the default categories
-      //if I have time, I'll come back to this to optimize it like line 102
-      const doneData = Promise.all(
-        data.map(async d => {
-          try {
-            const contents = await qs.link_user_categories(d.id, userid);
-            return d;
-          } catch (error) {
-            console.log(error);
-          }
-        })
-      );
+    //same thing, it just needs to insert into the user_category linking table the default categories
+    //if I have time, I'll come back to this to optimize it like line 102
+    const doneData = Promise.all(
+      data.map(async d => {
+        try {
+          const contents = await qs.link_user_categories(d.id, userid);
+          return d;
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
 
-      const newCategories = await User.returnUserCategories(userid)
-
-      if(newCategories.length > 0){
-        res.status(201).json({
-          accessCreated:Accessid,
-          ItemCreated:Itemid
-        })
-      }else{
-        res.status(409).json({message:'cant link categories at this time'})
-      }
-    }else{
-      res.status(201).json({
-        accessCreated: Accessid,
-        ItemCreated: Itemid
-      });
-    }
-
-
+    res.status(201).json({
+      accessCreated: Accessid,
+      ItemCreated: Itemid
+    });
   } catch (err) {
     console.log("access", err);
     res.status(500).json({ message: "cant insert at this time" });

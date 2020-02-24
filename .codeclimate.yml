@@ -1,7 +1,6 @@
 version: "2"
 exclude_patterns:
   - "**/__tests__/"
-  - "/webhook"
-  - "/webhook/plaidRouter.js"
-  - "coverage"
-  - "server.js"
+  - "*/webhook/*"
+  - "/plaid/"
+  - "spec/"

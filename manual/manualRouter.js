@@ -1,171 +1,204 @@
 //Plaid model and data
-const Plaid = require('../plaid/plaidModel.js');
-const data = require('../plaid/data.js');
+const Plaid = require("../plaid/plaidModel.js");
+const data = require("../plaid/data.js");
 //user model and data
-const paramCheck = require('../users/paramCheck.js')
-const User = require('../users/users-model.js')
+const paramCheck = require("../users/paramCheck.js");
+const User = require("../users/users-model.js");
 
 //manual model
-const qs = require('./manualModel.js')
+const qs = require("./manualModel.js");
 
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-router.get('/onboard/:userId',paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.get(
+  "/onboard/:userId",
+  paramCheck.onlyId,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const userid = req.params.userId;
+    try {
+      //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
+      const doneData = Promise.all(
+        data.map(async d => {
+          try {
+            const contents = await Plaid.link_user_categories(d.id, userid);
+            return d;
+          } catch (error) {
+            console.log(error);
+          }
+        })
+      );
 
-    const userid = req.params.userId
-    try{
+      const categories = await User.returnUserCategories(userid);
 
-        const categories = await User.returnUserCategories(userid)
-        if(categories.length == 0){
-            //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
-            const doneData = Promise.all(
-                data.map(async d => {
-                  try {
-                    const contents = await Plaid.link_user_categories(d.id, userid);
-                    return d;
-                  } catch (error) {
-                    console.log(error);
-                  }
-                })
-              );
+      if (categories) {
+        res.status(204).json({ message: "categories made" });
+      } else {
+        res.status(409).json({ message: "categories not made" });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err });
+    }
+  }
+);
 
-            const newCategories = await User.returnUserCategories(userid)
+router.post(
+  "/transaction/:userId",
+  paramCheck.idAndBody,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const body = req.body;
+    const id = req.params.userId;
+    if (!body.amount || !body.payment_date || !body.category_id) {
+      res.status(401).json({ message: "please send with the correct body" });
+    } else {
+      try {
+        const inserted = await qs.insert_transactions(body, id);
+        res.status(200).json({ inserted });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+      }
+    }
+  }
+);
 
-            if(newCategories.length > 0){
-                res.status(204).json({message:'categories made'})
-            }else{
-                res.status(409).json({message:'categories not made'})
-            }
-        }else{
-            res.status(205).json({message:'categories are already there'})
+router.patch(
+  "/transaction/:userId/:tranId",
+  paramCheck.idAndBody,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const body = req.body;
+    const id = req.params.userId;
+    const tranId = req.params.tranId;
+
+    try {
+      const update = await qs.editTransaction(body, id, tranId);
+      res.status(201).json({ update });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  }
+);
+
+router.get(
+  "/transaction/:userId",
+  paramCheck.onlyId,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const id = req.params.userId;
+    try {
+      const categories = await qs.MANUAL_get_categories(id);
+      const list = categories.filter(cat => {
+        if (cat != null) {
+          return cat;
         }
-    
-    }catch(err){
-        console.log(err)
-        res.status(500).json({err})
+      });
+      res.status(200).json({ list });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
     }
-})
+  }
+);
 
-router.post('/transaction/:userId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
-    const body = req.body
-    const id = req.params.userId
-    if(!body.amount || !body.payment_date || !body.category_id){
-        res.status(401).json({message:'please send with the correct body'})
-    }else{
-        try{
-            const inserted = await qs.insert_transactions(body, id)
-            res.status(200).json({inserted})
-        }catch(err){
-            console.log(err)
-            res.status(500).json(err)
-        }
-    }
-
-})
-
-router.patch('/transaction/:userId/:tranId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
-    const body = req.body
-    const id = req.params.userId
-    const tranId = req.params.tranId
-
-        try{
-            const update = await qs.editTransaction(body, id, tranId)
-            res.status(201).json({update})
-        }catch(err){
-            console.log(err)
-            res.status(500).json(err)
-        }
-    
-})
-
-router.get('/transaction/:userId',paramCheck.onlyId, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
-
-    const id =req.params.userId
-    try{
-        const categories = await qs.MANUAL_get_categories(id)
-        const list = categories.filter(cat => {
-            if (cat != null) {
-              return cat;
-            }
-          });
-        res.status(200).json({list})
-
-    }catch(err){
-        console.log(err)
-        res.status(500).json(err)
-    }
-})
-
-router.post('/categories/:userId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
-
-    const id = req.params.userId
-    const body = req.body
-
-    try{
-
-        const addedCat = await qs.insert_categories(body, id)
-        res.status(201).json({addedCat})
-
-    }catch(err){
-        console.log(err)
-        res.status(500).json(err)
-    }
-
-})
-
-router.patch('/categories/:userId/:catId', paramCheck.idAndBody, paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
-    const id = req.params.userId
-    const catId = req.params.catId
+router.post(
+  "/categories/:userId",
+  paramCheck.idAndBody,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const id = req.params.userId;
     const body = req.body;
 
-    if(catId >24){
-        try{
-            const updated = await qs.editCategory(body, catId, id)
-            if(updated){
-                res.status(201).json({updated})
-            }else{
-                res.status(400).json({message:'somthing went wrong, check the logs'})
-            }
-        }catch(err){
-            console.log(err)
-            res.status(500).json({err})
+    try {
+      const addedCat = await qs.insert_categories(body, id);
+      res.status(201).json({ addedCat });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  }
+);
+
+router.patch(
+  "/categories/:userId/:catId",
+  paramCheck.idAndBody,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const id = req.params.userId;
+    const catId = req.params.catId;
+    const body = req.body;
+
+    if (catId > 24) {
+      try {
+        const updated = await qs.editCategory(body, catId, id);
+        if (updated) {
+          res.status(201).json({ updated });
+        } else {
+          res
+            .status(400)
+            .json({ message: "somthing went wrong, check the logs" });
         }
-    }else{
-        res.status(400).json({message:"you just tried to change a default category"})
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ err });
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "you just tried to change a default category" });
     }
-})
+  }
+);
 
-router.delete('/transaction/:userId/:tranId', paramCheck.onlyId,paramCheck.userExists, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.delete(
+  "/transaction/:tranId",
+  paramCheck.onlyId,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const id = req.params.tranId;
 
-    const tranId = req.params.tranId
-
-    try{
-        const deleted = await qs.deleteTransaction(tranId)
-        res.status(200).json({deleted})
-    }catch(err){
-        console.log(err)
-        res.status(500).json({err})
+    try {
+      const deleted = await qs.deleteTransaction(id);
+      res.status(200).json({ deleted });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err });
     }
+  }
+);
 
-})
-
-router.delete('/categories/:userId/:catId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
-
-    const catId = req.params.catId
-    if(catId>24){
-        try{
-            const deleted = await qs.deleteCategory(catId)
-            res.status(200).json({deleted})
-        }catch(err){
-            console.log(err)
-            res.status(500).json({err})
-        }
-    }else{
-        res.status(400).json({message:'You just tried to delete a default category'})
+router.delete(
+  "/categories/:catId",
+  paramCheck.onlyId,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const catId = req.params.catId;
+    if (catId > 24) {
+      try {
+        const deleted = await qs.deleteCategory(catId);
+        res.status(200).json({ deleted });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ err });
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "You just tried to delete a default category" });
     }
-})
-
-
+  }
+);
 
 module.exports = router;
