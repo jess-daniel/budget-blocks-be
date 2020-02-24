@@ -7,6 +7,7 @@ exports.up = function(knex) {
           .string("email")
           .notNullable()
           .unique();
+
         tbl.string("password").notNullable();
 
         tbl.decimal('income')
@@ -14,6 +15,12 @@ exports.up = function(knex) {
 
         tbl.decimal('saving_goal')
         .nullable();
+
+        tbl.string('first_name')
+        .notNullable();
+
+        tbl.string('last_name')
+        .notNullable();
       })
 
       // Creates a reference table so that an access token can be mapped to a specific user_id
