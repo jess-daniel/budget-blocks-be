@@ -6,7 +6,7 @@
 
 # Badges
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/48e243bd3d68a7d834b0/maintainability](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
+[![Maintainability](https://api.codeclimate.com/v1/badges/48e243bd3d68a7d834b0/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/48e243bd3d68a7d834b0/test_coverage)](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
 
 # API Documentation
@@ -183,12 +183,11 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 
 ## Postgres
 
-- The backend is now running on Postgres, so things won't clear everytime the dev branch is commited to. In addition to that, you can create an account and sign up with plaid useing user/pass_good just once now. No more cre-creating accounts unless we need to wipe the DB. 
-
+- The backend is now running on Postgres, so things won't clear everytime the dev branch is commited to. In addition to that, you can create an account and sign up with plaid useing user/pass_good just once now. No more cre-creating accounts unless we need to wipe the DB.
 
 ## (auth) **POST** /api/auth/register
 
- **Expected requst body:**
+**Expected requst body:**
 
     {
         "email": "Yeet",
@@ -242,8 +241,7 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 
 **This is no longer a post request,now you just pass the userID as a param in the url**
 
-
-*When we implement the restricitve middleware, thers a chance it'll change to a get request and we'll get the user id from the authorization header token*
+_When we implement the restricitve middleware, thers a chance it'll change to a get request and we'll get the user id from the authorization header token_
 
 **Returns the list of transactions for that user**
 
@@ -330,7 +328,7 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
         example: /api/users/categories/1(userid)
     }
 
-    {    
+    {
         "categoryid": 1,
         "budget": 320
     }
@@ -365,7 +363,6 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 ## (User) **PUT** /api/users/savinggoal/:param
 
 **While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
-
 
     {
         example: /api/users/savinggoal/1(userid)
@@ -426,17 +423,17 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 
     {
       	"name": "Yeet",
-	      "amount": 20.00,
-	      "payment_date": "2020-02-14",
-	      "category_id": 4
+          "amount": 20.00,
+          "payment_date": "2020-02-14",
+          "category_id": 4
     }
 
 **And**
 
     {
-	      "amount": 20.00,
-	      "payment_date": "2020-02-14",
-	      "category_id": 4
+          "amount": 20.00,
+          "payment_date": "2020-02-14",
+          "category_id": 4
     }
 
 **It returns with the id of the transaction inserted into the manual_budget_item table**
@@ -478,9 +475,9 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 ## (Manual) **GET** /manual/transaction/:userId
 
 **Here you pass the endpoint the userId that you need all transactions from. Just like the plaid user version of this, it will send you each transaction PER category**
-    {
-      example: /manual/transaction/1(userId)
-    }
+{
+example: /manual/transaction/1(userId)
+}
 
 **Response**
 
@@ -543,4 +540,32 @@ See [Frontend Documentation](🚫link to your frontend readme here) for details 
 
         {
             updated:25
+        }
+
+## (Manual) **DELETE** /manual/transaction/:userId/:tranId
+
+**You need to pass the userId and tranId to this endpoint**
+
+        {
+            example: /manual/transaction/1(userId)/1(tranId)
+        }
+
+**Expected return will be a 200 status with a 1 for true(completed) or 0 for false(incomplete)**
+
+        {
+            deleted: 1
+        }
+
+## (Manual) **DELETE** /manual/categories/:userId/:catId
+
+**You must pass the userid and categoryid to this endpoints parameters.Like the other endpoints under manual, this is for manual users only that have made a custom category. If you try to delete a default category with this endpoint you will get an error**
+
+        {
+            example: /manual/categories/1/25
+        }
+
+**Expected return will be a 200 status with a 1 for true(completed) or 0 for false(incomplete)**
+
+        {
+            deleted: 1
         }

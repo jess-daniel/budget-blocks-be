@@ -70,10 +70,13 @@ function login(Cred) {
     .then(async user => {
       try {
         const good = await Plaid.getAccessToken(user.id);
+        const categories = await returnUserCategories(user.id)
         if (good) {
-          return (user = { ...user, LinkedAccount: true });
-        } else {
-          return (user = { ...user, LinkedAccount: false });
+          return (user = { ...user, LinkedAccount: true, ManualOnly:false })
+        } else if(!good && categories.length>0) {
+          return (user = { ...user, LinkedAccount: false, ManualOnly:true })
+        }else{
+          return ( user = {...user, LinkedAccount:false, ManualOnly:false})
         }
       } catch (error) {
         console.log(error);
