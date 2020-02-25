@@ -154,27 +154,21 @@ router.delete(
   }
 );
 
-router.delete(
-  "/categories/:catId",
-  paramCheck.onlyId,
-  paramCheck.userExists,
-  paramCheck.tokenMatchesUserId,
-  async (req, res) => {
-    const catId = req.params.catId;
-    if (catId > 24) {
-      try {
-        const deleted = await qs.deleteCategory(catId);
-        res.status(200).json({ deleted });
-      } catch (err) {
-        console.log(err);
-        res.status(500).json({ err });
+
+router.delete('/categories/:userId/:catId', paramCheck.onlyId, paramCheck.userExists,paramCheck.tokenMatchesUserId, async(req,res)=>{
+
+  const catId = req.params.catId
+  if(catId>24){
+      try{
+          const deleted = await qs.deleteCategory(catId)
+          res.status(200).json({deleted})
+      }catch(err){
+          console.log(err)
+          res.status(500).json({err})
       }
-    } else {
-      res
-        .status(400)
-        .json({ message: "You just tried to delete a default category" });
-    }
+  }else{
+      res.status(400).json({message:'You just tried to delete a default category'})
   }
-);
+})
 
 module.exports = router;
