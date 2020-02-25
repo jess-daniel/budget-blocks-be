@@ -131,17 +131,19 @@ const category_already_linked = (body, userId)=>{
   .where({name:body.name})
   .first()
   .then(async(category)=>{
+
     try{
       const linked = await search_link(category.id, userId)
-      if(linked){
-        console.log("THE LINKED ACCOUNT 1", linked)
-        return linked
-      }
+      // if(linked){
+      //   console.log("THE LINKED ACCOUNT 1", linked)
+      //   return linked
+      // }
       console.log("THE LINKED ACCOUNT 2", linked)
       return linked
     }catch(err){
       console.log(err)
     }
+
     return linked
   })
 }
