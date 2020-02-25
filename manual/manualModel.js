@@ -137,6 +137,7 @@ const category_already_linked = (body, userId)=>{
         console.log("THE LINKED ACCOUNT", linked)
         return linked
       }
+      return linked
     }catch(err){
       console.log(err)
     }
