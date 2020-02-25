@@ -130,20 +130,19 @@ const category_already_linked = (body, userId)=>{
   .from('category')
   .where({name:body.name})
   .first()
-  .then(async(category)=>{
-
+  .then(async category =>{
     try{
-      const linked = await search_link(category.id, userId)
-      // if(linked){
-      //   console.log("THE LINKED ACCOUNT 1", linked)
-      //   return linked
-      // }
-      console.log("THE LINKED ACCOUNT 2", linked)
-      return category = {...category, linked}
+      const good = await search_link(category.id, userId)
+      if(good){
+        return (category = {...category, good})
+      }
     }catch(err){
       console.log(err)
     }
   })
+  .catch(err){
+    console.log(err)
+  }
 }
 
 const editCategoryBudget = (catid, userid, bud)=>{
