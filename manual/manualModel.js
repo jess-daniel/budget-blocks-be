@@ -134,6 +134,7 @@ const category_already_linked = (body, userId)=>{
     try{
       const linked = await search_link(category.id, userId)
       if(linked){
+        console.log("THE LINKED ACCOUNT", linked)
         return linked
       }
     }catch(err){
