@@ -132,9 +132,9 @@ const category_already_linked = (body, userId)=>{
   .first()
   .then(async category =>{
     try{
-      const good = await search_link(category.id, userId)
-      if(good){
-        return (category = {...category, good})
+      const linked = await search_link(category.id, userId)
+      if(linked){
+        return linked
       }
     }catch(err){
       console.log(err)
