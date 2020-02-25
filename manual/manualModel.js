@@ -100,6 +100,7 @@ const find_category_by_name = (body, userId)=>{
   .select("*")
   .from('category')
   .where({name:body.name})
+  .first()
   .then(async(category)=>{
     console.log('THE CATE', category.id)
     try{
