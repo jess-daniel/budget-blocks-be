@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Users = require("./users-model.js");
+const Manual = require('../manual/manualModel.js');
 
 exports.idAndBody = (req, res, next) => {
   const body = req.body;
@@ -74,3 +75,21 @@ exports.userExists = (req, res, next) => {
       });
     });
 };
+
+exports.CatAlreadyLinked = async (req,res,next)=>{
+  let id = req.params.userId;
+  let body = req.body;
+
+  try{
+    const linked = Manual.category_already_linked(body, id)
+    if(linked){
+      res.status(201).json({message:'it worked'})
+    }else{
+      res.status(400).json({message:'it didnt work'})
+    }
+  }catch(err){
+
+  }
+
+
+}

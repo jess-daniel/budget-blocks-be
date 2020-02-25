@@ -114,6 +114,35 @@ const find_category_by_name = (body, userId)=>{
   })
 }
 
+//reserved for the function below it
+
+const search_link=(catId, userId)=>{
+  return db('db')
+  .select('*')
+  .from('user_category')
+  .where({category_id:catId, user_id:userId})
+  .first()
+}
+
+const category_already_linked = (body, userId)=>{
+  return db('db')
+  .select("*")
+  .from('category')
+  .where({name:body.name})
+  .first()
+  .then(async(category)=>{
+    try{
+      const linked = await search_link(category.id, userId)
+      if(linked){
+        return linked
+      }
+    }catch(err){
+      console.log(err)
+    }
+    return linked
+  })
+}
+
 const editCategoryBudget = (catid, userid, bud)=>{
   return db('user_category')
   .where({category_id:catid, user_id:userid})
@@ -160,5 +189,6 @@ module.exports = {
     editCategory,
     deleteTransaction,
     deleteCategory,
-    find_category_by_name
+    find_category_by_name,
+    category_already_linked
 }
