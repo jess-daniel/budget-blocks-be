@@ -95,6 +95,24 @@ const insert_categories = (body, userId)=>{
   })
 }
 
+const find_category_by_name = (body, userId)=>{
+  return db('db')
+  .select("*")
+  .from('category')
+  .where({name:body.name})
+  .then(async(category)=>{
+    try{
+      const link = await link_user_and_category(category.id, userId, body.budget)
+    }catch(err){
+      console.log(err)
+    }
+    return category.id
+  })
+  .catch(err=>{
+    console.log(err)
+  })
+}
+
 const editCategoryBudget = (catid, userid, bud)=>{
   return db('user_category')
   .where({category_id:catid, user_id:userid})
@@ -140,5 +158,6 @@ module.exports = {
     insert_categories,
     editCategory,
     deleteTransaction,
-    deleteCategory
+    deleteCategory,
+    find_category_by_name
 }

@@ -115,17 +115,18 @@ router.get(
 );
 
 router.post(
-  "/categories/:userId",
-  paramCheck.idAndBody,
-  paramCheck.userExists,
-  paramCheck.tokenMatchesUserId,
-  async (req, res) => {
+  "/categories/:userId",paramCheck.idAndBody,paramCheck.userExists,paramCheck.tokenMatchesUserId,async (req, res) => {
     const id = req.params.userId;
     const body = req.body;
 
     try {
-      const addedCat = await qs.insert_categories(body, id);
-      res.status(201).json({ addedCat });
+      const linkedCat = await qs.find_category_by_name(body, id);
+      if(linkedCat){
+        res.status(201).json({linkedCat})
+      }else{
+        const addedCat = await qs.insert_categories(body, id);
+        res.status(201).json({ addedCat });
+      }
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
