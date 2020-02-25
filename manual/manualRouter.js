@@ -121,6 +121,7 @@ router.post(
 
     try {
       const linkedCat = await qs.find_category_by_name(body, id);
+      console.log('linkedCat', linkedCat)
       if(linkedCat){
         res.status(201).json({linkedCat})
       }else{
