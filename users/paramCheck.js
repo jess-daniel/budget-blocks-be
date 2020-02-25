@@ -81,9 +81,9 @@ exports.CatAlreadyLinked = async (req,res,next)=>{
   let body = req.body;
 
   try{
-    const linked = Manual.category_already_linked(body, id)
-    if(linked){
-      res.status(201).json({message:'it worked', linked})
+    const yeet = Manual.category_already_linked(body, id)
+    if(yeet){
+      res.status(201).json({message:'it worked', yeet})
     }else{
       res.status(400).json({message:'it didnt work'})
     }
