@@ -135,9 +135,12 @@ const category_already_linked = (body, userId)=>{
       const linked = await search_link(category.id, userId)
       if(linked){
         return linked
+      }else{
+        return null
       }
     }catch(err){
       console.log(err)
+      return null
     }
   })
   .catch(err=>{
