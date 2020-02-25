@@ -140,9 +140,9 @@ const category_already_linked = (body, userId)=>{
       console.log(err)
     }
   })
-  .catch(err){
+  .catch(err=>{
     console.log(err)
-  }
+  })
 }
 
 const editCategoryBudget = (catid, userid, bud)=>{
