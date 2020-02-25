@@ -59,7 +59,7 @@ const MANUAL_get_categories = Userid => {
               try{
                 const trans = await MANUAL_get_cat_transactions(cat.id, Userid);
                 const amount = await MANUAL_get_amount_by_category(cat.id, Userid);
-                if (trans.length > 0) {
+                if (cat.budget != null) {
                   return { ...cat, transactions: trans, total: amount.total };
                 }
               }catch(err){
