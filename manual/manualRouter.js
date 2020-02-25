@@ -125,8 +125,8 @@ router.post(
       if(linkedCat){
         res.status(201).json({linkedCat})
       }else{
-      //   const addedCat = await qs.insert_categories(body, id);
-      //   res.status(201).json({ addedCat });
+        const addedCat = await qs.insert_categories(body, id);
+        res.status(201).json({ addedCat });
       }
     }catch(err){
       console.log(err);
