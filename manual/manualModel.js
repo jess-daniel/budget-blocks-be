@@ -101,6 +101,7 @@ const find_category_by_name = (body, userId)=>{
   .from('category')
   .where({name:body.name})
   .then(async(category)=>{
+    console.log('THE CATE', category)
     try{
       const link = await link_user_and_category(category.id, userId, body.budget)
     }catch(err){
