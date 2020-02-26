@@ -2,10 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const plaid = require("plaid");
 const qs = require("./plaidModel.js");
+const User = require("../users/users-model.js");
 const data = require("./data.js");
+const jwt = require("jsonwebtoken");
+
+const paramCheck = require("../users/paramCheck.js");
 
 const checkAccessToken = require("./getAccessToken-middleware.js");
-const webhookMiddle = require("./webhook-middleware.js");
 
 const router = express.Router();
 
@@ -13,7 +16,7 @@ const client = new plaid.Client(
   process.env.PLAID_CLIENT_ID,
   process.env.PLAID_SECRET,
   process.env.PLAID_PUBLIC_KEY,
-  plaid.environments[process.env.PLAID_ENV],
+  plaid.environments.sandbox,
   { version: "2019-05-29", clientApp: "Plaid Quickstart" }
 );
 
@@ -58,208 +61,107 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
 
     const doneAccounts = await qs.PLAID_insert_accounts(accounts, Itemid);
 
-    //same thing, it just needs to insert into the user_category linking table the default categories
-    //if I have time, I'll come back to this to optimize it like line 102
-    const doneData = Promise.all(
-      data.map(async d => {
-        try {
-          const contents = await qs.link_user_categories(d.id, userid);
-          return d;
-        } catch (error) {
-          console.log(error);
-        }
-      })
-    );
+    const categories = await User.returnUserCategories(userid);
+    if (categories.length == 0) {
+      //same thing, it just needs to insert into the user_category linking table the default categories
+      //if I have time, I'll come back to this to optimize it like line 102
+      const doneData = Promise.all(
+        data.map(async d => {
+          try {
+            const contents = await qs.link_user_categories(d.id, userid);
+            return d;
+          } catch (error) {
+            console.log(error);
+          }
+        })
+      );
 
-    res.status(201).json({
-      accessCreated: Accessid,
-      ItemCreated: Itemid
-    });
+      const newCategories = await User.returnUserCategories(userid);
+
+      if (newCategories.length > 0) {
+        res.status(201).json({
+          accessCreated: Accessid,
+          ItemCreated: Itemid
+        });
+      } else {
+        res.status(409).json({ message: "cant link categories at this time" });
+      }
+    } else {
+      res.status(201).json({
+        accessCreated: Accessid,
+        ItemCreated: Itemid
+      });
+    }
   } catch (err) {
     console.log("access", err);
     res.status(500).json({ message: "cant insert at this time" });
   }
 });
 
-//This is comming from PLAID, res.send or any variation will just be sending to plaid
-router.post("/webhook", webhookMiddle, async (req, res) => {
-  const body = req.body;
-
-  //changed this to initial update becuase honestly we just need the last 30 days, not their life story
-  if (body.webhook_code === "INITIAL_UPDATE") {
-    console.log("INITIAL PULL", body);
-
-    try {
-      // This basically inserts a row that says that the transaction download into our db for this Item, essenially this user, has begun
-      const InsertionStart = await qs.WEB_track_insertion(
-        body.pgItemId.id,
-        "inserting"
-      );
-
-      console.log("THE INSERTION BEGINNING", InsertionStart);
-
-      //We just get the access token based on the ItemID plaid gave us to make sure we are accessing the transactions for that EXACT set of credentials
-      const { access_token } = await qs.WEB_get_accessToken(body.item_id);
-
-      console.log("DATE RANGE FOR TRANSACTIONS", body.start, body.end);
-      //This is us getting the transactions
-      const { transactions } = await client.getTransactions(
-        access_token,
-        body.start,
-        body.end
-      );
-
-      if (!transactions) {
-        const InsertionFail = await qs.WEB_track_insertion(
-          body.pgItemId.id,
-          "failure"
-        );
-
-        res.status(500).json({
-          message: "contacting Plaid failed",
-          status: InsertionFail.status
-        });
-      }
-
-      //This is a more refined version of what I had before on line 54.
-      const done = await qs.WEB_insert_transactions(
-        transactions,
-        body.userID.id
-      );
-
-      //basically makes sure that the notification that the download is complete waits on it actually completing.
-      if (done) {
-        const InsertionEnd = await qs.WEB_track_insertion(
-          body.pgItemId.id,
-          "done"
-        );
-        console.log("THE INSERTION ENDING", InsertionEnd);
-        res.status(200);
-      }
-    } catch (err) {
-      console.log("INITAL ERROR", err);
-      res.status(500);
-    }
-  } else if (body.webhook_code === "DEFAULT_UPDATE") {
-    console.log("DEFAULT UPDATE", body);
-
-    const amountOfNew = body.new_transactions;
+router.get(
+  "/transactions/:userId",
+  paramCheck.tokenMatchesUserId,
+  checkAccessToken,
+  async (req, res) => {
+    const id = req.params.userId;
 
     try {
-      //This basically inserts a row that says that the transaction download into our db for this Item, essenially this user, has begun
-      const InsertionStart = await qs.WEB_track_insertion(
-        body.pgItemId.id,
-        "inserting"
-      );
+      //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
+      const status = await qs.INFO_get_status(id);
+      const pgItemId = await qs.PLAID_get_pg_item_id(id);
 
-      console.log("THE INSERTION BEGINNING", InsertionStart);
-
-      //We just get the access token based on the ItemID plaid gave us to make sure we are accessing the transactions for that EXACT set of credentials
-      const { access_token } = await qs.WEB_get_accessToken(body.item_id);
-
-      console.log("DATE RANGE FOR TRANSACTIONS", body.start, body.end);
-
-      //This is us getting the transactions
-      const { transactions } = await client.getTransactions(
-        access_token,
-        body.start,
-        body.end,
-        { count: amountOfNew }
-      );
-
-      if (!transactions) {
-        const InsertionFail = await qs.WEB_track_insertion(
-          body.pgItemId.id,
-          "failure"
-        );
-
-        res.status(500).json({
-          message: "contacting Plaid failed",
-          status: InsertionFail.status
-        });
-      }
-
-      //This is a more refined version of what I had before on line 54.
-      const done = await qs.WEB_insert_transactions(
-        transactions,
-        body.userID.id
-      );
-
-      //basically makes sure that the notification that the download is complete waits on it actually completing.
-      if (done) {
-        const InsertionEnd = await qs.WEB_track_insertion(
-          body.pgItemId.id,
-          "done"
-        );
-        console.log("THE INSERTION ENDING", InsertionEnd);
-      }
-
-      res.status(200);
-    } catch (err) {
-      console.log("UPDATE ERROR", err);
-    }
-  }
-});
-
-router.get("/transactions/:id", checkAccessToken, async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    //This is the check needed to make sure our front end has something to work on. It's checking if our user has any plaid 'items' that have outstanding downloads. The conditional below is as follows.
-    const status = await qs.INFO_get_status(id);
-    const pgItemId = await qs.PLAID_get_pg_item_id(id);
-
-    //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
-    if (!status) {
-      const code = 330;
-      res
-        .status(330)
-        .json({ message: "insertion process hasn't started", code });
-    } else {
-      switch (status.status) {
-        //when the status is done, run a super query to get the categories and their transactions
-        case "done":
-          const categories = await qs.INFO_get_categories(id);
-          const cat = categories.filter(cat => {
-            if (cat != null) {
-              return cat;
+      //I understand its redundant to have status.status, but just keep it. This error handling depends on it. Turst me on this one
+      if (!status) {
+        const code = 330;
+        res
+          .status(330)
+          .json({ message: "insertion process hasn't started", code });
+      } else {
+        switch (status.status) {
+          //when the status is done, run a super query to get the categories and their transactions
+          case "done":
+            const categories = await qs.INFO_get_categories(id);
+            const cat = categories.filter(cat => {
+              if (cat != null) {
+                return cat;
+              }
+            });
+            //first get the latest balance info
+            const balance = await client.getBalance(req.body.access);
+            if (!balance) {
+              //if Plaid is down just send what we have
+              console.log("PLAID IS DOWN");
+              const balances = await qs.PLAID_get_accounts(pgItemId.id);
+              res.status(200).json({ Categories: cat, accounts: balances });
+            } else {
+              //if Plaid is up, take the most recent and update our db, and send them back in our db's format
+              const accounts = balance.accounts;
+              //update our records
+              const updatedAccounts = await qs.PLAID_update_accounts(accounts);
+              //get our records
+              const balances = await qs.PLAID_get_accounts(pgItemId.id);
+              //send categories and account balances back to the user
+              res.status(200).json({ Categories: cat, accounts: balances });
             }
-          });
-          //first get the latest balance info
-          const balance = await client.getBalance(req.body.access);
-          if (!balance) {
-            //if Plaid is down just send what we have
-            console.log("PLAID IS DOWN");
-            const balances = await qs.PLAID_get_accounts(pgItemId.id);
-            res.status(200).json({ Categories: cat, accounts: balances });
-          } else {
-            //if Plaid is up, take the most recent and update our db, and send them back in our db's format
-            const accounts = balance.accounts;
-            //update our records
-            const updatedAccounts = await qs.PLAID_update_accounts(accounts);
-            //get our records
-            const balances = await qs.PLAID_get_accounts(pgItemId.id);
-            //send categories and account balances back to the user
-            res.status(200).json({ Categories: cat, accounts: balances });
-          }
-          break;
-        case "inserting":
-          const insertCode = 300;
-          res
-            .status(insertCode)
-            .json({ message: "we are inserting your data", insertCode });
-          break;
-        case "failure":
-          const failureCode = 503;
-          res
-            .status(failureCode)
-            .json({ message: "could not connect to plaid", failureCode });
+            break;
+          case "inserting":
+            const insertCode = 300;
+            res
+              .status(insertCode)
+              .json({ message: "we are inserting your data", insertCode });
+            break;
+          case "failure":
+            const failureCode = 503;
+            res
+              .status(failureCode)
+              .json({ message: "could not connect to plaid", failureCode });
+        }
       }
+    } catch (err) {
+      console.log("THE ERROR IM LOOKING FOR", err);
+      res.status(500).json({ message: "cant get transactions" });
     }
-  } catch (err) {
-    console.log("THE ERROR IM LOOKING FOR", err);
-    res.status(500).json({ message: "cant get transactions" });
   }
-});
+);
 
 module.exports = router;

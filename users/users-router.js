@@ -1,30 +1,10 @@
+const jwt = require("jsonwebtoken");
 const router = require("express").Router();
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
 const paramCheck = require("./paramCheck.js");
 
-// Middleware to check if a specified userId exists
-function userExists(req, res, next) {
-  let id = req.params.userId;
 
-  Users.findUserBy({ id })
-    .then(response => {
-      // if a response is returned, the user exists so we can retrieve the list of catergories
-      // Else, allow the next function to be passed
-      if (response) {
-        next();
-      } else {
-        res.status(400).json({ error: "The specified userId does not exist." });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        error:
-          "Unable to retrieve the list of categories for the specified userId."
-      });
-    });
-}
 
 router.get("/", restricted, (req, res) => {
   Users.allUsers()
@@ -37,45 +17,58 @@ router.get("/", restricted, (req, res) => {
     });
 });
 
-router.get("/user/:userId", userExists, paramCheck.onlyId, async (req, res) => {
-  const id = req.params.userId;
+router.get(
+  "/user/:userId",
+  paramCheck.userExists,
+  paramCheck.onlyId,
+  paramCheck.tokenMatchesUserId,
+  async (req, res) => {
+    const id = req.params.userId;
 
-  try {
-    const user = await Users.PLAID_find_user({ id });
+    try {
+      const user = await Users.PLAID_find_user({ id });
 
-    res.status(200).json({ user });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "cant get user right now" });
+      res.status(200).json({ user });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "cant get user right now" });
+    }
   }
-});
+);
 
 // Returns all of the categories for the userID that is passed. If no results are returned, that means the userID does not exist
-router.get(`/categories/:userId`, userExists, paramCheck.onlyId, (req, res) => {
-  const id = req.params.userId;
+router.get(
+  `/categories/:userId`,
+  paramCheck.userExists,
+  paramCheck.onlyId,
+  paramCheck.tokenMatchesUserId,
+  (req, res) => {
+    const id = req.params.userId;
 
-  Users.returnUserCategories(id)
-    .then(categories => {
-      if (categories.length > 0) {
-        res.status(200).json(categories);
-      } else {
-        res
-          .status(404)
-          .json({ message: "The specified user ID does not exist." });
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        message: "Unable to return categories for the specified user."
+    Users.returnUserCategories(id)
+      .then(categories => {
+        if (categories.length > 0) {
+          res.status(200).json(categories);
+        } else {
+          res
+            .status(404)
+            .json({ message: "The specified user ID does not exist." });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({
+          message: "Unable to return categories for the specified user."
+        });
       });
-    });
-});
+  }
+);
 
 router.put(
   "/categories/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.idAndBody,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const id = req.params.userId;
     const body = req.body;
@@ -86,7 +79,6 @@ router.put(
         body.categoryid,
         body.budget
       );
-      console.log("THE RESULT OF THE UPDATE", update);
       if (update) {
         res.status(202).json({
           userid: id,
@@ -111,8 +103,9 @@ router.put(
 
 router.put(
   "/income/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.idAndBody,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const body = req.body;
     const id = req.params.userId;
@@ -128,8 +121,9 @@ router.put(
 
 router.put(
   "/savinggoal/:userId",
-  userExists,
+  paramCheck.userExists,
   paramCheck.idAndBody,
+  paramCheck.tokenMatchesUserId,
   async (req, res) => {
     const body = req.body;
     const id = req.params.userId;

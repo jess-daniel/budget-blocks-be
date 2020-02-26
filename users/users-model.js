@@ -1,16 +1,17 @@
 const db = require("../data/db-config");
+const Plaid = require("../plaid/plaidModel");
 
 module.exports = {
   allUsers,
   addUser,
   findUserBy,
   login,
-  checkAccessToken,
   returnUserCategories,
   editUserCategoryBudget,
   editUserIncome,
   editUserSaving,
-  PLAID_find_user
+  PLAID_find_user,
+  get_total_budget
 };
 
 function allUsers() {
@@ -44,7 +45,7 @@ function findUserBy(filter) {
 
 function PLAID_find_user(filter) {
   return db("users")
-    .select("id", "email", "income", "saving_goal")
+    .select("id", "email", "income", "saving_goal", "last_name", "first_name")
     .where(filter)
     .first()
     .then(async user => {
@@ -68,26 +69,20 @@ function login(Cred) {
     .first()
     .then(async user => {
       try {
-        const good = await checkAccessToken(user.id);
+        const good = await Plaid.getAccessToken(user.id);
+        const categories = await returnUserCategories(user.id)
         if (good) {
-          return (user = { ...user, LinkedAccount: true });
-        } else {
-          return (user = { ...user, LinkedAccount: false });
+          return (user = { ...user, LinkedAccount: true, ManualOnly:false })
+        } else if(!good && categories.length>0) {
+          return (user = { ...user, LinkedAccount: false, ManualOnly:true })
+        }else{
+          return ( user = {...user, LinkedAccount:false, ManualOnly:false})
         }
       } catch (error) {
         console.log(error);
       }
     })
     .catch(error => console.log(error));
-}
-
-//This is to check if the user that logged in has a access_token.
-function checkAccessToken(UserID) {
-  return db("db")
-    .select("*")
-    .from("users_accessToken")
-    .where({ user_id: UserID })
-    .first();
 }
 
 // Returns the categories based upon the userId.

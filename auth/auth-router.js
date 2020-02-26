@@ -84,7 +84,8 @@ router.post('/login', validateUserCredentials, (req, res) => {
               id:user.id,
               token,
               message:`Welcome ${user.email}!`,
-              LinkedAccount:user.LinkedAccount
+              LinkedAccount:user.LinkedAccount,
+              ManualOnly:user.ManualOnly
             })
           }
         })

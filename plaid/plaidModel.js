@@ -147,9 +147,26 @@ const INFO_get_cat_transactions = (categoryID, userID) => {
     .from("budget_item")
     .where({ category_id: categoryID, user_id: userID });
 };
+
+//reserved for the function below it
+const INFO_get_cat_manual_transactions = (categoryID, userID) => {
+  return db("db")
+    .select("*")
+    .from("manual_budget_item")
+    .where({ category_id: categoryID, user_id: userID });
+};
+
 //reserved for the function below it
 const INFO_get_amount_by_category = (categoryID, userID) => {
   return db("budget_item")
+    .sum({ total: "amount" })
+    .where({ category_id: categoryID, user_id: userID })
+    .first();
+};
+
+//reserved for the function below it
+const INFO_get_manual_amount_by_category = (categoryID, userID) => {
+  return db("manual_budget_item")
     .sum({ total: "amount" })
     .where({ category_id: categoryID, user_id: userID })
     .first();
@@ -167,10 +184,14 @@ const INFO_get_categories = Userid => {
         return Promise.all(
           categories.map(async cat => {
             try{
-              const trans = await INFO_get_cat_transactions(cat.id, Userid);
-              const amount = await INFO_get_amount_by_category(cat.id, Userid);
-              if (trans.length > 0) {
-                return { ...cat, transactions: trans, total: amount.total };
+              const trans = await INFO_get_cat_transactions(cat.id, Userid)
+              const manualTrans = await INFO_get_cat_manual_transactions(cat.id, Userid)
+              const amount = await INFO_get_amount_by_category(cat.id, Userid)
+              const manualAmount = await INFO_get_manual_amount_by_category(cat.id, Userid)
+              const trueTotal = Number(amount.total)+Number(manualAmount.total)
+              if (trans.length > 0 || manualTrans.length > 0) {
+                return { ...cat, transactions: trans, manualTransactions:manualTrans, 
+                  total: trueTotal};
               }
             }catch(err){
               console.log(err)
