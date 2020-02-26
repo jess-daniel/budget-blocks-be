@@ -100,7 +100,7 @@ exports.defaultCategory = (req,res,next)=>{
   if(catId > 24){
     next()
   }else{
-    res.status(400).json({message:'You just tried to delete a default category'})
+    res.status(400).json({message:'You just tried to delete/update a default category'})
   }
 
 }
