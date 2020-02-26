@@ -4,8 +4,7 @@ exports.up = function(knex) {
 
     tbl
       .string('name', 160)
-      .notNullable()
-      .unique();
+      .notNullable();
   });
 };
 
