@@ -93,3 +93,14 @@ exports.CatAlreadyLinked = async (req,res,next)=>{
 
 
 }
+
+exports.defaultCategory = (req,res,next)=>{
+  let catId = req.params.catId;
+
+  if(catId > 24){
+    next()
+  }else{
+    res.status(400).json({message:'You just tried to delete a default category'})
+  }
+
+}
