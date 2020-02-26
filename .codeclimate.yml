@@ -3,4 +3,5 @@ exclude_patterns:
   - "**/__tests__/"
   - "*/webhook/*"
   - "/plaid/"
-  - "spec/"
+  - "**/*.spec.js"
+  - "/coverage"
