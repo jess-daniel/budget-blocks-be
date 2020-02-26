@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Users = require("./users-model.js");
+const Manual = require('../manual/manualModel.js');
 
 exports.idAndBody = (req, res, next) => {
   const body = req.body;
@@ -74,3 +75,30 @@ exports.userExists = (req, res, next) => {
       });
     });
 };
+
+exports.CatAlreadyLinked = async (req,res,next)=>{
+  let id = req.params.userId;
+  let body = req.body;
+
+  try{
+    const yeet = await Manual.category_already_linked(body, id)
+    if(yeet){
+      res.status(400).json({message:'You are already linked to this category'})
+    }else{
+      next()
+    }
+  }catch(err){
+
+  }
+}
+
+exports.defaultCategory = (req,res,next)=>{
+  let catId = req.params.catId;
+
+  if(catId > 24){
+    next()
+  }else{
+    res.status(400).json({message:'You just tried to delete/update a default category'})
+  }
+
+}
