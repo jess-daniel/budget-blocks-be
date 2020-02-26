@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.56% </span>
+                <span class="strong">36.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/45</span>
+                <span class='fraction'>18/49</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">15% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/18</span>
+                <span class='fraction'>3/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.56% </span>
+                <span class="strong">36.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/45</span>
+                <span class='fraction'>18/49</span>
             </div>
         
             
@@ -187,7 +187,20 @@
 <a name='L128'></a><a href='#L128'>128</a>
 <a name='L129'></a><a href='#L129'>129</a>
 <a name='L130'></a><a href='#L130'>130</a>
-<a name='L131'></a><a href='#L131'>131</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -309,8 +322,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -378,7 +404,7 @@ const MANUAL_get_categories = Userid =&gt; {
 <span class="cstat-no" title="statement not covered" >              try{</span>
                 const trans = <span class="cstat-no" title="statement not covered" >await MANUAL_get_cat_transactions(cat.id, Userid);</span>
                 const amount = <span class="cstat-no" title="statement not covered" >await MANUAL_get_amount_by_category(cat.id, Userid);</span>
-<span class="cstat-no" title="statement not covered" >                if (trans.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                if (cat.budget != null) {</span>
 <span class="cstat-no" title="statement not covered" >                  return { ...cat, transactions: trans, total: amount.total };</span>
                 }
               }catch(err){
@@ -437,7 +463,18 @@ const editCategory = <span class="fstat-no" title="function not covered" >(b</sp
 <span class="cstat-no" title="statement not covered" >      return ids[0]</span>
     }
   })
+}
 &nbsp;
+const deleteTransaction = <span class="fstat-no" title="function not covered" >(t</span>ranId)=&gt;{
+<span class="cstat-no" title="statement not covered" >  return db('manual_budget_item')</span>
+  .where({id:tranId})
+  .del()
+}
+&nbsp;
+const deleteCategory = <span class="fstat-no" title="function not covered" >(c</span>atId)=&gt;{
+<span class="cstat-no" title="statement not covered" >  return db('category')</span>
+  .where({id:catId})
+  .del()
 }
 &nbsp;
 module.exports = {
@@ -446,7 +483,9 @@ module.exports = {
     getAllTrans,
     MANUAL_get_categories,
     insert_categories,
-    editCategory
+    editCategory,
+    deleteTransaction,
+    deleteCategory
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -454,7 +493,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Feb 21 2020 10:16:14 GMT-0800 (Pacific Standard Time)
+                at Wed Feb 26 2020 12:46:16 GMT-0800 (Pacific Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
