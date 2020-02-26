@@ -90,8 +90,6 @@ exports.CatAlreadyLinked = async (req,res,next)=>{
   }catch(err){
 
   }
-
-
 }
 
 exports.defaultCategory = (req,res,next)=>{
