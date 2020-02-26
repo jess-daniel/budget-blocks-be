@@ -85,7 +85,7 @@ exports.CatAlreadyLinked = async (req,res,next)=>{
     if(yeet){
       res.status(400).json({message:'You are already linked to this category'})
     }else{
-      res.status(201).json({message:'on to the point'})
+      next()
     }
   }catch(err){
 
