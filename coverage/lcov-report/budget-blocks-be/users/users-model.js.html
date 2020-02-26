@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.85% </span>
+                <span class="strong">53.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/27</span>
+                <span class='fraction'>16/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>4/6</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.85% </span>
+                <span class="strong">53.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/27</span>
+                <span class='fraction'>16/30</span>
             </div>
         
             
@@ -178,7 +178,9 @@
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -251,6 +253,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -264,7 +269,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -295,7 +300,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -346,7 +350,7 @@ function findUserBy(filter) {
 &nbsp;
 function <span class="fstat-no" title="function not covered" >PLAID_find_user(</span>filter) {
 <span class="cstat-no" title="statement not covered" >  return db("users")</span>
-    .select("id", "email", "income", "saving_goal")
+    .select("id", "email", "income", "saving_goal", "last_name", "first_name")
     .where(filter)
     .first()
     .then(<span class="fstat-no" title="function not covered" >as</span>ync user =&gt; {
@@ -371,10 +375,13 @@ function login(Cred) {
     .then(async user =&gt; {
       try {
         const good = await Plaid.getAccessToken(user.id);
+        const categories = await returnUserCategories(user.id)
         <span class="missing-if-branch" title="if path not taken" >I</span>if (good) {
-<span class="cstat-no" title="statement not covered" >          return (user = { ...user, LinkedAccount: true });</span>
-        } else {
-          return (user = { ...user, LinkedAccount: false });
+<span class="cstat-no" title="statement not covered" >          return (user = { ...user, LinkedAccount: true, ManualOnly:false })</span>
+        } else <span class="missing-if-branch" title="if path not taken" >I</span>if(!good &amp;&amp; categories.length&gt;0) {
+<span class="cstat-no" title="statement not covered" >          return (user = { ...user, LinkedAccount: false, ManualOnly:true })</span>
+        }else{
+          return ( user = {...user, LinkedAccount:false, ManualOnly:false})
         }
       } catch (error) {
 <span class="cstat-no" title="statement not covered" >        console.log(error);</span>
@@ -419,15 +426,14 @@ function <span class="fstat-no" title="function not covered" >editUserSaving(</s
     .returning("id")
     .where({ id: Userid })
     .update({ saving_goal: body.saving_goal }, "id");
-}
-&nbsp;</pre></td></tr></table></pre>
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Feb 21 2020 10:16:14 GMT-0800 (Pacific Standard Time)
+                at Wed Feb 26 2020 14:34:57 GMT-0800 (Pacific Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
