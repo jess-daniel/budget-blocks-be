@@ -159,16 +159,7 @@ router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, 
 
   try{
     if(body.password){
-      const hashedPassword = await new Promise((resolve,reject)=>{
-        bcrypt.hash(body.password,12,(err,hash)=>{
-          if(err){
-            console.log(err)
-            reject(err)
-          }else{
-            resolve(hash)
-          }
-        })
-      })
+      const hashedPassword = await bcrypt.hash(body.password, 12)
 
       
       console.log('THE NEWPASS', hashedPassword)
