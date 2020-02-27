@@ -161,11 +161,9 @@ router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, 
     if(body.password){
       const hashedPassword = await bcrypt.hash(body.password, 12)
       body.password = hashedPassword
-      console.log('THE NEWPASS', body.password)
-
     }
-    // const updated = await Users.edituserProfile(id, body)
-    // res.status(201).json({updated})
+    const updated = await Users.edituserProfile(id, body)
+    res.status(201).json({updated})
   }catch(err){
     console.log(err)
     res.status(500).json({message:'error on server'})
