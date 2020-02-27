@@ -152,4 +152,21 @@ router.delete("/user/:userId", paramCheck.userExists, paramCheck.onlyId, paramCh
 
 })
 
+router.put('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, paramCheck.tokenMatchesUserId, async(req,res)=>{
+  const id = req.params.userId
+  const body = req.body
+
+  try{
+    const updated = await Users.edituserProfile(id, body)
+    res.status(201).json({updated})
+  }catch(err){
+    console.log(err)
+    res.status(500).json({message:'error on server'})
+  }
+
+
+
+
+})
+
 module.exports = router;
