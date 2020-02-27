@@ -168,10 +168,6 @@ router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, 
     console.log(err)
     res.status(500).json({message:'error on server'})
   }
-
-
-
-
 })
 
 module.exports = router;
