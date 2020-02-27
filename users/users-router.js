@@ -137,4 +137,19 @@ router.put(
   }
 );
 
+router.delete("/user/:userId", paramCheck.userExists, paramCheck.onlyId, paramCheck.tokenMatchesUserId, async(req,res)=>{
+  const id = req.params.userId
+
+  try{
+
+    const deleted = await Users.deleteUser(id)
+    res.status(201).json({deleted})
+  }catch(err){
+    console.log(err)
+    res.status(500).json({err})
+  }
+
+
+})
+
 module.exports = router;

@@ -11,7 +11,8 @@ module.exports = {
   editUserIncome,
   editUserSaving,
   PLAID_find_user,
-  get_total_budget
+  get_total_budget,
+  deleteUser
 };
 
 function allUsers() {
@@ -121,4 +122,10 @@ function editUserSaving(Userid, body) {
     .returning("id")
     .where({ id: Userid })
     .update({ saving_goal: body.saving_goal }, "id");
+}
+
+function deleteUser(Userid){
+  return db('users')
+  .where({id:Userid})
+  .del()
 }
