@@ -152,7 +152,7 @@ router.delete("/user/:userId", paramCheck.userExists, paramCheck.onlyId, paramCh
 
 })
 
-router.put('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, paramCheck.tokenMatchesUserId, async(req,res)=>{
+router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, paramCheck.tokenMatchesUserId, async(req,res)=>{
   const id = req.params.userId
   const body = req.body
 
