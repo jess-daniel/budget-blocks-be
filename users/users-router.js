@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
 const router = require("express").Router();
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
@@ -157,6 +158,22 @@ router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, 
   const body = req.body
 
   try{
+    if(body.password){
+      const hashedPassword = await new Promise((resolve,reject)=>{
+        bcrypt.hash(body.password,12,(err,hash)=>{
+          if(err){
+            console.log(err)
+            reject(err)
+          }else{
+            resolve(hash)
+          }
+        })
+      })
+
+      body.password = hashedPassword
+      console.log('THE NEWPASS', body.password)
+      res.end()
+    }
     const updated = await Users.edituserProfile(id, body)
     res.status(201).json({updated})
   }catch(err){
