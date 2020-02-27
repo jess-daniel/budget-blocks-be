@@ -181,6 +181,8 @@ router.delete(
   paramCheck.tokenMatchesUserId,
   paramCheck.defaultCategory,
   async (req, res) => {
+
+    const catId = req.params.catId
     
       try {
         const deleted = await qs.deleteCategory(catId);
