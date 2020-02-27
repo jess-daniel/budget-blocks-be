@@ -94,27 +94,6 @@ router.post('/login', validateUserCredentials, async (req, res) => {
     console.log(err)
     res.status(500).json({message:'cant login at this time'})
   }
-  // Users.login(credentials)
-  //   .then(user=>{
-  //       bcrypt.compare(credentials.password, user.password,(err,response)=>{
-  //         if(err){
-  //           res.status(401).json({message:'Invalid credentials were provided'})
-  //         }else{
-  //           const token = signToken(user);
-  //           res.status(200).json({
-  //             id:user.id,
-  //             token,
-  //             message:`Welcome ${user.email}!`,
-  //             LinkedAccount:user.LinkedAccount,
-  //             ManualOnly:user.ManualOnly
-  //           })
-  //         }
-  //       })
-  //   })
-  //   .catch(err=>{
-  //     // console.log(err)
-  //     res.status(500).json({message:"Unable to find the user by the email provided "})
-  //   })
 });
 
 function signToken(user) {
