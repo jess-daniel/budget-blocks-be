@@ -37,6 +37,7 @@ To get the server running locally:
 | PUT    | `/api/users/savinggoal/:userId` | Yes            | Adds a savings goal for the user                                                  |
 | GET    | `api/users/`                    | Yes            | Gets a list of all the users                                                      |
 | GET    | `api/users/user/:userId`        | Yes            | Gets the information for a specific user                                          |
+|DELETE  | `api/users/user/:userId`        | Yes            | Deletes the user from the user table.                                             |
 
 #### Manual Routes
 
