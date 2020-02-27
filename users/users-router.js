@@ -170,8 +170,8 @@ router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, 
         })
       })
 
-      body.password = hashedPassword
-      console.log('THE NEWPASS', body.password)
+      
+      console.log('THE NEWPASS', hashedPassword)
       res.end()
     }
     const updated = await Users.edituserProfile(id, body)
