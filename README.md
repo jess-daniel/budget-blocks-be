@@ -20,10 +20,9 @@ To get the server running locally:
 
 🚫 Why did you choose this framework?
 
-- Point One
-- Point Two
-- Point Three
-- Point Four
+- PostGres - Used this to deploy our backend to persist the data on Heroku
+- Heroku - Used to host our app. Heroku makes deploying web apps simple and fast
+- Knex - Used to create data migration tables and seeds to continuously have a clean data set
 
 #### User Routes
 
@@ -37,7 +36,7 @@ To get the server running locally:
 | PUT    | `/api/users/savinggoal/:userId` | Yes            | Adds a savings goal for the user                                                  |
 | GET    | `api/users/`                    | Yes            | Gets a list of all the users                                                      |
 | GET    | `api/users/user/:userId`        | Yes            | Gets the information for a specific user                                          |
-|DELETE  | `api/users/user/:userId`        | Yes            | Deletes the user from the user table.                                             |
+| DELETE | `api/users/user/:userId`        | Yes            | Deletes the user from the user table.                                             |
 
 #### Manual Routes
 
@@ -59,35 +58,77 @@ To get the server running locally:
 | POST   | `/plaid/token_exchange`       | No             | Returns confirmation that the AccessToken and Item (Plaid's term) has been inserted, and an array of transactions |
 | GET    | `/plaid/transactions/:userID` | No             | Returns the list of transactions for that user                                                                    |
 
-# Data Model
+## Actions
 
-🚫This is just an example. Replace this with your data model
+`validateUserCredentials()` -> Validates that a email address and a password is passed into the body
 
-## 2️⃣ Actions
+`userAlreadyExists()` -> Validates if a user exists to help create new users
 
-🚫 This is an example, replace this with the actions that pertain to your backend
+`allUsers` -> Returns all users
 
-`getOrgs()` -> Returns all organizations
+`addUser(userData)` -> Adds a new user to the database
 
-`getOrg(orgId)` -> Returns a single organization by ID
+`get_total_budget(userId)` -> Returns the sum of the user's total budget
 
-`addOrg(org)` -> Returns the created org
+`findUserBy(filter)` -> Finds a user based upon what parameters have been passed in
 
-`updateOrg(orgId)` -> Update an organization by ID
+`returnUserCategories(userId)` --> Returns a user's budgetting categories based upon the userId
 
-`deleteOrg(orgId)` -> Delete an organization by ID
-<br>
-<br>
-<br>
-`getUsers(orgId)` -> if no param all users
+`editUserCategoryBudget(userId, categoryId, amount)` -> Edits the user's category based upon the category id
 
-`getUser(userId)` -> Returns a single user by user ID
+`editUserIncome(userId, body)` -> Edits the income of the user
 
-`addUser(user object)` --> Creates a new user and returns that user. Also creates 7 availabilities defaulted to hours of operation for their organization.
+`editUserSavings(userId, body)` -> Edits the savings of the user
 
-`updateUser(userId, changes object)` -> Updates a single user by ID.
+`deleteUser(userId)` -> Deletes the user
 
-`deleteUser(userId)` -> deletes everything dependent on the user
+`editUserProfile(userId, body)` -> Edits the user's profile
+
+`add_A_Token(token, userId)` -> Adds a valid token via plaid to the user based upon the userId
+
+`add_An_Item(itemId, userId)` -> Adds an item to the user based upon the userId
+
+`insert_transactions(trans, userId)` -> Adds a transaction to the user based upon the userId
+
+`link_user_categories(categoryId, userId)` -> Adds the categories from plaid to the user Id
+
+`getAccessToken(userId)` -> Get's the access token from plaid
+
+`WEB_get_pg_itemid(plaidItemId)` -> Get's the item id from the plaid item id
+
+`WEB_get_userId(plaidItemId` -> Get's the user's id from the plaid item id
+
+`WEB_get_all_item_data()` -> Gets all of the information from the items table
+
+`WEB_track_insertion(pgItemId, status)` -> Tracks the insertion status of items into the database
+
+`WEB_get_accessToken(plaidItemId)` -> Get's the access token based upon the plaid item id
+
+`WEB_insert_transactions(list, userId)` -> Inserts the transaction list based upon the user id
+
+`INFO_get_status(userId)` -> Get's the insertion status based upon the user ID and the item ids found within the user table
+
+`INFO_get_cat_transactions(categoryId, userId)` -> Get's information for the category id based upon the user id
+
+`INFO_get_cat_manual_transactions(categoryId, userId) -> Get's the manual transactions that have been added for each category based upon the category and the user id
+
+`INFO_get_amount_by_category(categoryId, userId)` -> Get's the sum of the amount for each category id based upon the user id
+
+`INFO_get_manual_amount_by_category(categoryId, userId)` -> Get's the sum of the amount for each manually added category id based upon the user id
+
+`INFO_get_categories(userId)` -> Get's all of the categories based upon the user id
+
+`insert_accounts(body, pgItemId)` -> Inserts the accounts based upon the item id
+
+`PLAID_insert_accounts(accounts, pgItemId)` -> Uses Plaid to sync the bank accounts
+
+`PLAID_get_pg_item_id(userId)` -> Get's the item id based upon the user id from the plaid accounts
+
+`PLAID_get_accounts(pgItemId)` -> Uses plaid to return a specific bank account
+
+`update_accounts(body)` -> Updates the account based upon the information passed into the body
+
+`PLAID_update_accounts(accounts)` -> Updates the plaid accounts
 
 ## Environment Variables
 
