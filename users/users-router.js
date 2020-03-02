@@ -142,7 +142,6 @@ router.delete("/user/:userId", paramCheck.userExists, paramCheck.onlyId, paramCh
   const id = req.params.userId
 
   try{
-
     const deleted = await Users.deleteUser(id)
     res.status(201).json({deleted})
   }catch(err){

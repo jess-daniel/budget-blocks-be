@@ -76,7 +76,6 @@ router.post(
 
 router.post("/login", validateUserCredentials, async (req, res) => {
   let credentials = req.body;
-  // console.log(email, password);
 
   try {
     const user = await Users.login(credentials);

@@ -2,6 +2,7 @@ const db = require("../data/db-config.js");
 
 const data = require("./data.js");
 
+//accessed by the token exchange endpoint. It saves the access token we get from Plaid into the database
 const add_A_Token = (token, Userid) => {
   return db("users_accessToken")
     .returning("id")
@@ -12,6 +13,7 @@ const add_A_Token = (token, Userid) => {
     .catch(error => console.log(error));
 };
 
+//accessed by the token exchange endpoint. It saves the "item" we get from Plaid into the database
 const add_An_Item = (Itemid, Userid) => {
   return db("item")
     .returning("id")
@@ -40,6 +42,7 @@ const sortCategory = TransactionItem => {
   }
 };
 
+//This is used to insert transactions from plaid into our db. above function needed to parse the category id that plaid provides and filter it down to one of our 24 default categories.
 const insert_transactions = (trans, Userid) => {
   return db("budget_item")
     .returning("id")
@@ -53,6 +56,7 @@ const insert_transactions = (trans, Userid) => {
     });
 };
 
+//used to link a user_id to the categoryId.
 const link_user_categories = (Categoryid, Userid) => {
   return db("user_category").insert({
     category_id: Categoryid,
