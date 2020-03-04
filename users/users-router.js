@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
 const router = require("express").Router();
 const Users = require("./users-model.js");
 const restricted = require("../auth/restricted-middleware.js");
@@ -136,5 +137,36 @@ router.put(
     }
   }
 );
+
+router.delete("/user/:userId", paramCheck.userExists, paramCheck.onlyId, paramCheck.tokenMatchesUserId, async(req,res)=>{
+  const id = req.params.userId
+
+  try{
+    const deleted = await Users.deleteUser(id)
+    res.status(201).json({deleted})
+  }catch(err){
+    console.log(err)
+    res.status(500).json({err})
+  }
+
+
+})
+
+router.patch('/user/profile/:userId', paramCheck.userExists, paramCheck.onlyId, paramCheck.tokenMatchesUserId, async(req,res)=>{
+  const id = req.params.userId
+  const body = req.body
+
+  try{
+    if(body.password){
+      const hashedPassword = await bcrypt.hash(body.password, 12)
+      body.password = hashedPassword
+    }
+    const updated = await Users.edituserProfile(id, body)
+    res.status(201).json({updated})
+  }catch(err){
+    console.log(err)
+    res.status(500).json({message:'error on server'})
+  }
+})
 
 module.exports = router;

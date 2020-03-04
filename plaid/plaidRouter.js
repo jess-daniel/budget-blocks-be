@@ -99,8 +99,7 @@ router.post("/token_exchange", publicTokenExists, async (req, res) => {
 });
 
 router.get(
-  "/transactions/:userId",
-  paramCheck.tokenMatchesUserId,
+  "/transactions/:userId",paramCheck.userExists,paramCheck.onlyId,paramCheck.tokenMatchesUserId,
   checkAccessToken,
   async (req, res) => {
     const id = req.params.userId;
