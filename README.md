@@ -16,9 +16,9 @@ To get the server running locally:
 - **yarn server** to start the local server
 - **yarn test** to start server using testing environment
 
-### Backend framework goes here
+### Backend framework
 
-🚫 Why did you choose this framework?
+Why did you choose this framework?
 
 - PostGres - Used this to deploy our backend to persist the data on Heroku
 - Heroku - Used to host our app. Heroku makes deploying web apps simple and fast
@@ -184,8 +184,8 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 
 ## Documentation
 
-See [Frontend Documentation](🚫link to your frontend readme here) for details on the fronend of our project.
-🚫 Add DS iOS and/or Andriod links here if applicable.
+See [Frontend Documentation](https://github.com/Lambda-School-Labs/budget-blocks-fe/) for details on the fronend of our project.
+Also, you can view the [iOS Documenation](https://github.com/Lambda-School-Labs/budget-blocks-ios) for details on the iOS application for the project.
 
 # Information
 
