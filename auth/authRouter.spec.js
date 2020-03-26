@@ -4,6 +4,11 @@ const Users = require("../users/users-model");
 const db = require("../data/db-config");
 
 describe("Users Login & Register", () => {
+
+  console.log(
+    'node_env', process.env.NODE_ENV,
+    'db', db
+  )
   // Clears the users table when a test is ran to ensure that the db is clean
   afterAll(async () => {
     await db("users").truncate();
@@ -15,16 +20,18 @@ describe("Users Login & Register", () => {
 
   describe("Logs user in", () => {
     beforeAll(async () => {
-      await db("users").truncate();
+      await db("users")
     });
 
     test("Should allow a new user to be created", async () => {
       // Registers a new user;
 
-      const user = { email: "test@test.com", password: "password" };
+      const user = { email: "test@test.com", password: "password", first_name:"greg", last_name:"lala" };
       const response = await request(server)
         .post("/api/auth/register")
         .send(user);
+
+      console.log('userCreate', response.body, response.status)
 
       expect(response.status).toBe(201);
     });
@@ -37,7 +44,8 @@ describe("Users Login & Register", () => {
     const response = await request(server)
       .post("/api/auth/login")
       .send(user);
-    // console.log(response);
+
+    console.log('allowLogin', response.body, response.status);
 
     expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
