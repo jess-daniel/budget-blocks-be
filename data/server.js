@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const graphqlHTTP = require("express-graphql");
 const authenticate = require("../auth/restricted-middleware");
 
+
 // user Routes
 const authRouter = require("../auth/auth-router");
 const userRouter = require("../users/users-router");
@@ -16,6 +17,9 @@ const manualRouter = require("../manual/manualRouter.js");
 // Server initialization
 const knex = require("./db-config");
 const server = express();
+
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: process.env.DSN });
 
 server.use(express.json());
 server.use(helmet());
