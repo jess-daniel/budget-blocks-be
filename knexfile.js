@@ -23,6 +23,29 @@ module.exports = {
       directory: "./data/seeds"
     }
   },
-};
+
+  staging: {
+    client: "pg",
+    connection: process.env.STAGING_DATABASE_URL,
+    migrations: {
+      directory: "./data/migrations"
+    },
+    seeds: {
+      directory: "./data/seeds"
+    }
+  },
+
+  production: {
+    client: "pg",
+    connection: process.env.PRODUCTION_DATABASE_URL,
+    migrations: {
+      directory: "./data/migrations"
+    },
+    seeds: {
+      directory: "./data/seeds"
+    }
+  },
+  }
+
 
 
