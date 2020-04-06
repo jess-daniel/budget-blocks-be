@@ -13,13 +13,10 @@ describe("GET /", () => {
   });
 
   // Verifies that the server message is "API is up and running..."
-  it("Should return proper body.message", async () => {
+  it("Should return proper body.message", async (done) => {
     const response = await request(server).get("/");
     expect(response.type).toMatch(/json/i);
+    done()
   });
 
-  it("Should return proper body.message", async () => {
-    const response = await request(server).get("/");
-    expect(response.type).toMatch(/json/i);
-  });
 });
