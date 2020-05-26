@@ -1,18 +1,18 @@
 //Plaid model and data
-const Plaid = require("../plaid/plaidModel.js");
-const data = require("../plaid/data.js");
+const Plaid = require('../old-plaid/plaidModel.js');
+const data = require('../old-plaid/data.js');
 //user model and data
-const paramCheck = require("../users/paramCheck.js");
-const User = require("../users/users-model.js");
+const paramCheck = require('../old-users/paramCheck.js');
+const User = require('../old-users/users-model.js');
 
 //manual model
-const qs = require("./manualModel.js");
+const qs = require('./manualModel.js');
 
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 router.get(
-  "/onboard/:userId",
+  '/onboard/:userId',
   paramCheck.onlyId,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
@@ -23,9 +23,12 @@ router.get(
       if (categories.length == 0) {
         //same thing as the plaid router. Just need to loop though a default categories and link them to the user thats opted for manual entry.
         const doneData = Promise.all(
-          data.map(async d => {
+          data.map(async (d) => {
             try {
-              const contents = await Plaid.link_user_categories(d.id, userid);
+              const contents = await Plaid.link_user_categories(
+                d.id,
+                userid
+              );
               return d;
             } catch (error) {
               console.log(error);
@@ -36,12 +39,12 @@ router.get(
         const newCategories = await User.returnUserCategories(userid);
 
         if (newCategories.length > 0) {
-          res.status(204).json({ message: "categories made" });
+          res.status(204).json({ message: 'categories made' });
         } else {
-          res.status(409).json({ message: "categories not made" });
+          res.status(409).json({ message: 'categories not made' });
         }
       } else {
-        res.status(205).json({ message: "categories are already there" });
+        res.status(205).json({ message: 'categories are already there' });
       }
     } catch (err) {
       console.log(err);
@@ -51,7 +54,7 @@ router.get(
 );
 
 router.post(
-  "/transaction/:userId",
+  '/transaction/:userId',
   paramCheck.idAndBody,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
@@ -59,7 +62,9 @@ router.post(
     const body = req.body;
     const id = req.params.userId;
     if (!body.amount || !body.payment_date || !body.category_id) {
-      res.status(401).json({ message: "please send with the correct body" });
+      res
+        .status(401)
+        .json({ message: 'please send with the correct body' });
     } else {
       try {
         const inserted = await qs.insert_transactions(body, id);
@@ -73,7 +78,7 @@ router.post(
 );
 
 router.patch(
-  "/transaction/:userId/:tranId",
+  '/transaction/:userId/:tranId',
   paramCheck.idAndBody,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
@@ -93,7 +98,7 @@ router.patch(
 );
 
 router.get(
-  "/transaction/:userId",
+  '/transaction/:userId',
   paramCheck.onlyId,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
@@ -101,7 +106,7 @@ router.get(
     const id = req.params.userId;
     try {
       const categories = await qs.MANUAL_get_categories(id);
-      const list = categories.filter(cat => {
+      const list = categories.filter((cat) => {
         if (cat != null) {
           return cat;
         }
@@ -115,22 +120,27 @@ router.get(
 );
 
 router.post(
-  "/categories/:userId",paramCheck.idAndBody,paramCheck.userExists,paramCheck.tokenMatchesUserId, paramCheck.CatAlreadyLinked, async (req, res) => {
-    const id = req.params.userId
-    const body = req.body
+  '/categories/:userId',
+  paramCheck.idAndBody,
+  paramCheck.userExists,
+  paramCheck.tokenMatchesUserId,
+  paramCheck.CatAlreadyLinked,
+  async (req, res) => {
+    const id = req.params.userId;
+    const body = req.body;
 
-    try{
-      const addedCat = await qs.insert_categories(body, id)
-      res.status(201).json({addedCat})
-    }catch(err){
-      console.log(err)
-      res.status(500).json(err)
+    try {
+      const addedCat = await qs.insert_categories(body, id);
+      res.status(201).json({ addedCat });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
     }
   }
 );
 
 router.patch(
-  "/categories/:userId/:catId",
+  '/categories/:userId/:catId',
   paramCheck.idAndBody,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
@@ -139,25 +149,24 @@ router.patch(
     const id = req.params.userId;
     const body = req.body;
 
-      try {
-        const updated = await qs.editCategory(body, catId, id);
-        if (updated) {
-          res.status(201).json({ updated });
-        } else {
-          res
-            .status(400)
-            .json({ message: "somthing went wrong, check the logs" });
-        }
-      } catch (err) {
-        console.log(err);
-        res.status(500).json({ err });
+    try {
+      const updated = await qs.editCategory(body, catId, id);
+      if (updated) {
+        res.status(201).json({ updated });
+      } else {
+        res
+          .status(400)
+          .json({ message: 'somthing went wrong, check the logs' });
       }
-    
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err });
+    }
   }
 );
 
 router.delete(
-  "/transaction/:userId/:tranId",
+  '/transaction/:userId/:tranId',
   paramCheck.onlyId,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
@@ -175,23 +184,21 @@ router.delete(
 );
 
 router.delete(
-  "/categories/:userId/:catId",
+  '/categories/:userId/:catId',
   paramCheck.onlyId,
   paramCheck.userExists,
   paramCheck.tokenMatchesUserId,
   paramCheck.defaultCategory,
   async (req, res) => {
+    const catId = req.params.catId;
 
-    const catId = req.params.catId
-    
-      try {
-        const deleted = await qs.deleteCategory(catId);
-        res.status(200).json({ deleted });
-      } catch (err) {
-        console.log(err);
-        res.status(500).json({ err });
-      }
-   
+    try {
+      const deleted = await qs.deleteCategory(catId);
+      res.status(200).json({ deleted });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err });
+    }
   }
 );
 
