@@ -8,14 +8,14 @@ module.exports = {
     connection: {
       host: '127.0.0.1',
       user: 'postgres',
-      password: 'x',
+      password: process.env.PG_PASSWORD,
       database: 'test_db',
     },
     migrations: {
-      directory: './test_data/migrations',
+      directory: './data/migrations',
     },
     seeds: {
-      directory: './test_data/seeds',
+      directory: './data/seeds',
     },
   },
 
