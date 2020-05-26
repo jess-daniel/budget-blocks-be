@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const dataBase = require('./test-model');
+const dataBase = require('./okta-model');
 
 // SECTION Middleware
 const requireAuthentication = require('./middleware/require_authentication');
