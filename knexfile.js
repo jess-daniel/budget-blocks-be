@@ -21,7 +21,12 @@ module.exports = {
 
   test: {
     client: 'pg',
-    connection: process.env.TEST_DATABASE_URL,
+    connection: {
+      host: '127.0.0.1',
+      user: 'postgres',
+      password: process.env.PG_PASSWORD,
+      database: 'test_db',
+    },
     migrations: {
       directory: './data/migrations',
     },
