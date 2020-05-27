@@ -2,6 +2,9 @@ exports.up = function (knex) {
   return knex.schema.createTable('plaid_access_token', (tbl) => {
     tbl.increments();
 
+    tbl.string('access_token')
+      .notNullable()
+    
     tbl
       .integer('user_id')
       .unsigned()
@@ -10,8 +13,6 @@ exports.up = function (knex) {
       .inTable('users')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
-
-    tbl.string('access_token');
   });
 };
 

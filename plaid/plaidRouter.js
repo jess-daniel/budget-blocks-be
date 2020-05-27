@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const plaid = require('plaid');
-const qs = require('./plaidModel.js');
+const db = require('./plaidModel.js');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ var client = new plaid.Client(
   process.env.PLAID_SECRET,
   process.env.PLAID_PUBLIC_KEY,
   plaid.environments.sandbox,
-  { version: '2019-05-29', clientApp: 'Plaid Quickstart' }
+  { version: '2019-05-29', clientApp: 'Budget Blocks' }
 );
 
 // Checks if an access token exists for the user
@@ -34,23 +34,30 @@ function publicTokenExists(req, res, next) {
   }
 }
 
-router.post('/token_exchange', publicTokenExists, (req, res) => {
-  const { public_token } = req.body;
+router.post('/token_exchange/:id', publicTokenExists, (req, res) => {
+  const { publicToken } = req.body;
 
-  client.exchangePublicToken(public_token, function (
-    error,
-    tokenResponse
-  ) {
+  client.exchangePublicToken(publicToken, function ( error, tokenResponse) {
     if (error != null) {
-      return res
-        .status(500)
-        .json({ message: 'Error Exchanging Token', error });
+     res.status(500).json({ message: 'Error Exchanging Token', error });
     }
-    ACCESS_TOKEN = tokenResponse.access_token;
-    ITEM_ID = tokenResponse.item_id;
+    console.log(error)
+    
+    const ACCESS_TOKEN = tokenResponse.access_token;
+    const { id } = req.params
 
-    console.log('Access_Token:', ACCESS_TOKEN);
-    console.log('item_id:', ITEM_ID);
+    db.plaid_access(ACCESS_TOKEN, id)
+    .then(key => {
+      if(key.id){
+        res.status(200).json(key)
+      } else {
+        res.status(404).json({ message: 'You are missing the user id' })
+        console.log(key)
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error: error})
+    })
   });
 });
 
