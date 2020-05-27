@@ -10,7 +10,6 @@ exports.seed = function (knex) {
           name: 'Edward Blanciak',
           email: 'budgetblocks@gmail.com',
         },
-        { id: 2, name: 'Mike', email: 'blah2@blah.com' },
       ]);
     });
 };
