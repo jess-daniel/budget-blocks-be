@@ -37,28 +37,39 @@ function publicTokenExists(req, res, next) {
 router.post('/token_exchange/:id', publicTokenExists, (req, res) => {
   const { publicToken } = req.body;
 
-  client.exchangePublicToken(publicToken, function ( error, tokenResponse) {
+  client.exchangePublicToken(publicToken, function (error, tokenResponse) {
     if (error != null) {
-     res.status(500).json({ message: 'Error Exchanging Token', error });
+      res.status(500).json({ message: 'Error Exchanging Token', error });
     }
-    console.log(error)
-    
+    // console.log(error);
+
     const ACCESS_TOKEN = tokenResponse.access_token;
-    const { id } = req.params
+    const { id } = req.params;
 
     db.plaid_access(ACCESS_TOKEN, id)
-    .then(key => {
-      if(key.id){
-        res.status(200).json(key)
-      } else {
-        res.status(404).json({ message: 'You are missing the user id' })
-        console.log(key)
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ error: error})
-    })
+      .then((key) => {
+        if (key) {
+          res.status(200).json(key);
+        } else {
+          res.status(404).json({ message: 'You are missing the user id' });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error.message });
+      });
   });
+});
+
+router.get('/accessToken/:id', (req, res) => {
+  const user_id = req.params.id;
+
+  db.findTokensByUserId(user_id)
+    .then((accessToken) => {
+      res.status(200).json({ data: accessToken });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 });
 
 module.exports = router;
