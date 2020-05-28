@@ -34,6 +34,8 @@ function publicTokenExists(req, res, next) {
   }
 }
 
+// SECTION POST
+// Add Access Token to Database
 router.post('/token_exchange/:id', publicTokenExists, (req, res) => {
   const { publicToken } = req.body;
 
@@ -46,26 +48,72 @@ router.post('/token_exchange/:id', publicTokenExists, (req, res) => {
     const ACCESS_TOKEN = tokenResponse.access_token;
     const { id } = req.params;
 
-    db.plaid_access(ACCESS_TOKEN, id)
-      .then((key) => {
-        if (key) {
-          res.status(200).json(key);
+    db.findToken(ACCESS_TOKEN)
+      .then((token) => {
+        console.log(token);
+        if (token.length !== 0) {
+          res
+            .status(404)
+            .json({ message: 'Bank account already exists.' });
         } else {
-          res.status(404).json({ message: 'You are missing the user id' });
+          db.plaid_access(ACCESS_TOKEN, id)
+            .then((key) => {
+              if (key) {
+                res
+                  .status(200)
+                  .json({ message: 'Bank account successfully stored.' });
+              } else {
+                res
+                  .status(404)
+                  .json({ message: 'You are missing the user id' });
+              }
+            })
+            .catch((error) => {
+              res.status(500).json({ error: error.message });
+            });
         }
       })
-      .catch((error) => {
-        res.status(500).json({ error: error.message });
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
       });
   });
 });
 
+// SECTION GET
+// Find Access Token By Id
 router.get('/accessToken/:id', (req, res) => {
   const user_id = req.params.id;
 
   db.findTokensByUserId(user_id)
     .then((accessToken) => {
       res.status(200).json({ data: accessToken });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
+// SECTION GET
+// Find All Access Tokens
+router.get('/accessToken', (req, res) => {
+  db.findAllTokens()
+    .then((response) => {
+      res.status(200).json({ data: response });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
+// SECTION DELETE
+// Delete Access Token By Id
+router.delete('/accessToken/:id', (req, res) => {
+  const user_id = req.params.id;
+  const bankId = req.body.bankId;
+
+  db.deleteTokenByUserId(user_id, bankId)
+    .then((user) => {
+      res.status(200).json({ data: user });
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });
