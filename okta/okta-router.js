@@ -4,51 +4,6 @@ const dataBase = require('./okta-model');
 // SECTION Middleware
 const requireAuthentication = require('./middleware/require_authentication');
 
-// SECTION TEST ENDPOINT
-// router.post('/transactions', requireAuthentication, (req, res) => {
-//   const email = req.body.email;
-//   const user_id = req.body.id;
-
-//   dataBase
-//     .findUserByEmail(email)
-//     .then((user) => {
-//       if (user) {
-//         dataBase
-//           .findMessagesById(user_id)
-//           .then((message) => {
-//             if (user_id) res.status(200).json({ data: message });
-//           })
-//           .catch((err) => {
-//             res.status(500).json({ error: err.message });
-//           });
-//       } else {
-//         res.status(404).json({ error: 'user not found' });
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).json({ error: err.message });
-//     });
-// });
-
-// SECTION TEST ENDPOINT
-// Retrieve User by email
-// router.post('/users', requireAuthentication, (req, res) => {
-//   const email = req.body;
-
-//   dataBase
-//     .findUserByEmail(email)
-//     .then((user) => {
-//       res.status(200).json({ data: user });
-//     })
-//     .catch((err) => {
-//       console.log(email);
-//       res.status(500).json({ error: err.message });
-//     });
-// });
-
-// NOTE SAVE THESE ENDPOINTS BELOW
-// -------------------------------------------------
-
 // SECTION GET -- Get All Users
 router.get('/users', requireAuthentication, (req, res) => {
   dataBase
