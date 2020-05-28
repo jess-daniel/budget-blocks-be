@@ -5,16 +5,16 @@
 
 # API Documentation
 
-#### Backend delpoyed at [Heroku](https://lambda-budget-blocks.herokuapp.com/). <br>
+#### Backend deployed at [Heroku](https://lambda-budget-blocks.herokuapp.com/). <br>
 
 ## Getting started
 
 To get the server running locally:
 
 - Clone this repo
-- **yarn install** to install all required dependencies
-- **yarn server** to start the local server
-- **yarn test** to start server using testing environment
+- **npm install** to install all required dependencies
+- **npm run server** to start the local server
+- **npm test** to start server using testing environment
 
 ### Backend framework
 
@@ -24,7 +24,7 @@ Why did you choose this framework?
 - Heroku - Used to host our app. Heroku makes deploying web apps simple and fast
 - Knex - Used to create data migration tables and seeds to continuously have a clean data set
 
-#### User Routes
+#### Okta Routes <-- in progress(ignore current endpoints in documentation)
 
 | Method | Endpoint                        | Token Required | Description                                                                       |
 | ------ | ------------------------------- | -------------- | --------------------------------------------------------------------------------- |
@@ -36,99 +36,20 @@ Why did you choose this framework?
 | PUT    | `/api/users/savinggoal/:userId` | Yes            | Adds a savings goal for the user                                                  |
 | GET    | `api/users/`                    | Yes            | Gets a list of all the users                                                      |
 | GET    | `api/users/user/:userId`        | Yes            | Gets the information for a specific user                                          |
-| DELETE | `api/users/user/:userId`        | Yes            | Deletes the user from the user table.                                             |
-
-#### Manual Routes
-
-| Method | Endpoint                                     | Token Required | Description                                                                          |
-| ------ | -------------------------------------------- | -------------- | ------------------------------------------------------------------------------------ |
-| GET    | `/manual/onboard/:userId`                    | Yes            | Does not return anything, just links the user the Plaid's categories                 |
-| POST   | `/manual/transaction/:userId`                | Yes            | It returns with the id of the transaction inserted into the manual_budget_item table |
-| PATCH  | `/manual/transaction/:userId/:transactionId` | Yes            | Returns a list of the ids of the transaction you updated                             |
-| GET    | `/manual/transaction/:userId`                | Yes            | Returns each transaction PER category                                                |
-| POST   | `/manual/categories/:userId`                 | Yes            | Allows a user to add manual categories                                               |
-| PATCH  | `/manual/categories/:userId/:catId`          | Yes            | Will return a list of updated category ids                                           |
-| DELETE | `/manual/transaction/:userId/:tranId`        | Yes            | Will return a 1 for a successful delete, or a 0 for a failed delete                  |
-| DELETE | `/manual/categories/:userId/:catId`          | Yes            | Will return a 1 for a successful delete, or a 0 for a failed delete                  |
+| DELETE | `api/users/user/:userId`        | Yes            | Deletes the user from the user table.                                             
 
 #### Plaid Routes
 
 | Method | Endpoint                      | Token Required | Description                                                                                                       |
 | ------ | ----------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
-| POST   | `/plaid/token_exchange`       | No             | Returns confirmation that the AccessToken and Item (Plaid's term) has been inserted, and an array of transactions |
-| GET    | `/plaid/transactions/:userID` | No             | Returns the list of transactions for that user                                                                    |
+| POST   | `/plaid/token_exchange`       | No             | Exchanges PublicToken received by using the Plaid Link to connect to a bank account to retrieve the access token, must be connected to the user_id received from Okta|
+| GET    | `/plaid/items/:id` | No             | Returns the access_tokens associated with the user's id.                                                                  |
 
 ## Actions
 
-`validateUserCredentials()` -> Validates that a email address and a password is passed into the body
+`plaid_access()` -> Inserts the access_token and the user_id to the database for future plaid endpoints.
 
-`userAlreadyExists()` -> Validates if a user exists to help create new users
-
-`allUsers` -> Returns all users
-
-`addUser(userData)` -> Adds a new user to the database
-
-`get_total_budget(userId)` -> Returns the sum of the user's total budget
-
-`findUserBy(filter)` -> Finds a user based upon what parameters have been passed in
-
-`returnUserCategories(userId)` --> Returns a user's budgetting categories based upon the userId
-
-`editUserCategoryBudget(userId, categoryId, amount)` -> Edits the user's category based upon the category id
-
-`editUserIncome(userId, body)` -> Edits the income of the user
-
-`editUserSavings(userId, body)` -> Edits the savings of the user
-
-`deleteUser(userId)` -> Deletes the user
-
-`editUserProfile(userId, body)` -> Edits the user's profile
-
-`add_A_Token(token, userId)` -> Adds a valid token via plaid to the user based upon the userId
-
-`add_An_Item(itemId, userId)` -> Adds an item to the user based upon the userId
-
-`insert_transactions(trans, userId)` -> Adds a transaction to the user based upon the userId
-
-`link_user_categories(categoryId, userId)` -> Adds the categories from plaid to the user Id
-
-`getAccessToken(userId)` -> Get's the access token from plaid
-
-`WEB_get_pg_itemid(plaidItemId)` -> Get's the item id from the plaid item id
-
-`WEB_get_userId(plaidItemId` -> Get's the user's id from the plaid item id
-
-`WEB_get_all_item_data()` -> Gets all of the information from the items table
-
-`WEB_track_insertion(pgItemId, status)` -> Tracks the insertion status of items into the database
-
-`WEB_get_accessToken(plaidItemId)` -> Get's the access token based upon the plaid item id
-
-`WEB_insert_transactions(list, userId)` -> Inserts the transaction list based upon the user id
-
-`INFO_get_status(userId)` -> Get's the insertion status based upon the user ID and the item ids found within the user table
-
-`INFO_get_cat_transactions(categoryId, userId)` -> Get's information for the category id based upon the user id
-
-`INFO_get_cat_manual_transactions(categoryId, userId) -> Get's the manual transactions that have been added for each category based upon the category and the user id
-
-`INFO_get_amount_by_category(categoryId, userId)` -> Get's the sum of the amount for each category id based upon the user id
-
-`INFO_get_manual_amount_by_category(categoryId, userId)` -> Get's the sum of the amount for each manually added category id based upon the user id
-
-`INFO_get_categories(userId)` -> Get's all of the categories based upon the user id
-
-`insert_accounts(body, pgItemId)` -> Inserts the accounts based upon the item id
-
-`PLAID_insert_accounts(accounts, pgItemId)` -> Uses Plaid to sync the bank accounts
-
-`PLAID_get_pg_item_id(userId)` -> Get's the item id based upon the user id from the plaid accounts
-
-`PLAID_get_accounts(pgItemId)` -> Uses plaid to return a specific bank account
-
-`update_accounts(body)` -> Updates the account based upon the information passed into the body
-
-`PLAID_update_accounts(accounts)` -> Updates the plaid accounts
+`findTokensByUserId()` -> Seeks out the associated user_id to display the access_tokens that are connected to it.
 
 ## Environment Variables
 
@@ -142,8 +63,9 @@ create a .env file that includes the following:
 - PLAID_PUBLIC_KEY - Public key that was provided by [Plaid API](https://plaid.com/)
 - PLAID_PRODUCTS - The products that we want to generate data from through the [Plaid API](https://plaid.com/)
 - PLAID_COUNTRY_CODES - A list of country codes where [Plaid API](https://plaid.com/) will work from
-- PLAID_ENV - What environment you want to run the [Plaid API](https://plaid.com/) from
-- JWT_SECRET - you can generate this by using a python shell and running import random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;\*(-*=+)') for i in range(50)])
+- PLAID_ENV - Environment being used for [Plaid API](https://plaid.com/) IE: Sandbox, Development, Production
+- PG_PASSWORD - Secret password that belongs to each developer using PG.
+random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;\*(-*=+)') for i in range(50)])
 
 ## Contributing
 
@@ -189,396 +111,30 @@ Also, you can view the [iOS Documenation](https://github.com/Lambda-School-Labs/
 
 # Information
 
-## JWT
-
-- Uses JWT web tokens to store user information and verifies the keys by using a JWT_SECRET environment variable (will need to create)
-- JWT token contains user_id, and email
-
 ## Postgres
 
-- The backend is now running on Postgres, so things won't clear everytime the dev branch is commited to. In addition to that, you can create an account and sign up with plaid using user/pass_good just once now. No more cre-creating accounts unless we need to wipe the DB.
+- The backend is now running on Postgres, so things won't clear everytime the dev branch is commited to. In addition to that, you can create an account and sign up with plaid using user_good/pass_good just once now. No more re-creating accounts unless we need to wipe the DB.
 
-## (auth) **POST** /api/auth/register
-
-**Expected requst body:**
-
-    {
-        "email": "Yeet",
-        "password": "Yeet"
-    }
-
-**Returns the id of the newly created user:201 Status**
-
-    {
-        "message": "success",
-        "id": 1
-    }
-
-## (auth) **POST** /api/auth/login
+## (plaid) **POST** /plaid/token_exchange/:id
 
 **Expected request body:**
 
     {
-        "email": "Yeet",
-        "password": "Yeet"
+        "client_id": "{{client_id}}",
+        "secret": "{{secret_key}}",
+        "publicToken": "public-sandbox-64d2b25a-d7b0-44fd-82ba-d89735bad115" <-- example
     }
 
-**Returns the token, id, and BankAccountLink status**
+**Returns a status 200, user_id must be attached as the id parameters, stores access_token and user_id into database**
+
+## (plaid) **GET** /plaid/accessToken/:id
+
+**Expected request results example:**
 
     {
-        "id": 1,
-        "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Ikt5bGUiLCJpYXQiOjE1ODAyMzU0NzMsImV4cCI6MTU4MDI0OTg3M30.vOU1ZbHcLxOgCtD50Pu7JqHiudEc-0VYtDfbtXeqvlU",
-        "message": "Welcome Yeet!",
-        "LinkedAccount": false
+        "id": "1",
+        "access_token": "Amnsdgni13224ion1312asf",
+        "user_id": "1" 
     }
 
-## (Plaid) **POST** /plaid/token_exchange
-
-**Expected request body**
-
-**The publicToken is what you get from the react-plaid-link**
-
-    {
-        "publicToken": "public-sandbox-b54b4ec6-877d-456f-a916-2c38542be274",
-        "userid": 1
-    }
-
-**Returns confirmation that the AccessToken and Item(Plaid's term) has been inserted, and an array of transactions**
-
-    {
-        "AccessTokenInserted": 1,
-        "ItemIdInserted": 1
-    }
-
-## (Plaid) **GET** /plaid/transactions/:userID
-
-**This is no longer a post request,now you just pass the userID as a param in the url**
-
-_When we implement the restricitve middleware, thers a chance it'll change to a get request and we'll get the user id from the authorization header token_
-
-**Returns the list of transactions for that user**
-
-    {
-        "categories":[
-            {
-                "id": 10,
-                "name": "Payment",
-                "email": "Yeet",
-                "transactions": [
-                    {
-                        "id": 2,
-                        "name": "AUTOMATIC PAYMENT - THANK",
-                        "amount": 2078.5,
-                        "payment_date": "2019-01-30",
-                        "category_id": 10,
-                        "user_id": 1
-                    },
-                    {
-                        "id": 5,
-                        "name": "CREDIT CARD 3333 PAYMENT *//",
-                        "amount": 25,
-                        "payment_date": "2019-01-21",
-                        "category_id": 10,
-                        "user_id": 1
-                    }
-                ]
-            },
-        ],
-        "accounts":[
-            {
-                "id": 1,
-                "account_id": "kNnnbgZ9RATKbD1dqrl5I3jKLEz97eIWbw8n4",
-                "balance": 100,
-                "official_name": "Plaid Gold Standard 0% Interest Checking",
-                "subtype": "checking",
-                "type": "depository",
-                "mask": "0000",
-                "pg_item_id": 1
-            },
-            {
-                "id": 2,
-                "account_id": "lPbbW8MvRAhv5wlgKzkLiNZ6zMj4BviZvJrQD",
-                "balance": 200,
-                "official_name": "Plaid Silver Standard 0.1% Interest Saving",
-                "subtype": "savings",
-                "type": "depository",
-                "mask": "1111",
-                "pg_item_id": 1
-            }
-        ]
-    }
-
-## (User) **GET** /api/users/categories/param
-
-**You just pass the userID as a param in the url**
-
-    {
-        example: /api/users/categories/1(userid)
-    }
-
-**Returns the list of categories for that user**
-
-    [
-        {
-            "id": 1,
-            "name": "Bank Fees",
-            "email": "yeet",
-            "budget": null
-        },
-        {
-            "id": 2,
-            "name": "Cash Advance",
-            "email": "yeet",
-            "budget": null
-        }
-    ]
-
-## (User) **PUT** /api/users/categories/param
-
-**While hitting the endpoint, put the userid as a parameter on the end, then send the following object**
-
-    {
-        example: /api/users/categories/1(userid)
-    }
-
-    {
-        "categoryid": 1,
-        "budget": 320
-    }
-
-**Returns the following object**
-
-    {
-        "userid": "1",
-        "categoryid": 20,
-        "amount": 320,
-        "status": "true"
-    }
-
-## (User) **PUT** /api/users/income/:param
-
-**While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
-
-    {
-        example: /api/users/income/1(userid)
-    }
-
-    {
-        "income":3100
-    }
-
-**Returns the id of the updated record**
-
-    {
-        "id":1
-    }
-
-## (User) **PUT** /api/users/savinggoal/:param
-
-**While hitting the endpoint, put the userid as the parameter on the end, then pass the following object**
-
-    {
-        example: /api/users/savinggoal/1(userid)
-    }
-
-    {
-        "saving_goal":205
-    }
-
-**Returns the id of the updated record**
-
-    {
-        "id":1
-    }
-
-## (User) **GET** /api/users/user/:param
-
-**While hitting the endpoint, put the userid as the parameter on the end**
-
-    {
-        example: /api/users/user/1(userid)
-    }
-
-**Returns the following object**
-
-    {
-        "user": {
-            "id": 1,
-            "email": "Yeet",
-            "income": 4200,
-            "saving_goal": 205,
-            "Totalbudget":1400
-
-        }
-    }
-
-**Keep in mind, the totalbudget will be null since if the user hasn't set a budget for at least one of the categories. The endpoint to set a category budget for a specific user is above**
-
-## (Manual) **GET** /manual/onboard/:userId
-
-**While hitting the endpoint, put the userid as the parameter on the end**
-
-    {
-      example: /manual/onboard/1(userid)
-    }
-
-**This endpoint doesn't return anything. It simply linkes the user to the default categories**
-
-## (Manual) **POST** /manual/transaction/:userId
-
-**While hitting the endpoint, put the userid as the parameter on the end**
-
-    {
-      example: /manual/transaction/1(userid)
-    }
-
-**You can pass two types of objects to this endopoint. One with a name and one without**
-
-    {
-      	"name": "Yeet",
-          "amount": 20.00,
-          "payment_date": "2020-02-14",
-          "category_id": 4
-    }
-
-**And**
-
-    {
-          "amount": 20.00,
-          "payment_date": "2020-02-14",
-          "category_id": 4
-    }
-
-**It returns with the id of the transaction inserted into the manual_budget_item table**
-
-    {
-      "inserted":4
-    }
-
-## (Manual) **PATCH** /manual/transaction/:userId/:transactionId
-
-**On this endpoint, you'll need to user two parameters, the userId and the transactionId**
-
-    {
-      example: /manual/transaction/1(userId)/2(transactionId)
-    }
-
-**You can also pass different types of objects to this endpoint, but we aware they can only contain the payment_date, name, and amount. You may have all three in there or just one of each**
-
-    {
-      name:"Hardware"
-    }
-
-    {
-      name:"Hardware",
-      amount:456.21
-    }
-
-    {
-      payment_date: "2020-02-14",
-      name:"Hobbies"
-    }
-
-**They all return with the id of the transaction you updated**
-
-    {
-      "update":[2]
-    }
-
-## (Manual) **GET** /manual/transaction/:userId
-
-**Here you pass the endpoint the userId that you need all transactions from. Just like the plaid user version of this, it will send you each transaction PER category**
-{
-example: /manual/transaction/1(userId)
-}
-
-**Response**
-
-    {
-      "list": [
-      {
-        "id": 1,
-        "name": "Bank Fees",
-        "email": "Yeet",
-        "budget": null,
-        "transactions": [
-          {
-            "id": 2,
-            "name": "poop",
-            "amount": "987.00",
-            "payment_date": "2019-9-15",
-            "user_id": 1,
-            "category_id": 1
-          }
-        ],
-        "total": "987.00"
-      }
-    }
-
-## (Manual) **POST** /manual/categories/:userId
-
-**This is were manual users can add their custom categories**
-
-    {
-      "name": "Birthday dinner",
-      "budget": 70.00
-    }
-
-**Response**
-
-    {
-      "addedCat" : 25
-    }
-
-## (Manual) **PATCH** /manual/categories/:userId/:catId
-
-**You must pass the userid and categoryid to this endpoints parameters.Like the other endpoints under manual, this is for manual users only that have made a custom category. If you try to edit a default category with this endpoint you will get an error**
-
-        {
-            example: /manual/categories/1(userId)/25(catId)
-        }
-
-**The expected object can include the name or the name and budget.Either of these are fine, but you must include a name**
-
-        {
-            name: "toilet paper"
-        }
-
-        {
-            name:"toilet paper",
-            budget: 60
-        }
-
-**Expected returned body will be a 201 status and the id of the category updated**
-
-        {
-            updated:25
-        }
-
-## (Manual) **DELETE** /manual/transaction/:userId/:tranId
-
-**You need to pass the userId and tranId to this endpoint**
-
-        {
-            example: /manual/transaction/1(userId)/1(tranId)
-        }
-
-**Expected return will be a 200 status with a 1 for true(completed) or 0 for false(incomplete)**
-
-        {
-            deleted: 1
-        }
-
-## (Manual) **DELETE** /manual/categories/:userId/:catId
-
-**You must pass the userid and categoryid to this endpoints parameters.Like the other endpoints under manual, this is for manual users only that have made a custom category. If you try to delete a default category with this endpoint you will get an error**
-
-        {
-            example: /manual/categories/1/25
-        }
-
-**Expected return will be a 200 status with a 1 for true(completed) or 0 for false(incomplete)**
-
-        {
-            deleted: 1
-        }
+**Returns a status 200, retrieves the access_tokens associated with the user_id**
