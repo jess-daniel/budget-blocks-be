@@ -65,7 +65,6 @@ create a .env file that includes the following:
 - PLAID_COUNTRY_CODES - A list of country codes where [Plaid API](https://plaid.com/) will work from
 - PLAID_ENV - Environment being used for [Plaid API](https://plaid.com/) IE: Sandbox, Development, Production
 - PG_PASSWORD - Secret password that belongs to each developer using PG.
-random''.join([random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&amp;\*(-*=+)') for i in range(50)])
 
 ## Contributing
 
