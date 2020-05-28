@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28% </span>
+                <span class="strong">30.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/25</span>
+                <span class='fraction'>8/26</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28% </span>
+                <span class="strong">30.77% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/25</span>
+                <span class='fraction'>8/26</span>
             </div>
         
             
@@ -172,7 +172,9 @@
 <a name='L113'></a><a href='#L113'>113</a>
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,22 +208,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -242,6 +228,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -285,6 +286,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const router = require('express').Router();
@@ -320,19 +324,6 @@ const requireAuthentication = require('./middleware/require_authentication');
 // });
 &nbsp;
 // SECTION TEST ENDPOINT
-// Retrieve all users
-router.get('/users', <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >  dataBase</span>
-    .findAllUsers()
-    .then(<span class="fstat-no" title="function not covered" >(u</span>sers) =&gt; {
-<span class="cstat-no" title="statement not covered" >      res.status(200).json({ data: users });</span>
-    })
-    .catch(<span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
-<span class="cstat-no" title="statement not covered" >      res.status(500).json({ error: err.message });</span>
-    });
-});
-&nbsp;
-// SECTION TEST ENDPOINT
 // Retrieve User by email
 // router.post('/users', requireAuthentication, (req, res) =&gt; {
 //   const email = req.body;
@@ -351,11 +342,23 @@ router.get('/users', <span class="fstat-no" title="function not covered" >(r</sp
 // NOTE SAVE THESE ENDPOINTS BELOW
 // -------------------------------------------------
 &nbsp;
-// SECTION POST - Add User to the Database
+// SECTION GET -- Get All Users
+router.get('/users', requireAuthentication, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >  dataBase</span>
+    .findAllUsers()
+    .then(<span class="fstat-no" title="function not covered" >(u</span>sers) =&gt; {
+<span class="cstat-no" title="statement not covered" >      res.status(200).json({ data: users });</span>
+    })
+    .catch(<span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
+<span class="cstat-no" title="statement not covered" >      res.status(500).json({ error: err.message });</span>
+    });
+});
+&nbsp;
+// SECTION POST - Add User
 // Send Only Full Name &amp; E-mail
 // FIXME Needs to have more descriptive errors for missing fields
 // FIXME May need to include the access token from plaid IF user exists
-router.post('/users', <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+router.post('/users', requireAuthentication, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
   const oktaInfo = <span class="cstat-no" title="statement not covered" >req.body;</span>
   const userInfo = <span class="cstat-no" title="statement not covered" >{</span>
     name: oktaInfo.name,
@@ -387,8 +390,8 @@ router.post('/users', <span class="fstat-no" title="function not covered" >(r</s
     });
 });
 &nbsp;
-// SECTION DELETE - Delete User from the Databas
-router.delete('/users', <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+// SECTION DELETE - Delete User
+router.delete('/users', requireAuthentication, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
   const email = <span class="cstat-no" title="statement not covered" >req.body.email;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  dataBase</span>
@@ -401,6 +404,9 @@ router.delete('/users', <span class="fstat-no" title="function not covered" >(r<
     });
 });
 &nbsp;
+// SECTION PUT - Update User
+router.put('/users', requireAuthentication, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {});
+&nbsp;
 module.exports = router;
 &nbsp;</pre></td></tr></table></pre>
 
@@ -409,7 +415,7 @@ module.exports = router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 26 2020 17:11:13 GMT-0400 (Eastern Daylight Time)
+                at Thu May 28 2020 13:07:42 GMT-0400 (Eastern Daylight Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
