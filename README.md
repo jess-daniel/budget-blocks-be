@@ -43,7 +43,7 @@ Why did you choose this framework?
 | Method | Endpoint                      | Token Required | Description                                                                                                       |
 | ------ | ----------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
 | POST   | `/plaid/token_exchange`       | No             | Exchanges PublicToken received by using the Plaid Link to connect to a bank account to retrieve the access token, must be connected to the user_id received from Okta|
-| GET    | `/plaid/items/:id` | No             | Returns the access_tokens associated with the user's id.                                                                  |
+| GET    | `/plaid/accessToken/:id` | No             | Returns the access_tokens associated with the user's id.                                                                  |
 
 ## Actions
 
