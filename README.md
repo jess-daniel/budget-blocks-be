@@ -1,3 +1,4 @@
+
 # Badges
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/48e243bd3d68a7d834b0/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
@@ -5,7 +6,7 @@
 
 # API Documentation
 
-#### Backend deployed at [Heroku](https://lambda-budget-blocks.herokuapp.com/). <br>
+#### Backend deployed at [Heroku](https://budget-blocks-production-new.herokuapp.com). <br>
 
 ## Getting started
 
@@ -24,26 +25,21 @@ Why did you choose this framework?
 - Heroku - Used to host our app. Heroku makes deploying web apps simple and fast
 - Knex - Used to create data migration tables and seeds to continuously have a clean data set
 
-#### Okta Routes <-- in progress(ignore current endpoints in documentation)
-
-| Method | Endpoint                        | Token Required | Description                                                                       |
-| ------ | ------------------------------- | -------------- | --------------------------------------------------------------------------------- |
-| POST   | `/api/auth/login`               | No             | Logs a user in and returns a JWT token and if they have a linked account to Plaid |
-| POST   | `/api/auth/register`            | No             | Registers a new user and returns the user id                                      |
-| GET    | `/api/users/categories/:userId` | Yes            | Returns the list of categories for that user                                      |
-| PUT    | `/api/users/categories/:userId` | Yes            | Adds a new category for the user                                                  |
-| PUT    | `/api/users/income/:userId`     | Yes            | Adds an income amount for the user                                                |
-| PUT    | `/api/users/savinggoal/:userId` | Yes            | Adds a savings goal for the user                                                  |
-| GET    | `api/users/`                    | Yes            | Gets a list of all the users                                                      |
-| GET    | `api/users/user/:userId`        | Yes            | Gets the information for a specific user                                          |
-| DELETE | `api/users/user/:userId`        | Yes            | Deletes the user from the user table.                                             
+#### User Routes
+ | Method | Endpoint | Token Required | Description | Body | Params |
+|---|---|---|---|---|---|
+| GET | ```/api/users``` | Yes | Returns a list of all users | n/a | n/a | 
+| POST | ```/api/users``` | Yes | Adds a user | Name, Email | n/a |
+| DELETE | ```/api/users``` | Yes | Delete user by email | email | n/a |                                  
 
 #### Plaid Routes
 
 | Method | Endpoint                      | Token Required | Description                                                                                                       |
 | ------ | ----------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
 | POST   | `/plaid/token_exchange`       | No             | Exchanges PublicToken received by using the Plaid Link to connect to a bank account to retrieve the access token, must be connected to the user_id received from Okta|
-| GET    | `/plaid/accessToken/:id` | No             | Returns the access_tokens associated with the user's id.                                                                  |
+| GET    | `/plaid/accessToken/:id` | No             | Returns the access_tokens associated with the user's id.|
+| GET  | ```/plaid/accessToken``` | No  |  Returns all access tokens for every user |
+| DELETE  | ```/plaid/accessToken/:id``` | No  | Deletes a specific access token (aka bank account) for a specific user |
 
 ## Actions
 
@@ -137,3 +133,4 @@ Also, you can view the [iOS Documenation](https://github.com/Lambda-School-Labs/
     }
 
 **Returns a status 200, retrieves the access_tokens associated with the user_id**
+
