@@ -24,6 +24,9 @@ Why did you choose this framework?
 - PostGres - Used this to deploy our backend to persist the data on Heroku
 - Heroku - Used to host our app. Heroku makes deploying web apps simple and fast
 - Knex - Used to create data migration tables and seeds to continuously have a clean data set
+## Endpoints
+
+In-depth endpoint documentation: [Here](https://documenter.getpostman.com/view/10984987/SztD57nm?version=latest#0f5ff3a7-d6b6-4324-bb4c-003c86bc064e)
 
 #### User Routes
  | Method | Endpoint | Token Required | Description | Body | Params |
