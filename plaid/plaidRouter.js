@@ -86,9 +86,9 @@ router.post('/token_exchange/:id', publicTokenExists, (req, res) => {
 });
 
 // SECTION GET
-// Find Access Token By Id
-router.get('/accessToken/:id', (req, res) => {
-  const user_id = req.params.id;
+// Find Access Token By userId
+router.get('/accessToken/:userId', (req, res) => {
+  const user_id = req.params.userId;
   try {
     db.findTokensByUserId(user_id)
       .then((accessToken) => {
@@ -119,14 +119,22 @@ router.get('/accessToken', (req, res) => {
 });
 
 // SECTION DELETE
-// Delete Access Token By Id
-router.delete('/accessToken/:id', (req, res) => {
-  const user_id = req.params.id;
+// Delete a specific access tokens by user id
+//--- delete a bank account ----- //
+router.delete('/accessToken/:userId', (req, res) => {
+  const user_id = req.params.userId;
   const bankId = req.body.bankId;
+
   try {
     db.deleteTokenByUserId(user_id, bankId)
       .then((user) => {
-        res.status(200).json({ data: user });
+        if (user === 1) {
+          res
+            .status(200)
+            .json({ message: 'Bank account deleted successfully!' });
+        } else {
+          res.status(400).json({ message: 'Bank account not found!' });
+        }
       })
       .catch((err) => {
         res.status(500).json({ error: err.message });
@@ -134,6 +142,24 @@ router.delete('/accessToken/:id', (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// Delete All Access Tokens by User Id
+// --- delete all bank accounts feature --- //
+// FIXME needs to make sure the user exists and that there are bank accounts
+router.delete('/accessToken/:userId/all', (req, res) => {
+  const user_id = req.params.userId;
+
+  db.deleteAllTokensByUserId(user_id)
+    .then((response) => {
+      console.log(response);
+      res
+        .status(200)
+        .json({ message: 'All bank accounts successfully deleted!' });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 });
 
 module.exports = router;

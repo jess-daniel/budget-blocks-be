@@ -29,10 +29,15 @@ function deleteTokenByUserId(user_id, id) {
   return db('plaid_token').where({ user_id, id }).del();
 }
 
+function deleteAllTokensByUserId(user_id) {
+  return db('plaid_token').where({ user_id }).del();
+}
+
 module.exports = {
   plaid_access,
   findTokensByUserId,
   deleteTokenByUserId,
   findAllTokens,
   findToken,
+  deleteAllTokensByUserId,
 };

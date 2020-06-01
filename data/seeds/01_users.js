@@ -10,6 +10,11 @@ exports.seed = function (knex) {
           name: 'Edward Blanciak',
           email: 'budgetblocks@gmail.com',
         },
+        {
+          id: 2,
+          name: 'Joe Smith',
+          email: 'JoeSmith@gmail.com',
+        },
       ]);
     });
 };
