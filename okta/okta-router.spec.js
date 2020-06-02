@@ -6,7 +6,7 @@ describe("OKTA ROUTER", () => {
   describe("GET /users - all users", () => {
     it("should return 200", () => {
       return request(server)
-        .get("/api/users/")
+        .get("/api/users")
         .then((res) => {
           expect(res.status).toBe(200);
         });
