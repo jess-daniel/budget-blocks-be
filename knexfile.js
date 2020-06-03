@@ -8,6 +8,7 @@ module.exports = {
     connection: {
       host: '127.0.0.1',
       user: 'postgres',
+      port: process.env.PG_PORT,
       password: process.env.PG_PASSWORD,
       database: 'test_db',
     },
@@ -24,6 +25,7 @@ module.exports = {
     connection: {
       host: '127.0.0.1',
       user: 'postgres',
+      port: process.env.PG_PORT,
       password: process.env.PG_PASSWORD,
       database: 'test_db',
     },
