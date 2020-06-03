@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const moment = require('moment')
 const plaid = require("plaid");
 const db = require("./plaidModel.js");
 
@@ -22,7 +23,7 @@ function publicTokenExists(req, res, next) {
     // check specifically for the public token
     if (!req.body.publicToken) {
       res.status(400).json({ error: "You have not sync'd your bank account." });
-      // If no errrors, allow the middleware to go to the next endpoint
+      // If no errors, allow the middleware to go to the next endpoint
     } else {
       // res.status(200).json({message: req.body.publicToken});
       next();
@@ -30,27 +31,7 @@ function publicTokenExists(req, res, next) {
   }
 }
 
-//SECTION GET
-//First gets user`s transactions based on
-//passed id and then sends them back as a response
-router.get("/userTransactions/:userId", async (req, res) => {
-  const user_id = req.params.userId;
-  try {
-    db.findTokensByUserId(user_id)
-      .then(async (accessToken) => {
-        const { accounts, item } = await client
-          .getAccounts(accessToken[0].access_token)
-          .catch(console.error);
 
-        res.status(200).json({ data: accounts });
-      })
-      .catch((err) => {
-        res.status(500).json({ error: err.message });
-      });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // SECTION POST
 // Add Access Token to Database
@@ -94,6 +75,41 @@ router.post("/token_exchange/:id", publicTokenExists, (req, res) => {
         });
     });
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//SECTION GET
+//First gets user`s transactions based on
+//passed id and then sends them back as a response
+router.get("/userTransactions/:userId", (req, res) => {
+  const user_id = req.params.userId;
+  let startDate = moment()
+    .subtract(30, "days")
+    .format("YYYY-MM-DD");
+  let endDate = moment().format("YYYY-MM-DD");
+
+  try {
+    db.findTokensByUserId(user_id)
+      .then(accessToken => {
+          client.getTransactions(
+            accessToken[0].access_token,
+            startDate,
+            endDate,
+            {
+              count: 250,
+              offset: 0,
+            }, function(error, transactionsResponse){
+              if (error != null){
+                return res.status(500).json({
+                  error: error
+                });
+              } else {
+                res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id})
+              }
+            }
+          )}
+    )} catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
