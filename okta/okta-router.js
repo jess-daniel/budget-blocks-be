@@ -1,11 +1,11 @@
-const router = require("express").Router();
-const dataBase = require("./okta-model");
+const router = require('express').Router();
+const dataBase = require('./okta-model');
 
 // SECTION Middleware
-const requireAuthentication = require("./middleware/require_authentication");
+const requireAuthentication = require('./middleware/require_authentication');
 
 // SECTION GET -- Get All Users
-router.get("/users", requireAuthentication, (req, res) => {
+router.get('/users', requireAuthentication, (req, res) => {
   dataBase
     .findAllUsers()
     .then((users) => {
@@ -20,7 +20,7 @@ router.get("/users", requireAuthentication, (req, res) => {
 // Send Only Full Name & E-mail
 // FIXME Needs to have more descriptive errors for missing fields
 // FIXME May need to include the access token from plaid IF user exists
-router.post("/users", requireAuthentication, (req, res) => {
+router.post('/users', requireAuthentication, (req, res) => {
   const oktaInfo = req.body;
   const userInfo = {
     name: oktaInfo.name,
@@ -53,13 +53,13 @@ router.post("/users", requireAuthentication, (req, res) => {
 });
 
 // SECTION DELETE - Delete User
-router.delete("/users", requireAuthentication, (req, res) => {
+router.delete('/users', requireAuthentication, (req, res) => {
   const email = req.body.email;
 
   dataBase
     .deleteUser(email)
     .then(() => {
-      res.status(200).json({ message: "User successfully deleted!" });
+      res.status(200).json({ message: 'User successfully deleted!' });
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });
@@ -67,6 +67,18 @@ router.delete("/users", requireAuthentication, (req, res) => {
 });
 
 // SECTION PUT - Update User
-router.put("/users", requireAuthentication, (req, res) => {});
+router.put('/users/:userId', requireAuthentication, (req, res) => {
+  const userId = req.params.userId;
+  const { city, state } = req.body;
+
+  dataBase
+    .updateUser(city, state, userId)
+    .then((response) => {
+      res.status(200).json({ data: response[0] });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
 
 module.exports = router;

@@ -3,8 +3,8 @@ exports.up = function (knex) {
     tbl.increments();
     tbl.string('name').notNullable();
     tbl.string('email').notNullable().unique();
-    tbl.string('zipCode');
-    tbl.string('country');
+    tbl.string('city');
+    tbl.string('state');
     tbl.boolean('onboarding_complete').defaultTo(false);
   });
 };
