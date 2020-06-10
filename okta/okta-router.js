@@ -69,10 +69,10 @@ router.delete('/users', requireAuthentication, (req, res) => {
 // SECTION PUT - Update User
 router.put('/users/:userId', requireAuthentication, (req, res) => {
   const userId = req.params.userId;
-  const { city, state } = req.body;
+  const { city, state, onboarding_complete } = req.body;
 
   dataBase
-    .updateUser(city, state, userId)
+    .updateUser(city, state, onboarding_complete, userId)
     .then((response) => {
       res.status(200).json({ data: response[0] });
     })

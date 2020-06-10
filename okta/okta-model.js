@@ -34,9 +34,9 @@ function findAllUsers() {
   return db('users');
 }
 
-function updateUser(city, state, userId) {
+function updateUser(city, state, onboarding_complete, userId) {
   return db('users')
     .where({ id: userId })
-    .update({ city, state })
+    .update({ city, state, onboarding_complete })
     .returning('*');
 }
