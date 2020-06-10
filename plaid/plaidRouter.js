@@ -92,6 +92,7 @@ router.get("/userTransactions/:userId", (req, res) => {
   try {
     db.findTokensByUserId(user_id)
       .then(accessToken => {
+        console.log(accessToken)
           client.getTransactions(
             accessToken[0].access_token,
             startDate,
@@ -105,7 +106,7 @@ router.get("/userTransactions/:userId", (req, res) => {
                   error: error
                 });
               } else {
-                res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id})
+                res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id, location: [accessToken[0].city, accessToken[0].state] })
               }
             }
           )}
