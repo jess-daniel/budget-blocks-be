@@ -9,8 +9,8 @@ exports.seed = function (knex) {
           id: 1,
           name: 'Edward Blanciak',
           email: 'budgetblocks@gmail.com',
-          zipCode: '15600',
-          country: 'USA',
+          state: '',
+          city: '',
         },
       ]);
     });
