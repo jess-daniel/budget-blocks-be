@@ -5,6 +5,7 @@ module.exports = {
   addUser,
   deleteUser,
   findAllUsers,
+  updateUser,
 };
 
 // NOTE Save
@@ -31,4 +32,11 @@ function deleteUser(email) {
 // NOTE Test Helper Fxn (delete later)
 function findAllUsers() {
   return db('users');
+}
+
+function updateUser(city, state, userId) {
+  return db('users')
+    .where({ id: userId })
+    .update({ city, state })
+    .returning('*');
 }
