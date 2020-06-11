@@ -2,6 +2,7 @@ require("dotenv").config();
 const request = require("supertest");
 const server = require("../server");
 const axios = require("axios");
+const db = require("../data/db-config.js");
 
 describe("PLAID end points", () => {
   describe("POST to /plaid/token_exchange/:id", () => {
@@ -33,7 +34,7 @@ describe("PLAID end points", () => {
     });
   });
 
-  describe("GET to /accessToken", () => {
+  describe("GET to /accessToken and /userTransactions/:id", () => {
     it("should return status 200 and res.body should contain data", () => {
       return request(server)
         .get("/plaid/accessToken")
@@ -41,11 +42,43 @@ describe("PLAID end points", () => {
           expect(res.status).toBe(200);
           expect(res.body).toHaveProperty("data");
           expect(res.body.data).toBeDefined();
-        });
-    });
+        })
+      })
+        
+      it("should return status 200 and res.body should contain transaction information",  () => {
+        return request(server)
+          .get("/plaid/userTransactions/1")
+          .then(async (res) => {
+            const accessToken = await db("plaid_token")
+            console.log("Transaction", accessToken)
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveProperty("transactions")
+            expect(res.body).toBeDefined();
+          })
   });
+});
+
+  describe("GET to /accessToken/:id", () => {
+    it("should return status 200 and res.body should contain data for specific user", () => {
+      return request(server)
+        .get("/plaid/accessToken/1")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("data");
+          expect(res.body.data).toBeDefined();
+        })
+      })
+      it("should return status 500 and for invalid user id", () => {
+        return request(server)
+          .get("/plaid/accessToken/b")
+          .then((res) => {
+            expect(res.status).toBe(500);
+          })
+        })
+  })
 
   describe("delete to /accessToken/:userId/all", () => {
+    console.log("HERE")
     it("should return status 200 and res.body should contain message: 'All bank accounts successfully deleted!'", () => {
       return request(server)
         .delete("/plaid/accessToken/1/all")

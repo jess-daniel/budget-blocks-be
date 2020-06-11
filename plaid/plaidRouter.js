@@ -49,7 +49,6 @@ router.post("/token_exchange/:id", publicTokenExists, (req, res) => {
 
       db.findToken(ACCESS_TOKEN)
         .then((token) => {
-          console.log(token);
           if (token.length !== 0) {
             res.status(404).json({ message: "Bank account already exists." });
           } else {
@@ -92,7 +91,6 @@ router.get("/userTransactions/:userId", (req, res) => {
   try {
     db.findTokensByUserId(user_id)
       .then(accessToken => {
-        console.log(accessToken)
           client.getTransactions(
             accessToken[0].access_token,
             startDate,
