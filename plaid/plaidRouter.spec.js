@@ -35,7 +35,7 @@ describe("PLAID end points", () => {
     });
   });
 
-  describe("GET to /accessToken", () => {
+  describe("GET to /accessToken and /userTransactions/:id", () => {
     it("should return status 200 and res.body should contain data", () => {
       return request(server)
         .get("/plaid/accessToken")
@@ -47,6 +47,26 @@ describe("PLAID end points", () => {
         });
     });
   });
+
+
+  describe("GET to /accessToken/:id", () => {
+    it("should return status 200 and res.body should contain data for specific user", () => {
+      return request(server)
+        .get("/plaid/accessToken/1")
+        .then((res) => {
+          expect(res.status).toBe(200);
+          expect(res.body).toHaveProperty("data");
+          expect(res.body.data).toBeDefined();
+        })
+    })
+    it("should return status 500 and for invalid user id", () => {
+      return request(server)
+        .get("/plaid/accessToken/b")
+        .then((res) => {
+          expect(res.status).toBe(500);
+        })
+    })
+  })
 
   describe("GET Request to /userTransactions/:userId", () => {
     it("should return status 200 and res.body should contain transaction information", async () => {
@@ -63,7 +83,6 @@ describe("PLAID end points", () => {
   })
 
   describe("delete to /accessToken/:userId/all", () => {
-
     it("should return status 200 and res.body should contain message: 'All bank accounts successfully deleted!'", () => {
       return request(server)
         .delete("/plaid/accessToken/1/all")
