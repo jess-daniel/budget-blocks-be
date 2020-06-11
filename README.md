@@ -118,8 +118,6 @@ Also, you can view the [iOS Documenation](https://github.com/Lambda-School-Labs/
 **Expected request body:**
 
     {
-        "client_id": "{{client_id}}",
-        "secret": "{{secret_key}}",
         "publicToken": "public-sandbox-64d2b25a-d7b0-44fd-82ba-d89735bad115" <-- example
     }
 
