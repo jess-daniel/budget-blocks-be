@@ -3,7 +3,7 @@ const express = require("express");
 const moment = require('moment')
 const plaid = require("plaid");
 const db = require("./plaidModel.js");
-
+const datab = require("../data/db-config.js");
 const router = express.Router();
 
 var client = new plaid.Client(
@@ -49,7 +49,6 @@ router.post("/token_exchange/:id", publicTokenExists, (req, res) => {
 
       db.findToken(ACCESS_TOKEN)
         .then((token) => {
-          console.log(token);
           if (token.length !== 0) {
             res.status(404).json({ message: "Bank account already exists." });
           } else {
@@ -92,25 +91,25 @@ router.get("/userTransactions/:userId", (req, res) => {
   try {
     db.findTokensByUserId(user_id)
       .then(accessToken => {
-        console.log(accessToken)
-          client.getTransactions(
-            accessToken[0].access_token,
-            startDate,
-            endDate,
-            {
-              count: 250,
-              offset: 0,
-            }, function(error, transactionsResponse){
-              if (error != null){
-                return res.status(500).json({
-                  error: error
-                });
-              } else {
-                res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id })
-              }
+        client.getTransactions(
+          accessToken[0].access_token,
+          startDate,
+          endDate,
+          {
+            count: 250,
+            offset: 0,
+          }, function (error, transactionsResponse) {
+            if (error != null) {
+              return res.status(500).json({
+                error: error
+              });
+            } else {
+              res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id })
             }
-          )}
-    )
+          }
+        )
+      }
+      )
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

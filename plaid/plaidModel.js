@@ -16,7 +16,7 @@ function findToken(token) {
 
 // Find Token by User Id
 function findTokensByUserId(user_id) {
-  return db("plaid_token as pt").where({ user_id })
+  return db("plaid_token").where({ user_id })
 }
 
 // Find All Tokens
