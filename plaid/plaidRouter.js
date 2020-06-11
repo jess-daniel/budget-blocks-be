@@ -106,7 +106,7 @@ router.get("/userTransactions/:userId", (req, res) => {
                   error: error
                 });
               } else {
-                res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id, location: [accessToken[0].city, accessToken[0].state] })
+                res.status(200).json({ transactions: transactionsResponse.transactions, user_id: user_id })
               }
             }
           )}
