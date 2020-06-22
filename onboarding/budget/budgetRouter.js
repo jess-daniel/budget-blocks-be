@@ -44,7 +44,7 @@ router.post('/goals', requireAuthentication, (req, res) => {
   Budget.add(body)
     .then((budget) => {
       if (budget) {
-        res.json(budget);
+        res.status(200).json(budget);
       } else {
         res
           .status(400)
