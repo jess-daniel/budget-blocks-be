@@ -6,7 +6,7 @@ const requireAuthentication = require('../../okta/middleware/require_authenticat
 
 const router = express.Router();
 
-router.get('/goals', requireAuthentication, (req, res) => {
+router.get('/goals', (req, res) => {
   Budget.findAll()
     .then((budgets) => {
       if (budgets.length !== 0) {
@@ -20,7 +20,7 @@ router.get('/goals', requireAuthentication, (req, res) => {
     });
 });
 
-router.get('/goals/:user_id', requireAuthentication, (req, res) => {
+router.get('/goals/:user_id', (req, res) => {
   const { user_id } = req.params;
 
   Budget.findById(user_id)
@@ -36,7 +36,7 @@ router.get('/goals/:user_id', requireAuthentication, (req, res) => {
   })
 })
 
-router.post('/goals', requireAuthentication, (req, res) => {
+router.post('/goals', (req, res) => {
   const { body } = req;
   if (!body.user_id) {
     return res.status(400).json({ message: 'Must send user_id property' });
@@ -58,7 +58,6 @@ router.post('/goals', requireAuthentication, (req, res) => {
 
 router.put(
   '/goals/:user_id',
-  requireAuthentication,
   (req, res) => {
     const { user_id } = req.params;
     const { body } = req;
