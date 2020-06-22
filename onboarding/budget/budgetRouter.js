@@ -43,13 +43,7 @@ router.post('/goals', (req, res) => {
   }
   Budget.add(body)
     .then((budget) => {
-      if (budget) {
         res.status(200).json(budget);
-      } else {
-        res
-          .status(400)
-          .json({ message: 'There was an error adding the budget goal' });
-      }
     })
     .catch((err) => {
       res.status(500).json({ message: 'server error', error: err.message });
