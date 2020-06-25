@@ -1,4 +1,3 @@
-
 # Badges
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/48e243bd3d68a7d834b0/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/budget-blocks-be)
@@ -21,9 +20,18 @@ To get the server running locally:
 
 Why did you choose this framework?
 
-- PostGres - Used this to deploy our backend to persist the data on Heroku
-- Heroku - Used to host our app. Heroku makes deploying web apps simple and fast
-- Knex - Used to create data migration tables and seeds to continuously have a clean data set
+- PostGres - is an open-source, object-relational database management system (ORDBMS), it's persistent database as well as quality made it the correct choice for our application.
+- Heroku - is the hosting application we are using to deploy our backend. Heroku makes deploying web apps simple and fast.
+- Knex - Used to create data migration tables and seeds to continuously have a clean data set.
+- Express - is a minimal, open source and flexible Node.js web app framework designed to make developing websites, web apps, & API's much easier.
+- Nodemon - Used to run our backend locally for progressive testing before launching into the master branch of our product.
+- Node.js -  is a platform built on Chrome's JavaScript runtime for easily building fast and scalable network applications. It uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
+
+### Backend Engineering Tech
+
+- Okta - It's an enterprise-grade, identity management service, built for the cloud, but compatible with many on-premises applications. With [Okta](https://www.okta.com/), IT can manage any employee's access to any **application** or device.
+- Plaid API - allows developers to integrate transaction and account data from most major financial institutions into third party applications. The data includes merchant names, street addresses, geo-coordinates, categories, and other info.
+
 ## Endpoints
 
 In-depth endpoint documentation: [Here](https://documenter.getpostman.com/view/10984987/SztD57nm?version=latest#0f5ff3a7-d6b6-4324-bb4c-003c86bc064e)
@@ -33,22 +41,81 @@ In-depth endpoint documentation: [Here](https://documenter.getpostman.com/view/1
 |---|---|---|---|---|---|
 | GET | ```/api/users``` | Yes | Returns a list of all users | n/a | n/a | 
 | POST | ```/api/users``` | Yes | Adds a user | Name, Email | n/a |
-| DELETE | ```/api/users``` | Yes | Delete user by email | email | n/a |                                  
+| PUT | ```/api/users/:userId``` | Yes | Updates a specific user's information | City, State, onboarding_complete: True/False | user_id
+| DELETE | ```/api/users``` | Yes | Delete user by email | email | n/a                                   
 
 #### Plaid Routes
 
-| Method | Endpoint                      | Token Required | Description                                                                                                       |
-| ------ | ----------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------- |
-| POST   | `/plaid/token_exchange`       | No             | Exchanges PublicToken received by using the Plaid Link to connect to a bank account to retrieve the access token, must be connected to the user_id received from Okta|
-| GET    | `/plaid/accessToken/:id` | No             | Returns the access_tokens associated with the user's id.|
-| GET  | ```/plaid/accessToken``` | No  |  Returns all access tokens for every user |
-| DELETE  | ```/plaid/accessToken/:id``` | No  | Deletes a specific access token (aka bank account) for a specific user |
+ | Method | Endpoint | Token Required | Description | Body | Params |
+|---|---|---|---|---|---| 
+| GET | `/plaid/accessToken/:id` | No             | Returns the access_tokens associated with the user's id.| N/A | user_id
+| GET | ```/plaid/accessToken``` | No  |  Returns all access tokens for every user. |
+| GET | ```plaid/accessToken/:userId``` | No | Returns all access tokens connected to a specified user. | N/A | user_id
+| GET | ```/plaid/userTransactions/:userId``` | Yes | Returns User's Transaction history up to 30 days to the day that the api is fired. Must have connected bank account to Plaid already. | access_token is retrieved based off of user_id | user_id
+| GET | ```/plaid/userBalance/:userId``` | Yes | Returns User's current bank account balance as well as loan amounts and savings. Must have connected bank account to Plaid already. | access_token is retrieved based off of user_id | user_id
+| POST | `/plaid/token_exchange/:id`       | Yes             | Exchanges PublicToken received by using the Plaid Link to connect to a bank account to retrieve the access token, must be connected to the user_id received from Okta| public_token | user_id
+| DELETE | ```/plaid/accessToken/:userId``` | No  | Deletes a specific access token (aka bank account) for a specific user | bankId: access_token id | user_id
+| DELETE | ```/plaid/accessToken/:userId/all``` | No  | Deletes access tokens (aka bank account) for a specific user | N/A | user_id
 
+#### Budget Routes
+ | Method | Endpoint | Token Required | Description | Body | Params |
+|---|---|---|---|---|---|
+| GET | ```/api/goals``` | No | Returns a list of all Budget Goals | N/A | N/A |
+| GET | ```/api/goals/:user_id``` | No | Returns a list of Budget Goals for a specific user | N/A | user_id
+| POST | ```/api/goals``` | No | Adds a user's goals table. Suggestion: Create table in income component, then use PUT request for other goals. | Income or One of the other goals | N/A |
+| PUT | ```/api/goals/:user_id``` | No | Updates a specific user's goals (can update any number all are nullable) | food, housing, personal, income, giving, savings, debt, transfer, transportation | user_id
+
+
+
+#### Income Route
+ | Method | Endpoint | Token Required | Description | Body | Params |
+|---|---|---|---|---|---|
+| POST | ```/api/income``` | Yes | Adds a user's manually inputted monthly income amount. | income, user_id | N/A
 ## Actions
+
+### Okta Actions
+
+`findUserByEmail()`  -> Returns a user based off their email.
+
+`addUser()` -> Inserts userInfo to add a user to the database.
+
+`deleteUser()` -> Deletes a user based off their email.
+
+`findAllUsers()` -> Finds all users in the database.
+
+`updateUser()` -> Updates a user's info based off their city, state, onboarding_complete, and userId.
+
+### Plaid Actions
 
 `plaid_access()` -> Inserts the access_token and the user_id to the database for future plaid endpoints.
 
+`findToken()` -> Inserts the access_token to the find the user it's associated with
+
 `findTokensByUserId()` -> Seeks out the associated user_id to display the access_tokens that are connected to it.
+
+`findAllTokens()` -> Finds all access_tokens in the database.
+
+`deleteTokenByUserId()` -> Deletes a access_token based of the user_id and the access_token id.
+
+`deleteAllTokensByUserId()` -> Deletes all access_tokens based of the user_id.
+
+### Budget Actions
+
+`findAll()` -> Finds all budget goals in the database.
+
+`findById()` -> Finds all budget goals based on the user's user_id.
+
+`add()` -> Adds a budget goals table based off of what goals data you insert into it.
+
+`update()` -> Updates a user's budget goals based off of the changes and the user_id.
+
+`remove()` -> Deletes a user's budget goals based off of their user_id.
+
+### Income Actions
+
+`addIncome()` -> Adds a user's income based off the value and the user_id.
+
+`findIncomeById()` -> Find a user's income based off their user_id.
 
 ## Environment Variables
 
@@ -63,7 +130,9 @@ create a .env file that includes the following:
 - PLAID_PRODUCTS - The products that we want to generate data from through the [Plaid API](https://plaid.com/)
 - PLAID_COUNTRY_CODES - A list of country codes where [Plaid API](https://plaid.com/) will work from
 - PLAID_ENV - Environment being used for [Plaid API](https://plaid.com/) IE: Sandbox, Development, Production
-- PG_PASSWORD - Secret password that belongs to each developer using PG.
+- ISSUER -  URL that is used for verification with [Okta](https://www.okta.com/)
+- CLIENT_ID - ID assigned to each user/team that is needed for verification with [Okta](https://www.okta.com/)
+- PG_PASSWORD - Secret password that belongs to each developer using [PostgreSQL](https://www.postgresql.org/)
 
 ## Contributing
 
@@ -104,7 +173,7 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 
 ## Documentation
 
-See [Frontend Documentation](https://github.com/Lambda-School-Labs/budget-blocks-fe/) for details on the fronend of our project.
+See [Frontend Documentation](https://github.com/Lambda-School-Labs/budget-blocks-fe/) for details on the frontend of our project.
 Also, you can view the [iOS Documenation](https://github.com/Lambda-School-Labs/budget-blocks-ios) for details on the iOS application for the project.
 
 # Information
@@ -112,26 +181,3 @@ Also, you can view the [iOS Documenation](https://github.com/Lambda-School-Labs/
 ## Postgres
 
 - The backend is now running on Postgres, so things won't clear everytime the dev branch is commited to. In addition to that, you can create an account and sign up with plaid using user_good/pass_good just once now. No more re-creating accounts unless we need to wipe the DB.
-
-## (plaid) **POST** /plaid/token_exchange/:id
-
-**Expected request body:**
-
-    {
-        "publicToken": "public-sandbox-64d2b25a-d7b0-44fd-82ba-d89735bad115" <-- example
-    }
-
-**Returns a status 200, user_id must be attached as the id parameters, stores access_token and user_id into database**
-
-## (plaid) **GET** /plaid/accessToken/:id
-
-**Expected request results example:**
-
-    {
-        "id": "1",
-        "access_token": "Amnsdgni13224ion1312asf",
-        "user_id": "1" 
-    }
-
-**Returns a status 200, retrieves the access_tokens associated with the user_id**
-
