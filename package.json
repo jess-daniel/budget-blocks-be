@@ -1,6 +1,7 @@
 {
   "name": "Budget-Blocks-be",
   "version": "1.0.0",
+  "description": "Backend for tracking your spending goals and quering a data science API to see the average cost of living in your area.",
   "main": "index.js",
   "author": "lambdaschools",
   "license": "MIT",
